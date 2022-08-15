@@ -6,18 +6,16 @@ namespace MegaCorpClash.ViewModels;
 
 public class GameSession : IDisposable
 {
-    private readonly GameSettings _gameSettings;
     private TwitchConnector? _twitchConnector;
+    private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
 
     public GameSession(GameSettings gameSettings)
     {
-        _gameSettings = gameSettings;
         _twitchConnector = new TwitchConnector(gameSettings);
-
-        InitializeTimedMessages(_gameSettings.TimedMessages.IntervalInMinutes);
-
         _twitchConnector.Connect();
+
+        InitializeTimedMessages(gameSettings.TimedMessages);
     }
 
     public void Dispose()
@@ -26,25 +24,25 @@ public class GameSession : IDisposable
         _twitchConnector = null;
     }
 
-    private void InitializeTimedMessages(int intervalInMinutes)
+    private void InitializeTimedMessages(
+        GameSettings.TimedMessageSettings timedMessageSettings)
     {
-        if (!(intervalInMinutes > 0))
+        if (timedMessageSettings.IntervalInMinutes <= 0)
         {
             return;
         }
 
+        _timedMessages = timedMessageSettings.Messages;
+
         _timedMessagesTimer =
-            new System.Timers.Timer(intervalInMinutes * 60 * 1000);
+            new System.Timers.Timer(timedMessageSettings.IntervalInMinutes * 60 * 1000);
         _timedMessagesTimer.Elapsed += TimedMessagesTimer_Elapsed;
         _timedMessagesTimer.Enabled = true;
     }
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        if (_gameSettings.TimedMessages.Messages.Any())
-        {
-            _twitchConnector?
-                .SendChatMessage(_gameSettings.TimedMessages.Messages.RandomElement());
-        }
+        _twitchConnector?
+            .SendChatMessage(_timedMessages.RandomElement());
     }
 }

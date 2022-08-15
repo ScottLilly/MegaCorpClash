@@ -11,6 +11,6 @@ public class GameSettings
     public class TimedMessageSettings
     {
         public int IntervalInMinutes { get; set; }
-        public List<string?> Messages { get; set; }
+        public List<string> Messages { get; set; }
     }
 }
