@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MegaCorpClash.Core\MegaCorpClash.Core.csproj" />
     <ProjectReference Include="..\MegaCorpClash.Models\MegaCorpClash.Models.csproj" />
     <ProjectReference Include="..\MegaCorpClash.Services\MegaCorpClash.Services.csproj" />
   </ItemGroup>

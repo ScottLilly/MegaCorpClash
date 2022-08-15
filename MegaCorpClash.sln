@@ -5,11 +5,13 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaCorpClash.Console", "MegaCorpClash.Console\MegaCorpClash.Console.csproj", "{157E1165-6621-4E3F-9763-8B9B8762A72E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaCorpClash.Models", "MegaCorpClash.Models\MegaCorpClash.Models.csproj", "{FA9C70A6-BC9E-4DEB-B29B-FB6B8F4F7998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaCorpClash.Models", "MegaCorpClash.Models\MegaCorpClash.Models.csproj", "{FA9C70A6-BC9E-4DEB-B29B-FB6B8F4F7998}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaCorpClash.Services", "MegaCorpClash.Services\MegaCorpClash.Services.csproj", "{95D17EC6-9938-461B-823E-F841728EA631}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaCorpClash.Services", "MegaCorpClash.Services\MegaCorpClash.Services.csproj", "{95D17EC6-9938-461B-823E-F841728EA631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaCorpClash.ViewModels", "MegaCorpClash.ViewModels\MegaCorpClash.ViewModels.csproj", "{D0F0E68D-C76E-429D-808D-FDE56ECF7BDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaCorpClash.ViewModels", "MegaCorpClash.ViewModels\MegaCorpClash.ViewModels.csproj", "{D0F0E68D-C76E-429D-808D-FDE56ECF7BDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaCorpClash.Core", "MegaCorpClash.Core\MegaCorpClash.Core.csproj", "{B728C3BB-EA44-4C81-B16D-5456BA08FA13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D0F0E68D-C76E-429D-808D-FDE56ECF7BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0F0E68D-C76E-429D-808D-FDE56ECF7BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0F0E68D-C76E-429D-808D-FDE56ECF7BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B728C3BB-EA44-4C81-B16D-5456BA08FA13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B728C3BB-EA44-4C81-B16D-5456BA08FA13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B728C3BB-EA44-4C81-B16D-5456BA08FA13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B728C3BB-EA44-4C81-B16D-5456BA08FA13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
