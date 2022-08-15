@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="TwitchLib" Version="3.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MegaCorpClash.Core\MegaCorpClash.Core.csproj" />
-  </ItemGroup>
-
 </Project>
