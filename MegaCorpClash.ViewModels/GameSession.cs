@@ -22,6 +22,7 @@ public class GameSession : IDisposable
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
         _twitchConnector.OnCompanyCreated += OnCompanyCreated;
+        _twitchConnector.OnCompanyNameChanged += OnCompanyNameChanged;
         _twitchConnector.Connect();
 
         InitializeTimedMessages(gameSettings.TimedMessages);
@@ -61,7 +62,7 @@ public class GameSession : IDisposable
         _timedMessagesTimer.Enabled = true;
     }
 
-    private void OnCompanyCreated(object? sender, CompanyCreatedArgs e)
+    private void OnCompanyCreated(object? sender, CompanyCreatedEventArgs e)
     {
         _players.TryGetValue(e.TwitchId, out Player? player);
 
@@ -94,6 +95,32 @@ public class GameSession : IDisposable
         {
             _twitchConnector?
                 .SendChatMessage($"{e.TwitchDisplayName}, you already have a company name {player.CompanyName}");
+        }
+    }
+
+    private void OnCompanyNameChanged(object? sender, CompanyNameChangedEventArgs e)
+    {
+        _players.TryGetValue(e.TwitchId, out Player? player);
+
+        if (player == null)
+        {
+            // TODO: Start a company for them?
+            _twitchConnector?
+                .SendChatMessage($"{e.TwitchDisplayName}, you don't have a company. Type !incorporate <company name> to start one.");
+        }
+        else
+        {
+            if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
+            {
+                _twitchConnector?
+                    .SendChatMessage($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
+
+                return;
+            }
+
+            player.CompanyName = e.CompanyName;
+
+            PersistenceService.SavePlayerData(_players.Values);
         }
     }
 

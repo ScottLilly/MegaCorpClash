@@ -2,11 +2,11 @@
 
 namespace MegaCorpClash.Models.CustomEventArgs;
 
-public class CompanyCreatedArgs : BaseCustomEventArgs
+public class CompanyNameChangedEventArgs : BaseCustomEventArgs
 {
     public string CompanyName { get; }
 
-    public CompanyCreatedArgs(ChatCommand chatCommand) 
+    public CompanyNameChangedEventArgs(ChatCommand chatCommand)
         : base(chatCommand.ChatMessage.UserId, chatCommand.ChatMessage.DisplayName)
     {
         CompanyName = chatCommand.ArgumentsAsString;
