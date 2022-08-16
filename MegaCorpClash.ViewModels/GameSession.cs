@@ -2,6 +2,7 @@
 using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Services;
 
 namespace MegaCorpClash.ViewModels;
 
@@ -10,15 +11,18 @@ public class GameSession : IDisposable
     private TwitchConnector? _twitchConnector;
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
+    private readonly LogWriter _logWriter = new();
 
     public GameSession(GameSettings gameSettings)
     {
         _twitchConnector = new TwitchConnector(gameSettings);
+        _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
+        _twitchConnector.OnCompanyCreated += OnCompanyCreated;
         _twitchConnector.Connect();
 
-        _twitchConnector.OnCompanyCreated += OnCompanyCreated;
-
         InitializeTimedMessages(gameSettings.TimedMessages);
+
+        WriteToLog("Game started");
     }
 
     public void Dispose()
@@ -53,5 +57,16 @@ public class GameSession : IDisposable
     {
         _twitchConnector?
             .SendChatMessage(_timedMessages.RandomElement());
+    }
+
+    private void OnTwitchMessageToLog(object? sender, string e)
+    {
+        WriteToLog(e);
+    }
+
+    private void WriteToLog(string message)
+    {
+        Console.WriteLine(message);
+        _logWriter.WriteMessage(message);
     }
 }
