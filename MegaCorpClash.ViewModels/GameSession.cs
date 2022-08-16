@@ -13,10 +13,12 @@ public class GameSession : IDisposable
     private System.Timers.Timer? _timedMessagesTimer;
     private readonly LogWriter _logWriter = new();
 
-    private Dictionary<string, Player> _players = new();
+    private readonly Dictionary<string, Player> _players = new();
 
     public GameSession(GameSettings gameSettings)
     {
+        PopulatePlayers();
+
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
         _twitchConnector.OnCompanyCreated += OnCompanyCreated;
@@ -31,6 +33,16 @@ public class GameSession : IDisposable
     {
         _twitchConnector?.Dispose();
         _twitchConnector = null;
+    }
+
+    private void PopulatePlayers()
+    {
+        var players = PersistenceService.GetPlayerData();
+
+        foreach (Player player in players)
+        {
+            _players.Add(player.Id, player);
+        }
     }
 
     private void InitializeTimedMessages(
@@ -55,6 +67,14 @@ public class GameSession : IDisposable
 
         if (player == null)
         {
+            if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
+            {
+                _twitchConnector?
+                    .SendChatMessage($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
+
+                return;
+            }
+
             player = new Player
             {
                 Id = e.TwitchId,
@@ -64,6 +84,11 @@ public class GameSession : IDisposable
             };
 
             _players[e.TwitchId] = player;
+
+            PersistenceService.SavePlayerData(_players.Values);
+
+            _twitchConnector?
+                .SendChatMessage($"{e.TwitchDisplayName}, you are now the proud CEO of {player.CompanyName}");
         }
         else
         {
