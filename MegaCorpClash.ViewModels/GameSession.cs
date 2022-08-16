@@ -13,6 +13,8 @@ public class GameSession : IDisposable
     private System.Timers.Timer? _timedMessagesTimer;
     private readonly LogWriter _logWriter = new();
 
+    private Dictionary<string, Player> _players = new();
+
     public GameSession(GameSettings gameSettings)
     {
         _twitchConnector = new TwitchConnector(gameSettings);
@@ -47,10 +49,27 @@ public class GameSession : IDisposable
         _timedMessagesTimer.Enabled = true;
     }
 
-    private static void OnCompanyCreated(object? sender, CompanyCreatedArgs e)
+    private void OnCompanyCreated(object? sender, CompanyCreatedArgs e)
     {
-        // TODO: If Player or company name already exists, send an error message.
-        // Else, add Player and company to players list and write to disk.
+        _players.TryGetValue(e.TwitchId, out Player? player);
+
+        if (player == null)
+        {
+            player = new Player
+            {
+                Id = e.TwitchId,
+                DisplayName = e.TwitchDisplayName,
+                CompanyName = e.CompanyName,
+                CreatedOn = DateTime.UtcNow
+            };
+
+            _players[e.TwitchId] = player;
+        }
+        else
+        {
+            _twitchConnector?
+                .SendChatMessage($"{e.TwitchDisplayName}, you already have a company name {player.CompanyName}");
+        }
     }
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)

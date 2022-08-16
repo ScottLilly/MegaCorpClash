@@ -96,7 +96,7 @@ public class TwitchConnector : IDisposable
             }
             else
             {
-                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by single word/name for your company");
+                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by name for your company");
             }
         }
     }

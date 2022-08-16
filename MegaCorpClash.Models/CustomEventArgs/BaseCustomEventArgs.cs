@@ -2,12 +2,12 @@
 
 public abstract class BaseCustomEventArgs : EventArgs
 {
-    public string Id { get; }
-    public string Name { get; }
+    public string TwitchId { get; }
+    public string TwitchDisplayName { get; }
 
-    protected BaseCustomEventArgs(string id, string name)
+    protected BaseCustomEventArgs(string twitchId, string twitchDisplayName)
     {
-        Id = id;
-        Name = name;
+        TwitchId = twitchId;
+        TwitchDisplayName = twitchDisplayName;
     }
 }
