@@ -13,7 +13,7 @@ public static class PersistenceService
         {
             string text = File.ReadAllText(GAME_SETTINGS_FILE_NAME);
 
-            GameSettings gameSettings = 
+            GameSettings? gameSettings = 
                 JsonConvert.DeserializeObject<GameSettings>(text);
 
             if (gameSettings == null)

@@ -1,4 +1,6 @@
-﻿using TwitchLib.Client;
+﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.CustomEventArgs;
+using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
@@ -13,6 +15,8 @@ public class TwitchConnector : IDisposable
     private readonly string _botDisplayName;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
+
+    public event EventHandler<CompanyCreatedArgs>? OnCompanyCreated;
 
     public TwitchConnector(GameSettings gameSettings)
     {
@@ -61,7 +65,7 @@ public class TwitchConnector : IDisposable
         }
 
         _client.SendMessage(_channelName, message);
-
+        Console.WriteLine(message);
         WriteToChatLog(_botDisplayName, message);
     }
 
@@ -87,6 +91,18 @@ public class TwitchConnector : IDisposable
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
         WriteToChatLog(e.Command.ChatMessage.DisplayName, e.Command.ChatMessage.Message);
+
+        if (e.Command.CommandText.Matches("incorporate"))
+        {
+            if (e.Command.ArgumentsAsList.Any())
+            {
+                OnCompanyCreated?.Invoke(this, new CompanyCreatedArgs(e.Command));
+            }
+            else
+            {
+                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by single word/name for your company");
+            }
+        }
     }
 
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)

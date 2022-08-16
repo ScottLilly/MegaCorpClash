@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ScottLilly.CSharpExtender" Version="1.0.0" />
     <PackageReference Include="TwitchLib" Version="3.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MegaCorpClash.Core\MegaCorpClash.Core.csproj" />
   </ItemGroup>
 
 </Project>
