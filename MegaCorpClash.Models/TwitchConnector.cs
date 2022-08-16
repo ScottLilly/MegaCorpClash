@@ -9,14 +9,13 @@ namespace MegaCorpClash.Models;
 
 public class TwitchConnector : IDisposable
 {
-    private const string CHAT_LOG_DIRECTORY = "./ChatLogs";
-
     private readonly string _channelName;
     private readonly string _botAccountName;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
     public event EventHandler<CompanyCreatedArgs>? OnCompanyCreated;
+    public event EventHandler<string> OnMessageToLog;
 
     public TwitchConnector(GameSettings gameSettings)
     {
@@ -48,8 +47,10 @@ public class TwitchConnector : IDisposable
 
     public void Connect()
     {
+        WriteToChatLog("Start connecting to Twitch");
         _client.Initialize(_credentials, _channelName);
         _client.Connect();
+        WriteToChatLog("Connected to Twitch");
     }
 
     public void SendChatMessage(string? message)
@@ -106,15 +107,14 @@ public class TwitchConnector : IDisposable
         Connect();
     }
 
-    private static void WriteToChatLog(string chatterName, string? message)
+    private void WriteToChatLog(string chatterName, string? message)
     {
-        if (!Directory.Exists(CHAT_LOG_DIRECTORY))
-        {
-            Directory.CreateDirectory(CHAT_LOG_DIRECTORY);
-        }
+        WriteToChatLog($"{chatterName} - {message}");
+    }
 
-        File.AppendAllText(
-            Path.Combine(CHAT_LOG_DIRECTORY, $"MegaCorpClash-{DateTime.Now:yyyy-MM-dd}.log"),
-            $"{DateTime.Now.ToShortTimeString()}: {chatterName} - {message}{Environment.NewLine}");
+    private void WriteToChatLog(string? message)
+    {
+        OnMessageToLog?.Invoke(this,
+            $"{DateTime.Now.ToShortTimeString()}: {message}");
     }
 }
