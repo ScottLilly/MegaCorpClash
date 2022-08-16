@@ -6,7 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>7ff217c7-edf9-47ad-89fb-ff7efdd5ef92</UserSecretsId>
+    <AssemblyName>MegaCorpClash</AssemblyName>
+    <ApplicationIcon>FactoryIcon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="FactoryIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

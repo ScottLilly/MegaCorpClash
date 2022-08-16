@@ -12,7 +12,7 @@ public class TwitchConnector : IDisposable
     private const string CHAT_LOG_DIRECTORY = "./ChatLogs";
 
     private readonly string _channelName;
-    private readonly string _botDisplayName;
+    private readonly string _botAccountName;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
@@ -32,19 +32,14 @@ public class TwitchConnector : IDisposable
 
         _channelName = gameSettings.ChannelName;
 
-        var botAccountName = 
+        _botAccountName = 
             string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
                 ? gameSettings.ChannelName
                 : gameSettings.BotAccountName;
 
-        _botDisplayName = 
-            string.IsNullOrWhiteSpace(gameSettings.BotDisplayName) 
-                ? gameSettings.BotAccountName
-                : gameSettings.BotDisplayName;
-
         _credentials =
             new ConnectionCredentials(
-                botAccountName, 
+                _botAccountName, 
                 gameSettings.TwitchToken,
                 disableUsernameCheck: true);
 
@@ -66,7 +61,7 @@ public class TwitchConnector : IDisposable
 
         _client.SendMessage(_channelName, message);
         Console.WriteLine(message);
-        WriteToChatLog(_botDisplayName, message);
+        WriteToChatLog(_botAccountName, message);
     }
 
     public void Dispose()
