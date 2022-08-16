@@ -9,6 +9,6 @@ public class CompanyCreatedArgs : BaseCustomEventArgs
     public CompanyCreatedArgs(ChatCommand chatCommand) 
         : base(chatCommand.ChatMessage.UserId, chatCommand.ChatMessage.DisplayName)
     {
-        CompanyName = chatCommand.ArgumentsAsList[0];
+        CompanyName = chatCommand.ArgumentsAsString;
     }
 }
