@@ -14,7 +14,8 @@ public class TwitchConnector : IDisposable
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
-    public event EventHandler<CompanyCreatedArgs>? OnCompanyCreated;
+    public event EventHandler<CompanyCreatedEventArgs>? OnCompanyCreated;
+    public event EventHandler<CompanyNameChangedEventArgs> OnCompanyNameChanged;
     public event EventHandler<string> OnMessageToLog;
 
     public TwitchConnector(GameSettings gameSettings)
@@ -92,11 +93,22 @@ public class TwitchConnector : IDisposable
         {
             if (e.Command.ArgumentsAsList.Any())
             {
-                OnCompanyCreated?.Invoke(this, new CompanyCreatedArgs(e.Command));
+                OnCompanyCreated?.Invoke(this, new CompanyCreatedEventArgs(e.Command));
             }
             else
             {
                 SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by name for your company");
+            }
+        }
+        else if (e.Command.CommandText.Matches("rename"))
+        {
+            if (e.Command.ArgumentsAsList.Any())
+            {
+                OnCompanyNameChanged?.Invoke(this, new CompanyNameChangedEventArgs(e.Command));
+            }
+            else
+            {
+                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !rename must be followed by the new name for your company");
             }
         }
     }
