@@ -1,6 +1,7 @@
 ﻿using System.Timers;
-using MegaCorpClash.Core;
+using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.ViewModels;
 
@@ -14,6 +15,8 @@ public class GameSession : IDisposable
     {
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.Connect();
+
+        _twitchConnector.OnCompanyCreated += OnCompanyCreated;
 
         InitializeTimedMessages(gameSettings.TimedMessages);
     }
@@ -38,6 +41,12 @@ public class GameSession : IDisposable
             new System.Timers.Timer(timedMessageSettings.IntervalInMinutes * 60 * 1000);
         _timedMessagesTimer.Elapsed += TimedMessagesTimer_Elapsed;
         _timedMessagesTimer.Enabled = true;
+    }
+
+    private static void OnCompanyCreated(object? sender, CompanyCreatedArgs e)
+    {
+        // TODO: If Player or company name already exists, send an error message.
+        // Else, add Player and company to players list and write to disk.
     }
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)

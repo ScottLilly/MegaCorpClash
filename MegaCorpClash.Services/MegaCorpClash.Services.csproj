@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MegaCorpClash.Core\MegaCorpClash.Core.csproj" />
     <ProjectReference Include="..\MegaCorpClash.Models\MegaCorpClash.Models.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,6 @@
-﻿using TwitchLib.Client;
+﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.CustomEventArgs;
+using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
@@ -10,9 +12,11 @@ public class TwitchConnector : IDisposable
     private const string CHAT_LOG_DIRECTORY = "./ChatLogs";
 
     private readonly string _channelName;
-    private readonly string _botDisplayName;
+    private readonly string _botAccountName;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
+
+    public event EventHandler<CompanyCreatedArgs>? OnCompanyCreated;
 
     public TwitchConnector(GameSettings gameSettings)
     {
@@ -28,19 +32,14 @@ public class TwitchConnector : IDisposable
 
         _channelName = gameSettings.ChannelName;
 
-        var botAccountName = 
+        _botAccountName = 
             string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
                 ? gameSettings.ChannelName
                 : gameSettings.BotAccountName;
 
-        _botDisplayName = 
-            string.IsNullOrWhiteSpace(gameSettings.BotDisplayName) 
-                ? gameSettings.BotAccountName
-                : gameSettings.BotDisplayName;
-
         _credentials =
             new ConnectionCredentials(
-                botAccountName, 
+                _botAccountName, 
                 gameSettings.TwitchToken,
                 disableUsernameCheck: true);
 
@@ -61,8 +60,8 @@ public class TwitchConnector : IDisposable
         }
 
         _client.SendMessage(_channelName, message);
-
-        WriteToChatLog(_botDisplayName, message);
+        Console.WriteLine(message);
+        WriteToChatLog(_botAccountName, message);
     }
 
     public void Dispose()
@@ -87,6 +86,18 @@ public class TwitchConnector : IDisposable
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
         WriteToChatLog(e.Command.ChatMessage.DisplayName, e.Command.ChatMessage.Message);
+
+        if (e.Command.CommandText.Matches("incorporate"))
+        {
+            if (e.Command.ArgumentsAsList.Any())
+            {
+                OnCompanyCreated?.Invoke(this, new CompanyCreatedArgs(e.Command));
+            }
+            else
+            {
+                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by single word/name for your company");
+            }
+        }
     }
 
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)

@@ -1,5 +1,14 @@
-﻿namespace MegaCorpClash.Models.CustomEventArgs;
+﻿using TwitchLib.Client.Models;
 
-public class CompanyCreatedArgs : EventArgs
+namespace MegaCorpClash.Models.CustomEventArgs;
+
+public class CompanyCreatedArgs : BaseCustomEventArgs
 {
+    public string CompanyName { get; }
+
+    public CompanyCreatedArgs(ChatCommand chatCommand) 
+        : base(chatCommand.ChatMessage.UserId, chatCommand.ChatMessage.DisplayName)
+    {
+        CompanyName = chatCommand.ArgumentsAsList[0];
+    }
 }
