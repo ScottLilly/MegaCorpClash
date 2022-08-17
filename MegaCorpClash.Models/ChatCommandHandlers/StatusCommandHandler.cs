@@ -3,7 +3,7 @@ using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class StatusCommandHandler
+public class StatusCommandHandler : IHandleChatCommand
 {
     public string CommandText => "status";
 

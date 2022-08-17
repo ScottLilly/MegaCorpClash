@@ -23,18 +23,37 @@ public class GameSession : IDisposable
 
         PopulatePlayers();
 
-        var statusCommandHandler = new StatusCommandHandler();
-        statusCommandHandler.OnCompanyStatusRequested += OnCompanyStatusRequested;
+        var chatCommandHandlers = GetChatCommandHandlers();
 
-        _twitchConnector = new TwitchConnector(gameSettings, statusCommandHandler);
+        _twitchConnector = new TwitchConnector(gameSettings, chatCommandHandlers);
         _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
-        _twitchConnector.OnCompanyCreated += OnCompanyCreated;
-        _twitchConnector.OnCompanyNameChanged += OnCompanyNameChanged;
         _twitchConnector.Connect();
 
         InitializeTimedMessages(gameSettings.TimedMessages);
 
         WriteToLog("Game started");
+    }
+
+    private List<IHandleChatCommand> GetChatCommandHandlers()
+    {
+        var chatCommandHandlers = 
+            new List<IHandleChatCommand>();
+
+        var incorporateCommandHandler = new IncorporateCommandHandler();
+        incorporateCommandHandler.OnCompanyCreated += OnCompanyCreated;
+        incorporateCommandHandler.OnMessageToLog += OnMessageToLog;
+        chatCommandHandlers.Add(incorporateCommandHandler);
+
+        var renameCommandHandler = new RenameCommandHandler();
+        renameCommandHandler.OnCompanyNameChanged += OnCompanyNameChanged;
+        renameCommandHandler.OnMessageToLog += OnMessageToLog;
+        chatCommandHandlers.Add(renameCommandHandler);
+
+        var statusCommandHandler = new StatusCommandHandler();
+        statusCommandHandler.OnCompanyStatusRequested += OnCompanyStatusRequested;
+        chatCommandHandlers.Add(statusCommandHandler);
+
+        return chatCommandHandlers;
     }
 
     public void Dispose()
@@ -71,7 +90,7 @@ public class GameSession : IDisposable
 
     #region Chat command event handlers
 
-    private void OnCompanyCreated(object? sender, CompanyCreatedEventArgs e)
+    private void OnCompanyCreated(object? sender, CreateCompanyEventArgs e)
     {
         _players.TryGetValue(e.TwitchId, out Player? player);
 
@@ -107,7 +126,7 @@ public class GameSession : IDisposable
         }
     }
 
-    private void OnCompanyNameChanged(object? sender, CompanyNameChangedEventArgs e)
+    private void OnCompanyNameChanged(object? sender, ChangeCompanyNameEventArgs e)
     {
         _players.TryGetValue(e.TwitchId, out Player? player);
 
@@ -143,6 +162,11 @@ public class GameSession : IDisposable
                 : $"{e.TwitchDisplayName}: Your company {player.CompanyName} has {player.Points} {_gameSettings.PointsName}");
     }
 
+    private void OnMessageToLog(object? sender, MessageEventArgs e)
+    {
+        LogMessage(e.Message, e.ShowInTwitchChat);
+    }
+
     #endregion
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
@@ -154,6 +178,16 @@ public class GameSession : IDisposable
     private void OnTwitchMessageToLog(object? sender, string e)
     {
         WriteToLog(e);
+    }
+
+    private void LogMessage(string message, bool writeInTwitchChat)
+    {
+        if (writeInTwitchChat)
+        {
+            _twitchConnector?.SendChatMessage(message);
+        }
+
+        WriteToLog(message);
     }
 
     private void WriteToLog(string message)
