@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -14,11 +15,12 @@ public class TwitchConnector : IDisposable
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
-    public event EventHandler<CompanyCreatedEventArgs>? OnCompanyCreated;
-    public event EventHandler<CompanyNameChangedEventArgs> OnCompanyNameChanged;
     public event EventHandler<string> OnMessageToLog;
 
-    public TwitchConnector(GameSettings gameSettings)
+    private readonly List<IHandleChatCommand> _chatCommandHandlers;
+
+    public TwitchConnector(GameSettings gameSettings, 
+        List<IHandleChatCommand> chatCommandHandlers)
     {
         if (gameSettings == null)
         {
@@ -30,6 +32,7 @@ public class TwitchConnector : IDisposable
             throw new ArgumentException("ChannelName cannot be empty");
         }
 
+        _chatCommandHandlers = chatCommandHandlers;
         _channelName = gameSettings.ChannelName;
 
         _botAccountName = 
@@ -50,7 +53,15 @@ public class TwitchConnector : IDisposable
     {
         WriteToChatLog("Start connecting to Twitch");
         _client.Initialize(_credentials, _channelName);
-        _client.Connect();
+        try
+        {
+            _client.Connect();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
         WriteToChatLog("Connected to Twitch");
     }
 
@@ -62,8 +73,6 @@ public class TwitchConnector : IDisposable
         }
 
         _client.SendMessage(_channelName, message);
-        Console.WriteLine(message);
-        WriteToChatLog(_botAccountName, message);
     }
 
     public void Dispose()
@@ -87,30 +96,13 @@ public class TwitchConnector : IDisposable
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        WriteToChatLog(e.Command.ChatMessage.DisplayName, e.Command.ChatMessage.Message);
+        OnMessageToLog?
+            .Invoke(this, 
+                $"{e.Command.ChatMessage.DisplayName} - {e.Command.ChatMessage.Message}");
 
-        if (e.Command.CommandText.Matches("incorporate"))
-        {
-            if (e.Command.ArgumentsAsList.Any())
-            {
-                OnCompanyCreated?.Invoke(this, new CompanyCreatedEventArgs(e.Command));
-            }
-            else
-            {
-                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !incorporate must be followed by name for your company");
-            }
-        }
-        else if (e.Command.CommandText.Matches("rename"))
-        {
-            if (e.Command.ArgumentsAsList.Any())
-            {
-                OnCompanyNameChanged?.Invoke(this, new CompanyNameChangedEventArgs(e.Command));
-            }
-            else
-            {
-                SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !rename must be followed by the new name for your company");
-            }
-        }
+        _chatCommandHandlers
+            .FirstOrDefault(cch => cch.CommandText.Matches(e.Command.CommandText))
+            ?.Execute(e.Command);
     }
 
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)
