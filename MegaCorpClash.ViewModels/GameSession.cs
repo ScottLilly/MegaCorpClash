@@ -98,8 +98,7 @@ public class GameSession : IDisposable
         {
             if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
             {
-                _twitchConnector?
-                    .SendChatMessage($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
+                SendMessageInTwitchChat($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
 
                 return;
             }
@@ -116,13 +115,11 @@ public class GameSession : IDisposable
 
             PersistenceService.SavePlayerData(_players.Values);
 
-            _twitchConnector?
-                .SendChatMessage($"{e.TwitchDisplayName}, you are now the proud CEO of {player.CompanyName}");
+            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you are now the proud CEO of {player.CompanyName}");
         }
         else
         {
-            _twitchConnector?
-                .SendChatMessage($"{e.TwitchDisplayName}, you already have a company name {player.CompanyName}");
+            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you already have a company name {player.CompanyName}");
         }
     }
 
@@ -132,16 +129,13 @@ public class GameSession : IDisposable
 
         if (player == null)
         {
-            // TODO: Start a company for them?
-            _twitchConnector?
-                .SendChatMessage($"{e.TwitchDisplayName}, you don't have a company. Type !incorporate <company name> to start one.");
+            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you don't have a company. Type !incorporate <company name> to start one.");
         }
         else
         {
             if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
             {
-                _twitchConnector?
-                    .SendChatMessage($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
+                SendMessageInTwitchChat($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
 
                 return;
             }
@@ -156,10 +150,9 @@ public class GameSession : IDisposable
     {
         _players.TryGetValue(e.TwitchId, out Player? player);
 
-        _twitchConnector?
-            .SendChatMessage(player == null
-                ? $"{e.TwitchDisplayName}, you do not have a company"
-                : $"{e.TwitchDisplayName}: Your company {player.CompanyName} has {player.Points} {_gameSettings.PointsName}");
+        SendMessageInTwitchChat(player == null
+            ? $"{e.TwitchDisplayName}, you do not have a company"
+            : $"{e.TwitchDisplayName}: Your company {player.CompanyName} has {player.Points} {_gameSettings.PointsName}");
     }
 
     private void OnMessageToLog(object? sender, MessageEventArgs e)
@@ -171,13 +164,17 @@ public class GameSession : IDisposable
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        _twitchConnector?
-            .SendChatMessage(_timedMessages.RandomElement());
+        SendMessageInTwitchChat(_timedMessages?.RandomElement() ?? "");
     }
 
     private void OnTwitchMessageToLog(object? sender, string e)
     {
         WriteToLog(e);
+    }
+
+    private void SendMessageInTwitchChat(string message)
+    {
+        LogMessage(message, true);
     }
 
     private void LogMessage(string message, bool writeInTwitchChat)
