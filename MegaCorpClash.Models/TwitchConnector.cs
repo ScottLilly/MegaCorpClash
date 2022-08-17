@@ -116,6 +116,7 @@ public class TwitchConnector : IDisposable
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)
     {
         // If disconnected, automatically attempt to reconnect
+        WriteToChatLog("Disconnected - Reconnecting");
         Connect();
     }
 
