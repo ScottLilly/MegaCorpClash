@@ -1,6 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -11,7 +10,6 @@ namespace MegaCorpClash.Models;
 public class TwitchConnector : IDisposable
 {
     private readonly string _channelName;
-    private readonly string _botAccountName;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
@@ -35,14 +33,14 @@ public class TwitchConnector : IDisposable
         _chatCommandHandlers = chatCommandHandlers;
         _channelName = gameSettings.ChannelName;
 
-        _botAccountName = 
+        var botAccountName = 
             string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
                 ? gameSettings.ChannelName
                 : gameSettings.BotAccountName;
 
         _credentials =
             new ConnectionCredentials(
-                _botAccountName, 
+                botAccountName, 
                 gameSettings.TwitchToken,
                 disableUsernameCheck: true);
 
@@ -51,7 +49,8 @@ public class TwitchConnector : IDisposable
 
     public void Connect()
     {
-        WriteToChatLog("Start connecting to Twitch");
+        WriteToLog("Start connecting to Twitch");
+
         _client.Initialize(_credentials, _channelName);
         try
         {
@@ -62,17 +61,16 @@ public class TwitchConnector : IDisposable
             Console.WriteLine(e);
             throw;
         }
-        WriteToChatLog("Connected to Twitch");
+
+        WriteToLog("Connected to Twitch");
     }
 
     public void SendChatMessage(string? message)
     {
-        if (string.IsNullOrWhiteSpace(message))
+        if (!string.IsNullOrWhiteSpace(message))
         {
-            return;
+            _client.SendMessage(_channelName, message);
         }
-
-        _client.SendMessage(_channelName, message);
     }
 
     public void Dispose()
@@ -108,16 +106,12 @@ public class TwitchConnector : IDisposable
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)
     {
         // If disconnected, automatically attempt to reconnect
-        WriteToChatLog("Disconnected - Reconnecting");
+        WriteToLog("Disconnected - Reconnecting");
+
         Connect();
     }
 
-    private void WriteToChatLog(string chatterName, string? message)
-    {
-        WriteToChatLog($"{chatterName} - {message}");
-    }
-
-    private void WriteToChatLog(string? message)
+    private void WriteToLog(string? message)
     {
         OnMessageToLog?.Invoke(this,
             $"{DateTime.Now.ToShortTimeString()}: {message}");
