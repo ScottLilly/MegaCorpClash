@@ -1,6 +1,7 @@
 ﻿using System.Timers;
 using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
+using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Services;
 
@@ -8,6 +9,7 @@ namespace MegaCorpClash.ViewModels;
 
 public class GameSession : IDisposable
 {
+    private readonly GameSettings _gameSettings;
     private TwitchConnector? _twitchConnector;
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -17,9 +19,14 @@ public class GameSession : IDisposable
 
     public GameSession(GameSettings gameSettings)
     {
+        _gameSettings = gameSettings;
+
         PopulatePlayers();
 
-        _twitchConnector = new TwitchConnector(gameSettings);
+        var statusCommandHandler = new StatusCommandHandler();
+        statusCommandHandler.OnCompanyStatusRequested += OnCompanyStatusRequested;
+
+        _twitchConnector = new TwitchConnector(gameSettings, statusCommandHandler);
         _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
         _twitchConnector.OnCompanyCreated += OnCompanyCreated;
         _twitchConnector.OnCompanyNameChanged += OnCompanyNameChanged;
@@ -61,6 +68,8 @@ public class GameSession : IDisposable
         _timedMessagesTimer.Elapsed += TimedMessagesTimer_Elapsed;
         _timedMessagesTimer.Enabled = true;
     }
+
+    #region Chat command event handlers
 
     private void OnCompanyCreated(object? sender, CompanyCreatedEventArgs e)
     {
@@ -123,6 +132,18 @@ public class GameSession : IDisposable
             PersistenceService.SavePlayerData(_players.Values);
         }
     }
+
+    private void OnCompanyStatusRequested(object? sender, ChatterEventArgs e)
+    {
+        _players.TryGetValue(e.TwitchId, out Player? player);
+
+        _twitchConnector?
+            .SendChatMessage(player == null
+                ? $"{e.TwitchDisplayName}, you do not have a company"
+                : $"{e.TwitchDisplayName}: Your company {player.CompanyName} has {player.Points} {_gameSettings.PointsName}");
+    }
+
+    #endregion
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {

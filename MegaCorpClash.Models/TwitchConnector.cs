@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -18,7 +19,9 @@ public class TwitchConnector : IDisposable
     public event EventHandler<CompanyNameChangedEventArgs> OnCompanyNameChanged;
     public event EventHandler<string> OnMessageToLog;
 
-    public TwitchConnector(GameSettings gameSettings)
+    private StatusCommandHandler _statusCommandHandler;
+
+    public TwitchConnector(GameSettings gameSettings, StatusCommandHandler statusCommandHandler)
     {
         if (gameSettings == null)
         {
@@ -31,6 +34,7 @@ public class TwitchConnector : IDisposable
         }
 
         _channelName = gameSettings.ChannelName;
+        _statusCommandHandler = statusCommandHandler;
 
         _botAccountName = 
             string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
@@ -50,7 +54,15 @@ public class TwitchConnector : IDisposable
     {
         WriteToChatLog("Start connecting to Twitch");
         _client.Initialize(_credentials, _channelName);
-        _client.Connect();
+        try
+        {
+            _client.Connect();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
         WriteToChatLog("Connected to Twitch");
     }
 
@@ -110,6 +122,10 @@ public class TwitchConnector : IDisposable
             {
                 SendChatMessage($"{e.Command.ChatMessage.DisplayName} - !rename must be followed by the new name for your company");
             }
+        }
+        else if (e.Command.CommandText.Matches("status"))
+        {
+            _statusCommandHandler.Execute(e.Command);
         }
     }
 
