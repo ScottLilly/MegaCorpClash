@@ -22,6 +22,13 @@ public abstract class BaseCommandHandler
         _players = players;
     }
 
+    protected Player? GetPlayerObjectForChatter(ChatCommand chatCommand)
+    {
+        _players.TryGetValue(TwitchUserId(chatCommand), out Player? player);
+
+        return player;
+    }
+
     protected void InvokeMessageToDisplay(ChatCommand chatCommand, 
         string message, bool displayInTwitchChat = true)
     {

@@ -46,9 +46,10 @@ public class GameSession : IDisposable
 
         var renameCommandHandler = new RenameCommandHandler(_players);
         renameCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
+        renameCommandHandler.OnPlayerDataUpdated += OnPlayerDataUpdated;
         chatCommandHandlers.Add(renameCommandHandler);
 
-        var statusCommandHandler = new StatusCommandHandler(_players);
+        var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
         statusCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
         chatCommandHandlers.Add(statusCommandHandler);
 
@@ -96,47 +97,6 @@ public class GameSession : IDisposable
         _timedMessagesTimer.Elapsed += TimedMessagesTimer_Elapsed;
         _timedMessagesTimer.Enabled = true;
     }
-
-    #region Chat command event handlers
-
-    private void OnCompanyNameChanged(object? sender, ChangeCompanyNameEventArgs e)
-    {
-        _players.TryGetValue(e.TwitchId, out Player? player);
-
-        if (player == null)
-        {
-            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you don't have a company. Type !incorporate <company name> to start one.");
-        }
-        else
-        {
-            if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
-            {
-                SendMessageInTwitchChat($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
-
-                return;
-            }
-
-            player.CompanyName = e.CompanyName;
-
-            PersistenceService.SavePlayerData(_players.Values);
-        }
-    }
-
-    private void OnCompanyStatusRequested(object? sender, ChatterEventArgs e)
-    {
-        _players.TryGetValue(e.TwitchId, out Player? player);
-
-        SendMessageInTwitchChat(player == null
-            ? $"{e.TwitchDisplayName}, you do not have a company"
-            : $"{e.TwitchDisplayName}: Your company {player.CompanyName} has {player.Points} {_gameSettings.PointsName}");
-    }
-
-    private void OnMessageToLog(object? sender, MessageEventArgs e)
-    {
-        LogMessage(e.Message, e.ShowInTwitchChat);
-    }
-
-    #endregion
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {

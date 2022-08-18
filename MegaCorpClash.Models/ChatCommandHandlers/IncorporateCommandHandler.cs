@@ -22,7 +22,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
             return;
         }
 
-        _players.TryGetValue(TwitchUserId(chatCommand), out Player? player);
+        Player? player = GetPlayerObjectForChatter(chatCommand);
 
         if (player != null)
         {
