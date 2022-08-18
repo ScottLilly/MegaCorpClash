@@ -1,29 +1,39 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using CSharpExtender.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class RenameCommandHandler : IHandleChatCommand
+public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
     public string CommandText => "rename";
 
-    public event EventHandler<ChangeCompanyNameEventArgs> OnCompanyNameChanged;
-    public event EventHandler<MessageEventArgs> OnMessageToLog;
+    public RenameCommandHandler(Dictionary<string, Player> players) 
+        : base(players)
+    {
+    }
 
     public void Execute(ChatCommand chatCommand)
     {
-        if (chatCommand.ArgumentsAsList.Any())
+        Player? player = GetPlayerObjectForChatter(chatCommand);
+
+        if (player == null)
         {
-            OnCompanyNameChanged?.Invoke(this, new ChangeCompanyNameEventArgs(chatCommand));
+            InvokeMessageToDisplay(chatCommand, 
+                $"{DisplayName(chatCommand)}, you don't have a company. Type !incorporate <company name> to start one.");
         }
         else
         {
-            OnMessageToLog?
-                .Invoke(this,
-                    new MessageEventArgs(
-                        chatCommand,
-                        $"{chatCommand.ChatMessage.DisplayName} - !rename must be followed by the new name for your company",
-                        true));
+            if (_players.Values.Any(p => p.CompanyName.Matches(Arguments(chatCommand))))
+            {
+                InvokeMessageToDisplay(chatCommand, 
+                    $"{DisplayName(chatCommand)}, there is already a company named {Arguments(chatCommand)}");
+
+                return;
+            }
+
+            player.CompanyName = Arguments(chatCommand);
+
+            NotifyPlayerDataUpdated();
         }
     }
 }
