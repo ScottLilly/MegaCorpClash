@@ -94,7 +94,7 @@ public class TwitchConnector : IDisposable
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        OnMessageToLog?
+        OnMessageToLog
             .Invoke(this, 
                 $"{e.Command.ChatMessage.DisplayName} - {e.Command.ChatMessage.Message}");
 
@@ -113,7 +113,7 @@ public class TwitchConnector : IDisposable
 
     private void WriteToLog(string? message)
     {
-        OnMessageToLog?.Invoke(this,
+        OnMessageToLog.Invoke(this,
             $"{DateTime.Now.ToShortTimeString()}: {message}");
     }
 }

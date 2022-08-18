@@ -39,21 +39,30 @@ public class GameSession : IDisposable
         var chatCommandHandlers = 
             new List<IHandleChatCommand>();
 
-        var incorporateCommandHandler = new IncorporateCommandHandler();
-        incorporateCommandHandler.OnCompanyCreated += OnCompanyCreated;
-        incorporateCommandHandler.OnMessageToLog += OnMessageToLog;
+        var incorporateCommandHandler = new IncorporateCommandHandler(_players);
+        incorporateCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
+        incorporateCommandHandler.OnPlayerDataUpdated += OnPlayerDataUpdated;
         chatCommandHandlers.Add(incorporateCommandHandler);
 
-        var renameCommandHandler = new RenameCommandHandler();
-        renameCommandHandler.OnCompanyNameChanged += OnCompanyNameChanged;
-        renameCommandHandler.OnMessageToLog += OnMessageToLog;
+        var renameCommandHandler = new RenameCommandHandler(_players);
+        renameCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
         chatCommandHandlers.Add(renameCommandHandler);
 
-        var statusCommandHandler = new StatusCommandHandler();
-        statusCommandHandler.OnCompanyStatusRequested += OnCompanyStatusRequested;
+        var statusCommandHandler = new StatusCommandHandler(_players);
+        statusCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
         chatCommandHandlers.Add(statusCommandHandler);
 
         return chatCommandHandlers;
+    }
+
+    private void OnPlayerDataUpdated(object? sender, EventArgs e)
+    {
+        PersistenceService.SavePlayerData(_players.Values);
+    }
+
+    private void OnMessageToDisplay(object? sender, MessageEventArgs e)
+    {
+        LogMessage(e.Message, e.ShowInTwitchChat);
     }
 
     public void Dispose()
@@ -89,39 +98,6 @@ public class GameSession : IDisposable
     }
 
     #region Chat command event handlers
-
-    private void OnCompanyCreated(object? sender, CreateCompanyEventArgs e)
-    {
-        _players.TryGetValue(e.TwitchId, out Player? player);
-
-        if (player == null)
-        {
-            if (_players.Values.Any(p => p.CompanyName.Matches(e.CompanyName)))
-            {
-                SendMessageInTwitchChat($"{e.TwitchDisplayName}, there is already a company named {e.CompanyName}");
-
-                return;
-            }
-
-            player = new Player
-            {
-                Id = e.TwitchId,
-                DisplayName = e.TwitchDisplayName,
-                CompanyName = e.CompanyName,
-                CreatedOn = DateTime.UtcNow
-            };
-
-            _players[e.TwitchId] = player;
-
-            PersistenceService.SavePlayerData(_players.Values);
-
-            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you are now the proud CEO of {player.CompanyName}");
-        }
-        else
-        {
-            SendMessageInTwitchChat($"{e.TwitchDisplayName}, you already have a company name {player.CompanyName}");
-        }
-    }
 
     private void OnCompanyNameChanged(object? sender, ChangeCompanyNameEventArgs e)
     {
