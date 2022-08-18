@@ -55,6 +55,10 @@ public class GameSession : IDisposable
         statusCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
         chatCommandHandlers.Add(statusCommandHandler);
 
+        var companiesCommandHandler = new CompaniesCommandHandler(_players);
+        companiesCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
+        chatCommandHandlers.Add(companiesCommandHandler);
+
         return chatCommandHandlers;
     }
 
