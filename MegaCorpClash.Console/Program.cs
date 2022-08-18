@@ -34,6 +34,9 @@ do
             case "!clear":
                 Console.Clear();
                 break;
+            case "!exit":
+                gameSession.Dispose();
+                break;
             default:
                 Console.WriteLine($"Unrecognized command: '{command}'");
                 break;

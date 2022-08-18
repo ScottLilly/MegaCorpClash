@@ -29,9 +29,11 @@ public class GameSession : IDisposable
         _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
         _twitchConnector.Connect();
 
+        Thread.Sleep(5000);
+
         InitializeTimedMessages(gameSettings.TimedMessages);
 
-        WriteToLog("Game started");
+        LogMessage("Starting MegaCorpClash game", true);
     }
 
     private List<IHandleChatCommand> GetChatCommandHandlers()
@@ -68,6 +70,8 @@ public class GameSession : IDisposable
 
     public void Dispose()
     {
+        LogMessage("Stopping MegaCorpClash game. Thanks for playing!", true);
+
         _twitchConnector?.Dispose();
         _twitchConnector = null;
     }
