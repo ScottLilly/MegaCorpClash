@@ -35,38 +35,12 @@ public class GameSession
 
     public void End()
     {
-        DisplayMessage("Stopping MegaCorpClash game. Thanks for playing!", true);
+        WriteMessageToTwitchChat("Stopping MegaCorpClash game. Thanks for playing!");
 
         _twitchConnector?.Disconnect();
     }
 
     #region Private startup functions
-
-    private List<IHandleChatCommand> GetChatCommandHandlers()
-    {
-        var chatCommandHandlers =
-            new List<IHandleChatCommand>();
-
-        var incorporateCommandHandler = new IncorporateCommandHandler(_players);
-        incorporateCommandHandler.OnMessagePublished += HandleMessagePublished;
-        incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-        chatCommandHandlers.Add(incorporateCommandHandler);
-
-        var renameCommandHandler = new RenameCommandHandler(_players);
-        renameCommandHandler.OnMessagePublished += HandleMessagePublished;
-        renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-        chatCommandHandlers.Add(renameCommandHandler);
-
-        var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
-        statusCommandHandler.OnMessagePublished += HandleMessagePublished;
-        chatCommandHandlers.Add(statusCommandHandler);
-
-        var companiesCommandHandler = new CompaniesCommandHandler(_players);
-        companiesCommandHandler.OnMessagePublished += HandleMessagePublished;
-        chatCommandHandlers.Add(companiesCommandHandler);
-
-        return chatCommandHandlers;
-    }
 
     private void PopulatePlayers()
     {
@@ -78,28 +52,54 @@ public class GameSession
         }
     }
 
+    private List<IHandleChatCommand> GetChatCommandHandlers()
+    {
+        var chatCommandHandlers =
+            new List<IHandleChatCommand>();
+
+        var incorporateCommandHandler = new IncorporateCommandHandler(_players);
+        incorporateCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        chatCommandHandlers.Add(incorporateCommandHandler);
+
+        var renameCommandHandler = new RenameCommandHandler(_players);
+        renameCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        chatCommandHandlers.Add(renameCommandHandler);
+
+        var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
+        statusCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        chatCommandHandlers.Add(statusCommandHandler);
+
+        var companiesCommandHandler = new CompaniesCommandHandler(_players);
+        companiesCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        chatCommandHandlers.Add(companiesCommandHandler);
+
+        return chatCommandHandlers;
+    }
+
     #endregion
 
     #region Private event handler functions
 
     private void HandleConnected(object? sender, EventArgs e)
     {
-        DisplayMessage("Started MegaCorpClash game", true);
+        WriteMessageToTwitchChat("Started MegaCorpClash game");
     }
 
     private void HandleDisconnected(object? sender, EventArgs e)
     {
-        DisplayMessage("Stopped MegaCorpClash game", true);
+        WriteMessageToTwitchChat("Stopped MegaCorpClash game");
     }
 
     private void HandleLogMessagePublished(object? sender, string e)
     {
-        WriteToLog(e);
+        WriteMessageToLog(e);
     }
 
-    private void HandleMessagePublished(object? sender, MessageEventArgs e)
+    private void HandleChatMessagePublished(object? sender, PublishMessageToTwitchChatEventArgs e)
     {
-        DisplayMessage(e.Message, true);
+        WriteMessageToTwitchChat($"{e.ChatterDisplayName} {e.Message}");
     }
 
     private void HandlePlayerDataUpdated(object? sender, EventArgs e)
@@ -129,24 +129,21 @@ public class GameSession
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        DisplayMessage(_timedMessages?.RandomElement() ?? "", true);
+        WriteMessageToTwitchChat(_timedMessages?.RandomElement() ?? "");
     }
 
     #endregion
 
     #region Private output/display functions
 
-    private void DisplayMessage(string message, bool writeInTwitchChat)
+    private void WriteMessageToTwitchChat(string message)
     {
-        if (writeInTwitchChat)
-        {
-            _twitchConnector?.SendChatMessage(message);
-        }
+        _twitchConnector?.SendChatMessage(message);
 
-        WriteToLog(message);
+        WriteMessageToLog(message);
     }
 
-    private void WriteToLog(string message)
+    private void WriteMessageToLog(string message)
     {
         Console.WriteLine(message);
         _logWriter.WriteMessage(message);

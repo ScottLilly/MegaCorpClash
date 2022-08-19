@@ -19,6 +19,6 @@ public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        PublishMessage(chatCommand, $"Companies: {PlayerList}");
+        PublishMessage(DisplayName(chatCommand), $"Companies: {PlayerList}");
     }
 }

@@ -14,10 +14,13 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        if (!chatCommand.ArgumentsAsList.Any())
+        string chatterDisplayName = DisplayName(chatCommand);
+        string? companyName = chatCommand.ArgumentsAsString;
+
+        if (string.IsNullOrWhiteSpace(companyName))
         {
-            PublishMessage(chatCommand, 
-                $"{DisplayName(chatCommand)} - !incorporate must be followed by a name for your company");
+            PublishMessage(chatterDisplayName, 
+                "!incorporate must be followed by a name for your company");
 
             return;
         }
@@ -26,33 +29,35 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
         if (player != null)
         {
-            PublishMessage(chatCommand,
-                $"{DisplayName(chatCommand)}, you already have a company name {player.CompanyName}");
+            PublishMessage(chatterDisplayName,
+                $"You already have a company named {player.CompanyName}");
 
             return;
         }
 
-        if (_players.Values.Any(p => p.CompanyName.Matches(Arguments(chatCommand))))
+        if (_players.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
-            PublishMessage(chatCommand,
-                $"{DisplayName(chatCommand)}, there is already a company named {Arguments(chatCommand)}");
+            PublishMessage(chatterDisplayName,
+                $"There is already a company named {companyName}");
 
             return;
         }
+
+        string twitchUserId = TwitchUserId(chatCommand);
 
         player = new Player
         {
-            Id = TwitchUserId(chatCommand),
-            DisplayName = DisplayName(chatCommand),
-            CompanyName = Arguments(chatCommand),
+            Id = twitchUserId,
+            DisplayName = chatterDisplayName,
+            CompanyName = companyName,
             CreatedOn = DateTime.UtcNow
         };
 
-        _players[TwitchUserId(chatCommand)] = player;
+        _players[twitchUserId] = player;
 
         NotifyPlayerDataUpdated();
 
-        PublishMessage(chatCommand,
-            $"{DisplayName(chatCommand)}, you are now the proud CEO of {player.CompanyName}");
+        PublishMessage(chatterDisplayName,
+            $"You are now the proud CEO of {companyName}");
     }
 }

@@ -54,14 +54,13 @@ public class TwitchConnector
     {
         try
         {
-            _client.Initialize(_credentials, _channelName);
-
             if (_hasConnected)
             {
                 _client.Reconnect();
             }
             else
             {
+                _client.Initialize(_credentials, _channelName);
                 _client.Connect();
                 _hasConnected = true;
             }
@@ -116,12 +115,19 @@ public class TwitchConnector
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        OnLogMessagePublished
-            .Invoke(this, 
-                $"{e.Command.ChatMessage.DisplayName} - {e.Command.ChatMessage.Message}");
+        IHandleChatCommand? chatCommandHandler = 
+            _chatCommandHandlers
+                .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText));
 
-        _chatCommandHandlers
-            .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText))
-            ?.Execute(e.Command);
+        if (chatCommandHandler == null)
+        {
+            return;
+        }
+
+        OnLogMessagePublished
+            .Invoke(this,
+                $"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
+
+        chatCommandHandler?.Execute(e.Command);
     }
 }
