@@ -35,20 +35,12 @@ public class TwitchConnector
 
         _channelName = gameSettings.ChannelName;
         _chatCommandHandlers = chatCommandHandlers;
-
-        var botAccountName = 
-            string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
-                ? gameSettings.ChannelName
-                : gameSettings.BotAccountName;
-
-        _credentials =
-            new ConnectionCredentials(
-                botAccountName, 
-                gameSettings.TwitchToken,
-                disableUsernameCheck: true);
+        _credentials = CreateCredentials(gameSettings);
 
         SubscribeToEvents();
     }
+
+    #region Public functions
 
     public void Connect()
     {
@@ -67,7 +59,8 @@ public class TwitchConnector
         }
         catch (Exception e)
         {
-            OnLogMessagePublished(this, $"Exception during Connect(): {e.Message}");
+            WriteMessageToLog($"Exception during Connect(): {e.Message}");
+
             throw;
         }
     }
@@ -87,6 +80,20 @@ public class TwitchConnector
         }
     }
 
+    #endregion
+
+    #region Private Twitch connection functions
+
+    private static ConnectionCredentials CreateCredentials(GameSettings gameSettings)
+    {
+        return new ConnectionCredentials(
+            string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
+                ? gameSettings.ChannelName
+                : gameSettings.BotAccountName,
+            gameSettings.TwitchToken,
+            disableUsernameCheck: true);
+    }
+
     private void SubscribeToEvents()
     {
         _client.OnConnected += HandleConnected;
@@ -100,6 +107,10 @@ public class TwitchConnector
         _client.OnDisconnected -= HandleDisconnected;
         _client.OnChatCommandReceived -= HandleChatCommandReceived;
     }
+
+    #endregion
+
+    #region Private event handler functions
 
     private void HandleConnected(object? sender, OnConnectedArgs e)
     {
@@ -124,10 +135,19 @@ public class TwitchConnector
             return;
         }
 
-        OnLogMessagePublished
-            .Invoke(this,
-                $"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
+        WriteMessageToLog($"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
 
         chatCommandHandler?.Execute(e.Command);
     }
+
+    #endregion
+
+    #region Private helper functions
+
+    private void WriteMessageToLog(string message)
+    {
+        OnLogMessagePublished.Invoke(this, message);
+    }
+
+    #endregion
 }

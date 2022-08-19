@@ -58,21 +58,21 @@ public class GameSession
             new List<IHandleChatCommand>();
 
         var incorporateCommandHandler = new IncorporateCommandHandler(_players);
-        incorporateCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        incorporateCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(incorporateCommandHandler);
 
         var renameCommandHandler = new RenameCommandHandler(_players);
-        renameCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        renameCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(renameCommandHandler);
 
         var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
-        statusCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        statusCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(statusCommandHandler);
 
         var companiesCommandHandler = new CompaniesCommandHandler(_players);
-        companiesCommandHandler.OnMessagePublished += HandleChatMessagePublished;
+        companiesCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(companiesCommandHandler);
 
         return chatCommandHandlers;
@@ -97,7 +97,7 @@ public class GameSession
         WriteMessageToLog(e);
     }
 
-    private void HandleChatMessagePublished(object? sender, TwitchChatMessageEventArgs e)
+    private void HandleChatMessagePublished(object? sender, ChatMessageEventArgs e)
     {
         WriteMessageToTwitchChat($"{e.ChatterDisplayName} {e.Message}");
     }
