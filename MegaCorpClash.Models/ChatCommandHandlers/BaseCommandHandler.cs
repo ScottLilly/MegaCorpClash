@@ -7,14 +7,14 @@ public abstract class BaseCommandHandler
 {
     protected readonly Dictionary<string, Player> _players;
 
-    protected string TwitchUserId(ChatCommand chatCommand) => 
+    protected static string TwitchUserId(ChatCommand chatCommand) => 
         chatCommand.ChatMessage.UserId;
-    protected string DisplayName(ChatCommand chatCommand) => 
+    protected static string DisplayName(ChatCommand chatCommand) => 
         chatCommand.ChatMessage.DisplayName;
-    protected string Arguments(ChatCommand chatCommand) => 
+    protected static string Arguments(ChatCommand chatCommand) => 
         chatCommand.ArgumentsAsString;
 
-    public event EventHandler<MessageEventArgs> OnMessageToDisplay;
+    public event EventHandler<MessageEventArgs> OnMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
     protected BaseCommandHandler(Dictionary<string, Player> players)
@@ -29,12 +29,9 @@ public abstract class BaseCommandHandler
         return player;
     }
 
-    protected void InvokeMessageToDisplay(ChatCommand chatCommand, 
-        string message, bool displayInTwitchChat = true)
+    protected void PublishMessage(ChatCommand chatCommand, string message)
     {
-        OnMessageToDisplay
-            .Invoke(this, 
-                new MessageEventArgs(chatCommand, message, displayInTwitchChat));
+        OnMessagePublished.Invoke(this, new MessageEventArgs(chatCommand, message));
     }
 
     protected void NotifyPlayerDataUpdated()

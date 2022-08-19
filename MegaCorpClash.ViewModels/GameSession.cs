@@ -7,77 +7,65 @@ using MegaCorpClash.Services;
 
 namespace MegaCorpClash.ViewModels;
 
-public class GameSession : IDisposable
+public class GameSession
 {
+    private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
-    private TwitchConnector? _twitchConnector;
+    private readonly Dictionary<string, Player> _players = new();
+    private readonly TwitchConnector? _twitchConnector;
+
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
-    private readonly LogWriter _logWriter = new();
-
-    private readonly Dictionary<string, Player> _players = new();
 
     public GameSession(GameSettings gameSettings)
     {
         _gameSettings = gameSettings;
 
         PopulatePlayers();
+        InitializeTimedMessages(gameSettings.TimedMessages);
 
         var chatCommandHandlers = GetChatCommandHandlers();
 
         _twitchConnector = new TwitchConnector(gameSettings, chatCommandHandlers);
-        _twitchConnector.OnMessageToLog += OnTwitchMessageToLog;
+        _twitchConnector.OnConnected += HandleConnected;
+        _twitchConnector.OnDisconnected += HandleDisconnected;
+        _twitchConnector.OnLogMessagePublished += HandleLogMessagePublished;
         _twitchConnector.Connect();
-
-        Thread.Sleep(5000);
-
-        InitializeTimedMessages(gameSettings.TimedMessages);
-
-        LogMessage("Starting MegaCorpClash game", true);
     }
+
+    public void End()
+    {
+        DisplayMessage("Stopping MegaCorpClash game. Thanks for playing!", true);
+
+        _twitchConnector?.Disconnect();
+    }
+
+    #region Private startup functions
 
     private List<IHandleChatCommand> GetChatCommandHandlers()
     {
-        var chatCommandHandlers = 
+        var chatCommandHandlers =
             new List<IHandleChatCommand>();
 
         var incorporateCommandHandler = new IncorporateCommandHandler(_players);
-        incorporateCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
-        incorporateCommandHandler.OnPlayerDataUpdated += OnPlayerDataUpdated;
+        incorporateCommandHandler.OnMessagePublished += HandleMessagePublished;
+        incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(incorporateCommandHandler);
 
         var renameCommandHandler = new RenameCommandHandler(_players);
-        renameCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
-        renameCommandHandler.OnPlayerDataUpdated += OnPlayerDataUpdated;
+        renameCommandHandler.OnMessagePublished += HandleMessagePublished;
+        renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(renameCommandHandler);
 
         var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
-        statusCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
+        statusCommandHandler.OnMessagePublished += HandleMessagePublished;
         chatCommandHandlers.Add(statusCommandHandler);
 
         var companiesCommandHandler = new CompaniesCommandHandler(_players);
-        companiesCommandHandler.OnMessageToDisplay += OnMessageToDisplay;
+        companiesCommandHandler.OnMessagePublished += HandleMessagePublished;
         chatCommandHandlers.Add(companiesCommandHandler);
 
         return chatCommandHandlers;
-    }
-
-    private void OnPlayerDataUpdated(object? sender, EventArgs e)
-    {
-        PersistenceService.SavePlayerData(_players.Values);
-    }
-
-    private void OnMessageToDisplay(object? sender, MessageEventArgs e)
-    {
-        LogMessage(e.Message, e.ShowInTwitchChat);
-    }
-
-    public void Dispose()
-    {
-        LogMessage("Stopping MegaCorpClash game. Thanks for playing!", true);
-
-        _twitchConnector?.Dispose();
-        _twitchConnector = null;
     }
 
     private void PopulatePlayers()
@@ -89,6 +77,39 @@ public class GameSession : IDisposable
             _players.Add(player.Id, player);
         }
     }
+
+    #endregion
+
+    #region Private event handler functions
+
+    private void HandleConnected(object? sender, EventArgs e)
+    {
+        DisplayMessage("Started MegaCorpClash game", true);
+    }
+
+    private void HandleDisconnected(object? sender, EventArgs e)
+    {
+        DisplayMessage("Stopped MegaCorpClash game", true);
+    }
+
+    private void HandleLogMessagePublished(object? sender, string e)
+    {
+        WriteToLog(e);
+    }
+
+    private void HandleMessagePublished(object? sender, MessageEventArgs e)
+    {
+        DisplayMessage(e.Message, true);
+    }
+
+    private void HandlePlayerDataUpdated(object? sender, EventArgs e)
+    {
+        PersistenceService.SavePlayerData(_players.Values);
+    }
+
+    #endregion
+
+    #region Private timer function methods
 
     private void InitializeTimedMessages(
         GameSettings.TimedMessageSettings timedMessageSettings)
@@ -108,20 +129,14 @@ public class GameSession : IDisposable
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        SendMessageInTwitchChat(_timedMessages?.RandomElement() ?? "");
+        DisplayMessage(_timedMessages?.RandomElement() ?? "", true);
     }
 
-    private void OnTwitchMessageToLog(object? sender, string e)
-    {
-        WriteToLog(e);
-    }
+    #endregion
 
-    private void SendMessageInTwitchChat(string message)
-    {
-        LogMessage(message, true);
-    }
+    #region Private output/display functions
 
-    private void LogMessage(string message, bool writeInTwitchChat)
+    private void DisplayMessage(string message, bool writeInTwitchChat)
     {
         if (writeInTwitchChat)
         {
@@ -136,4 +151,6 @@ public class GameSession : IDisposable
         Console.WriteLine(message);
         _logWriter.WriteMessage(message);
     }
+
+    #endregion
 }

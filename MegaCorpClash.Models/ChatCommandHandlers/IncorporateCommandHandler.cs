@@ -5,7 +5,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandText => "incorporate";
+    public string CommandName => "incorporate";
 
     public IncorporateCommandHandler(Dictionary<string, Player> players)
         : base(players)
@@ -16,7 +16,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
     {
         if (!chatCommand.ArgumentsAsList.Any())
         {
-            InvokeMessageToDisplay(chatCommand, 
+            PublishMessage(chatCommand, 
                 $"{DisplayName(chatCommand)} - !incorporate must be followed by a name for your company");
 
             return;
@@ -26,7 +26,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
         if (player != null)
         {
-            InvokeMessageToDisplay(chatCommand,
+            PublishMessage(chatCommand,
                 $"{DisplayName(chatCommand)}, you already have a company name {player.CompanyName}");
 
             return;
@@ -34,7 +34,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
         if (_players.Values.Any(p => p.CompanyName.Matches(Arguments(chatCommand))))
         {
-            InvokeMessageToDisplay(chatCommand,
+            PublishMessage(chatCommand,
                 $"{DisplayName(chatCommand)}, there is already a company named {Arguments(chatCommand)}");
 
             return;
@@ -52,7 +52,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
         NotifyPlayerDataUpdated();
 
-        InvokeMessageToDisplay(chatCommand,
+        PublishMessage(chatCommand,
             $"{DisplayName(chatCommand)}, you are now the proud CEO of {player.CompanyName}");
     }
 }

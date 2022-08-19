@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public interface IHandleChatCommand
 {
-    string CommandText { get; }
-    event EventHandler<MessageEventArgs> OnMessageToDisplay;
+    string CommandName { get; }
+    event EventHandler<MessageEventArgs> OnMessagePublished;
     event EventHandler OnPlayerDataUpdated; 
     void Execute(ChatCommand chatCommand);
 }
