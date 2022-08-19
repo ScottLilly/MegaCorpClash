@@ -3,8 +3,6 @@ using MegaCorpClash.Services;
 using MegaCorpClash.ViewModels;
 using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Starting MegaCorpClash");
-
 GameSettings gameSettings = GetGameSettings();
 GameSession gameSession = new GameSession(gameSettings);
 
@@ -35,7 +33,7 @@ do
                 Console.Clear();
                 break;
             case "!exit":
-                gameSession.Dispose();
+                gameSession.End();
                 break;
             default:
                 Console.WriteLine($"Unrecognized command: '{command}'");

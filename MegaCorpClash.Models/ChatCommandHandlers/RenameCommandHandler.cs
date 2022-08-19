@@ -5,7 +5,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandText => "rename";
+    public string CommandName => "rename";
 
     public RenameCommandHandler(Dictionary<string, Player> players) 
         : base(players)
@@ -14,26 +14,37 @@ public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
+        string chatterDisplayName = DisplayName(chatCommand);
         Player? player = GetPlayerObjectForChatter(chatCommand);
 
         if (player == null)
         {
-            InvokeMessageToDisplay(chatCommand, 
-                $"{DisplayName(chatCommand)}, you don't have a company. Type !incorporate <company name> to start one.");
+            PublishMessage(chatterDisplayName, 
+                "You don't have a company. Type !incorporate <company name> to start one.");
+
+            return;
         }
-        else
+
+        string newCompanyName = Arguments(chatCommand);
+
+        if (string.IsNullOrWhiteSpace(newCompanyName))
         {
-            if (_players.Values.Any(p => p.CompanyName.Matches(Arguments(chatCommand))))
-            {
-                InvokeMessageToDisplay(chatCommand, 
-                    $"{DisplayName(chatCommand)}, there is already a company named {Arguments(chatCommand)}");
+            PublishMessage(chatterDisplayName,
+                "You must provide a new name for your company");
 
-                return;
-            }
-
-            player.CompanyName = Arguments(chatCommand);
-
-            NotifyPlayerDataUpdated();
+            return;
         }
+
+        if (_players.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
+        {
+            PublishMessage(chatterDisplayName, 
+                $"There is already a company named {newCompanyName}");
+
+            return;
+        }
+
+        player.CompanyName = newCompanyName;
+
+        NotifyPlayerDataUpdated();
     }
 }

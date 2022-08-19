@@ -5,7 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
     private readonly string _pointsName;
-    public string CommandText => "status";
+
+    public string CommandName => "status";
 
     public StatusCommandHandler(Dictionary<string, Player> players, string pointsName)
         : base(players)
@@ -15,11 +16,12 @@ public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
+        string chatterDisplayName = DisplayName(chatCommand);
         Player? player = GetPlayerObjectForChatter(chatCommand);
 
-        InvokeMessageToDisplay(chatCommand,
+        PublishMessage(chatterDisplayName,
             player == null
-                ? $"{DisplayName(chatCommand)}, you do not have a company"
-                : $"{DisplayName(chatCommand)}: Your company {player.CompanyName} has {player.Points} {_pointsName}");
+                ? "You do not have a company"
+                : $"Your company {player.CompanyName} has {player.Points} {_pointsName}");
     }
 }

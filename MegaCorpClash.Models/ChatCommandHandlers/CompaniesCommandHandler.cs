@@ -4,7 +4,13 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandText => "companies";
+    private string PlayerList =>
+        string.Join(", ", 
+            _players.Values
+                .OrderBy(c => c.CompanyName)
+                .Select(c => $"{c.CompanyName} ({c.DisplayName})"));
+
+    public string CommandName => "companies";
 
     public CompaniesCommandHandler(Dictionary<string, Player> players)
         : base(players)
@@ -13,7 +19,6 @@ public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        InvokeMessageToDisplay(chatCommand, 
-            $"Companies: {string.Join(", ", _players.Values.OrderBy(c => c.CompanyName).Select(c => $"{c.CompanyName} ({c.DisplayName})"))}");
+        PublishMessage(DisplayName(chatCommand), $"Companies: {PlayerList}");
     }
 }

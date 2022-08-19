@@ -7,15 +7,18 @@ using TwitchLib.Communication.Events;
 
 namespace MegaCorpClash.Models;
 
-public class TwitchConnector : IDisposable
+public class TwitchConnector
 {
+    private bool _hasConnected;
+
     private readonly string _channelName;
+    private readonly List<IHandleChatCommand> _chatCommandHandlers;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
-    public event EventHandler<string> OnMessageToLog;
-
-    private readonly List<IHandleChatCommand> _chatCommandHandlers;
+    public event EventHandler OnConnected;
+    public event EventHandler OnDisconnected; 
+    public event EventHandler<string> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings, 
         List<IHandleChatCommand> chatCommandHandlers)
@@ -30,8 +33,8 @@ public class TwitchConnector : IDisposable
             throw new ArgumentException("ChannelName cannot be empty");
         }
 
-        _chatCommandHandlers = chatCommandHandlers;
         _channelName = gameSettings.ChannelName;
+        _chatCommandHandlers = chatCommandHandlers;
 
         var botAccountName = 
             string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
@@ -49,20 +52,31 @@ public class TwitchConnector : IDisposable
 
     public void Connect()
     {
-        WriteToLog("Start connecting to Twitch");
-
-        _client.Initialize(_credentials, _channelName);
         try
         {
-            _client.Connect();
+            if (_hasConnected)
+            {
+                _client.Reconnect();
+            }
+            else
+            {
+                _client.Initialize(_credentials, _channelName);
+                _client.Connect();
+                _hasConnected = true;
+            }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            OnLogMessagePublished(this, $"Exception during Connect(): {e.Message}");
             throw;
         }
+    }
 
-        WriteToLog("Connected to Twitch");
+    public void Disconnect()
+    {
+        UnsubscribeFromEvents();
+
+        _client?.Disconnect();
     }
 
     public void SendChatMessage(string? message)
@@ -73,47 +87,47 @@ public class TwitchConnector : IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        UnsubscribeFromEvents();
-
-        _client?.Disconnect();
-    }
-
     private void SubscribeToEvents()
     {
-        _client.OnChatCommandReceived += HandleChatCommandReceived;
+        _client.OnConnected += HandleConnected;
         _client.OnDisconnected += HandleDisconnected;
+        _client.OnChatCommandReceived += HandleChatCommandReceived;
     }
 
     private void UnsubscribeFromEvents()
     {
-        _client.OnChatCommandReceived -= HandleChatCommandReceived;
+        _client.OnConnected -= HandleConnected;
         _client.OnDisconnected -= HandleDisconnected;
+        _client.OnChatCommandReceived -= HandleChatCommandReceived;
     }
 
-    private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
+    private void HandleConnected(object? sender, OnConnectedArgs e)
     {
-        OnMessageToLog
-            .Invoke(this, 
-                $"{e.Command.ChatMessage.DisplayName} - {e.Command.ChatMessage.Message}");
-
-        _chatCommandHandlers
-            .FirstOrDefault(cch => cch.CommandText.Matches(e.Command.CommandText))
-            ?.Execute(e.Command);
+        OnConnected?.Invoke(this, EventArgs.Empty);
     }
 
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)
     {
-        // If disconnected, automatically attempt to reconnect
-        WriteToLog("Disconnected - Reconnecting");
+        OnDisconnected?.Invoke(this, EventArgs.Empty);
 
         Connect();
     }
 
-    private void WriteToLog(string? message)
+    private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        OnMessageToLog.Invoke(this,
-            $"{DateTime.Now.ToShortTimeString()}: {message}");
+        IHandleChatCommand? chatCommandHandler = 
+            _chatCommandHandlers
+                .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText));
+
+        if (chatCommandHandler == null)
+        {
+            return;
+        }
+
+        OnLogMessagePublished
+            .Invoke(this,
+                $"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
+
+        chatCommandHandler?.Execute(e.Command);
     }
 }
