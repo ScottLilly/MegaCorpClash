@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -14,7 +15,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = DisplayName(chatCommand);
+        string chatterDisplayName = chatCommand.ChatterDisplayName();
         string? companyName = chatCommand.ArgumentsAsString;
 
         if (string.IsNullOrWhiteSpace(companyName))
@@ -43,7 +44,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
             return;
         }
 
-        string twitchUserId = TwitchUserId(chatCommand);
+        string twitchUserId = chatCommand.ChatterUserId();
 
         player = new Player
         {

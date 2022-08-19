@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -14,7 +15,7 @@ public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = DisplayName(chatCommand);
+        string chatterDisplayName = chatCommand.ChatterDisplayName();
         Player? player = GetPlayerObjectForChatter(chatCommand);
 
         if (player == null)
@@ -25,7 +26,7 @@ public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
             return;
         }
 
-        string newCompanyName = Arguments(chatCommand);
+        string newCompanyName = chatCommand.ArgumentsAsString;
 
         if (string.IsNullOrWhiteSpace(newCompanyName))
         {

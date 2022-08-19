@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -6,13 +7,6 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public abstract class BaseCommandHandler
 {
     protected readonly Dictionary<string, Player> _players;
-
-    protected static string TwitchUserId(ChatCommand chatCommand) => 
-        chatCommand.ChatMessage.UserId;
-    protected static string DisplayName(ChatCommand chatCommand) => 
-        chatCommand.ChatMessage.DisplayName;
-    protected static string Arguments(ChatCommand chatCommand) => 
-        chatCommand.ArgumentsAsString;
 
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
@@ -24,7 +18,7 @@ public abstract class BaseCommandHandler
 
     protected Player? GetPlayerObjectForChatter(ChatCommand chatCommand)
     {
-        _players.TryGetValue(TwitchUserId(chatCommand), out Player? player);
+        _players.TryGetValue(chatCommand.ChatterUserId(), out Player? player);
 
         return player;
     }
