@@ -1,11 +1,11 @@
 ﻿namespace MegaCorpClash.Models.CustomEventArgs;
 
-public class PublishMessageToTwitchChatEventArgs
+public class TwitchChatMessageEventArgs
 {
     public string ChatterDisplayName { get; }
     public string Message { get; }
 
-    public PublishMessageToTwitchChatEventArgs(string chatterDisplayName, string message)
+    public TwitchChatMessageEventArgs(string chatterDisplayName, string message)
     {
         ChatterDisplayName = chatterDisplayName;
         Message = message;

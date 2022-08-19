@@ -14,7 +14,7 @@ public abstract class BaseCommandHandler
     protected static string Arguments(ChatCommand chatCommand) => 
         chatCommand.ArgumentsAsString;
 
-    public event EventHandler<PublishMessageToTwitchChatEventArgs> OnMessagePublished;
+    public event EventHandler<TwitchChatMessageEventArgs> OnMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
     protected BaseCommandHandler(Dictionary<string, Player> players)
@@ -32,7 +32,7 @@ public abstract class BaseCommandHandler
     protected void PublishMessage(string chatterDisplayName, string message)
     {
         OnMessagePublished.Invoke(this, 
-            new PublishMessageToTwitchChatEventArgs(chatterDisplayName, message));
+            new TwitchChatMessageEventArgs(chatterDisplayName, message));
     }
 
     protected void NotifyPlayerDataUpdated()
