@@ -1,4 +1,5 @@
-﻿using TwitchLib.Client.Models;
+﻿using MegaCorpClash.Models.ExtensionMethods;
+using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -19,6 +20,6 @@ public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        PublishMessage(DisplayName(chatCommand), $"Companies: {PlayerList}");
+        PublishMessage(chatCommand.ChatterDisplayName(), $"Companies: {PlayerList}");
     }
 }

@@ -1,4 +1,5 @@
-﻿using TwitchLib.Client.Models;
+﻿using MegaCorpClash.Models.ExtensionMethods;
+using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -16,7 +17,7 @@ public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
 
     public void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = DisplayName(chatCommand);
+        string chatterDisplayName = chatCommand.ChatterDisplayName();
         Player? player = GetPlayerObjectForChatter(chatCommand);
 
         PublishMessage(chatterDisplayName,
