@@ -46,5 +46,8 @@ public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
         player.CompanyName = newCompanyName;
 
         NotifyPlayerDataUpdated();
+
+        PublishMessage(chatterDisplayName,
+            $"Your company is now named {player.CompanyName}");
     }
 }

@@ -97,7 +97,7 @@ public class GameSession
         WriteMessageToLog(e);
     }
 
-    private void HandleChatMessagePublished(object? sender, PublishMessageToTwitchChatEventArgs e)
+    private void HandleChatMessagePublished(object? sender, TwitchChatMessageEventArgs e)
     {
         WriteMessageToTwitchChat($"{e.ChatterDisplayName} {e.Message}");
     }
