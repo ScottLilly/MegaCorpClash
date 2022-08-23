@@ -9,6 +9,8 @@ namespace MegaCorpClash.ViewModels;
 
 public class GameSession
 {
+    private const int POINTS_TIMER_INTERVAL_IN_MINUTES = 1;
+
     private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Player> _players = new();
@@ -17,13 +19,13 @@ public class GameSession
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
+    private System.Timers.Timer _pointsTimer;
 
     public GameSession(GameSettings gameSettings)
     {
         _gameSettings = gameSettings;
 
         PopulatePlayers();
-        InitializeTimedMessages(gameSettings.TimedMessages);
 
         var chatCommandHandlers = GetChatCommandHandlers();
 
@@ -33,6 +35,9 @@ public class GameSession
         _twitchConnector.OnPersonChatted += HandlePersonChatted;
         _twitchConnector.OnLogMessagePublished += HandleLogMessagePublished;
         _twitchConnector.Connect();
+
+        InitializePointsTimer();
+        InitializeTimedMessages(gameSettings.TimedMessages);
     }
 
     public List<string> ShowPlayers()
@@ -137,7 +142,7 @@ public class GameSession
 
     private void HandlePlayerDataUpdated(object? sender, EventArgs e)
     {
-        PersistenceService.SavePlayerData(_players.Values);
+        UpdatePlayerInformation();
     }
 
     #endregion
@@ -160,9 +165,44 @@ public class GameSession
         _timedMessagesTimer.Enabled = true;
     }
 
+    private void InitializePointsTimer()
+    {
+        _pointsTimer =
+            new System.Timers.Timer(POINTS_TIMER_INTERVAL_IN_MINUTES * 60 * 1000);
+        _pointsTimer.Elapsed += PointsTimer_Elapsed;
+        _pointsTimer.Enabled = true;
+    }
+
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         WriteMessageToTwitchChat(_timedMessages?.RandomElement() ?? "");
+    }
+
+    private void PointsTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        WriteMessageToLog($"Points timer ticked: {DateTime.Now}");
+
+        foreach (var player in _players.Values)
+        {
+            if (_lastChatTime.TryGetValue(player.Id, out DateTime timeChatted))
+            {
+                if (DateTime.Now.Subtract(timeChatted).TotalSeconds < 
+                    POINTS_TIMER_INTERVAL_IN_MINUTES * 60)
+                {
+                    player.Points += 10;
+                }
+                else
+                {
+                    player.Points++;
+                }
+            }
+            else
+            {
+                player.Points++;
+            }
+        }
+
+        UpdatePlayerInformation();
     }
 
     #endregion
@@ -180,6 +220,15 @@ public class GameSession
     {
         Console.WriteLine(message);
         _logWriter.WriteMessage(message);
+    }
+
+    #endregion
+
+    #region Private support functions
+
+    private void UpdatePlayerInformation()
+    {
+        PersistenceService.SavePlayerData(_players.Values);
     }
 
     #endregion
