@@ -12,6 +12,7 @@ public class GameSession
     private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Player> _players = new();
+    private readonly Dictionary<string, DateTime> _lastChatTime = new();
     private readonly TwitchConnector? _twitchConnector;
 
     private List<string> _timedMessages = new();
@@ -29,8 +30,25 @@ public class GameSession
         _twitchConnector = new TwitchConnector(gameSettings, chatCommandHandlers);
         _twitchConnector.OnConnected += HandleConnected;
         _twitchConnector.OnDisconnected += HandleDisconnected;
+        _twitchConnector.OnPersonChatted += HandlePersonChatted;
         _twitchConnector.OnLogMessagePublished += HandleLogMessagePublished;
         _twitchConnector.Connect();
+    }
+
+    public List<string> ShowPlayers()
+    {
+        return _players
+            .OrderBy(p => p.Value.DisplayName)
+            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points}")
+            .ToList();
+    }
+
+    public List<string> ShowLastChatTimes()
+    {
+        return _lastChatTime
+            .OrderBy(lct => lct.Value)
+            .Select(kvp => $"{kvp.Value} - {_players[kvp.Key].DisplayName}")
+            .ToList();
     }
 
     public void End()
@@ -95,6 +113,16 @@ public class GameSession
     private void HandleDisconnected(object? sender, EventArgs e)
     {
         WriteMessageToTwitchChat("Stopped MegaCorpClash game");
+    }
+
+    private void HandlePersonChatted(object? sender, ChattedEventArgs e)
+    {
+        if (!_players.ContainsKey(e.UserId))
+        {
+            return;
+        }
+
+        _lastChatTime[e.UserId] = DateTime.Now;
     }
 
     private void HandleLogMessagePublished(object? sender, string e)

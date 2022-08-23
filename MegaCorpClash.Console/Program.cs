@@ -32,6 +32,18 @@ do
             case "!clear":
                 Console.Clear();
                 break;
+            case "!chats":
+                foreach (string chatTime in gameSession.ShowLastChatTimes())
+                {
+                    Console.WriteLine(chatTime);
+                }
+                break;
+            case "!players":
+                foreach (string player in gameSession.ShowPlayers())
+                {
+                    Console.WriteLine(player);
+                }
+                break;
             case "!exit":
                 gameSession.End();
                 break;
