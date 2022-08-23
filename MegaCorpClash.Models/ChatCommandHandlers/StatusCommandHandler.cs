@@ -23,6 +23,6 @@ public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
         PublishMessage(chatterDisplayName,
             player == null
                 ? "You do not have a company"
-                : $"Your company {player.CompanyName} has {player.Points} {_pointsName}");
+                : $"At {player.CompanyName} we always say '{player.Motto}'. That's how we earned {player.Points} {_pointsName}");
     }
 }

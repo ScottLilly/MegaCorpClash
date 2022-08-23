@@ -75,6 +75,11 @@ public class GameSession
         companiesCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(companiesCommandHandler);
 
+        var setMottoCommandHandler = new SetMottoCommandHandler(_players);
+        setMottoCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
+        setMottoCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        chatCommandHandlers.Add(setMottoCommandHandler);
+
         return chatCommandHandlers;
     }
 
