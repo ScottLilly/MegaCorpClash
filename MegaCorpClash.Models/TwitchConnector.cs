@@ -1,5 +1,7 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -17,7 +19,8 @@ public class TwitchConnector
     private readonly TwitchClient _client = new();
 
     public event EventHandler OnConnected;
-    public event EventHandler OnDisconnected; 
+    public event EventHandler OnDisconnected;
+    public event EventHandler<ChattedEventArgs> OnPersonChatted;
     public event EventHandler<string> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings, 
@@ -98,6 +101,7 @@ public class TwitchConnector
     {
         _client.OnConnected += HandleConnected;
         _client.OnDisconnected += HandleDisconnected;
+        _client.OnMessageReceived += HandleChatMessageReceived;
         _client.OnChatCommandReceived += HandleChatCommandReceived;
     }
 
@@ -105,6 +109,7 @@ public class TwitchConnector
     {
         _client.OnConnected -= HandleConnected;
         _client.OnDisconnected -= HandleDisconnected;
+        _client.OnMessageReceived -= HandleChatMessageReceived;
         _client.OnChatCommandReceived -= HandleChatCommandReceived;
     }
 
@@ -124,8 +129,17 @@ public class TwitchConnector
         Connect();
     }
 
+    private void HandleChatMessageReceived(object? sender, OnMessageReceivedArgs e)
+    {
+        OnPersonChatted?.Invoke(this, 
+            new ChattedEventArgs(e.ChatMessage.UserId));
+    }
+
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
+        OnPersonChatted?.Invoke(this, 
+            new ChattedEventArgs(e.Command.ChatterUserId()));
+
         IHandleChatCommand? chatCommandHandler = 
             _chatCommandHandlers
                 .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText));
