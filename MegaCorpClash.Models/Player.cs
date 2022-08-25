@@ -8,4 +8,5 @@ public class Player
     public string CompanyName { get; set; }
     public string Motto { get; set; } = "We don't need a motto";
     public int Points { get; set; }
+    public List<Employee> Employees { get; set; } = new();
 }

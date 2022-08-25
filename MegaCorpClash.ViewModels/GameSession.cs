@@ -44,7 +44,7 @@ public class GameSession
     {
         return _players
             .OrderBy(p => p.Value.DisplayName)
-            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points}")
+            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
             .ToList();
     }
 
