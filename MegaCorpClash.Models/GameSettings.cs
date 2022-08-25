@@ -6,6 +6,7 @@ public class GameSettings
     public string BotAccountName { get; set; }
     public string TwitchToken { get; set; }
     public string PointsName { get; set; }
+    public int MinutesPerTurn { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
 
     public class TimedMessageSettings
