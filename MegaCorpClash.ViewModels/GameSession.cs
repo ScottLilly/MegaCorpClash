@@ -9,13 +9,11 @@ namespace MegaCorpClash.ViewModels;
 
 public class GameSession
 {
-    private const int POINTS_TIMER_INTERVAL_IN_MINUTES = 1;
-
     private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Player> _players = new();
-    private readonly Dictionary<string, DateTime> _lastChatTime = new();
     private readonly TwitchConnector? _twitchConnector;
+    private readonly PointsCalculator _pointsCalculator;
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -26,6 +24,8 @@ public class GameSession
         _gameSettings = gameSettings;
 
         PopulatePlayers();
+
+        _pointsCalculator = new PointsCalculator(gameSettings, _players);
 
         var chatCommandHandlers = GetChatCommandHandlers();
 
@@ -45,14 +45,6 @@ public class GameSession
         return _players
             .OrderBy(p => p.Value.DisplayName)
             .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points}")
-            .ToList();
-    }
-
-    public List<string> ShowLastChatTimes()
-    {
-        return _lastChatTime
-            .OrderBy(lct => lct.Value)
-            .Select(kvp => $"{kvp.Value} - {_players[kvp.Key].DisplayName}")
             .ToList();
     }
 
@@ -122,12 +114,7 @@ public class GameSession
 
     private void HandlePersonChatted(object? sender, ChattedEventArgs e)
     {
-        if (!_players.ContainsKey(e.UserId))
-        {
-            return;
-        }
-
-        _lastChatTime[e.UserId] = DateTime.Now;
+        _pointsCalculator.RecordChatTimeForPlayer(e.UserId);
     }
 
     private void HandleLogMessagePublished(object? sender, string e)
@@ -168,7 +155,7 @@ public class GameSession
     private void InitializePointsTimer()
     {
         _pointsTimer =
-            new System.Timers.Timer(POINTS_TIMER_INTERVAL_IN_MINUTES * 60 * 1000);
+            new System.Timers.Timer(_gameSettings.MinutesPerTurn * 60 * 1000);
         _pointsTimer.Elapsed += PointsTimer_Elapsed;
         _pointsTimer.Enabled = true;
     }
@@ -182,25 +169,7 @@ public class GameSession
     {
         WriteMessageToLog($"Points timer ticked: {DateTime.Now}");
 
-        foreach (var player in _players.Values)
-        {
-            if (_lastChatTime.TryGetValue(player.Id, out DateTime timeChatted))
-            {
-                if (DateTime.Now.Subtract(timeChatted).TotalSeconds < 
-                    POINTS_TIMER_INTERVAL_IN_MINUTES * 60)
-                {
-                    player.Points += 10;
-                }
-                else
-                {
-                    player.Points++;
-                }
-            }
-            else
-            {
-                player.Points++;
-            }
-        }
+        _pointsCalculator.ApplyPointsForTurn();
 
         UpdatePlayerInformation();
     }
