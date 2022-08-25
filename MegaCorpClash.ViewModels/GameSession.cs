@@ -155,7 +155,7 @@ public class GameSession
     private void InitializePointsTimer()
     {
         _pointsTimer =
-            new System.Timers.Timer(_gameSettings.MinutesPerTurn * 60 * 1000);
+            new System.Timers.Timer(_gameSettings.TurnDetails.MinutesPerTurn * 60 * 1000);
         _pointsTimer.Elapsed += PointsTimer_Elapsed;
         _pointsTimer.Enabled = true;
     }

@@ -31,11 +31,13 @@ public class PointsCalculator
             {
                 if (s_chattersDuringTurn.Contains(player.Id))
                 {
-                    player.Points += 10;
+                    player.Points += 
+                        _gameSettings.TurnDetails.PointsPerTurn.Chatter;
                 }
                 else
                 {
-                    player.Points++;
+                    player.Points += 
+                        _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
             }
 
