@@ -2,11 +2,11 @@
 
 public enum EmployeeType
 {
-    Manufacturer,
-    Salesperson,
+    Manufacturing,
+    Sales,
     Marketing,
     Research,
     HumanResources,
     Legal,
-    CorporateSpy
+    CorporateEspionage
 }

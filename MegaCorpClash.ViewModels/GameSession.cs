@@ -95,6 +95,10 @@ public class GameSession
         setMottoCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(setMottoCommandHandler);
 
+        var employeeListCommandHandler = new EmployeeListCommandHandler(_players);
+        employeeListCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
+        chatCommandHandlers.Add(employeeListCommandHandler);
+
         return chatCommandHandlers;
     }
 

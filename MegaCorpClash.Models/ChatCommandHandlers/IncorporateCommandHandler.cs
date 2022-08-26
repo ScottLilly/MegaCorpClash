@@ -54,8 +54,8 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
             CreatedOn = DateTime.UtcNow,
             Employees = new List<Employee>
             {
-                new() {Type = EmployeeType.Manufacturer, SkillLevel = 1},
-                new() {Type = EmployeeType.Salesperson, SkillLevel = 1},
+                new() {Type = EmployeeType.Manufacturing, SkillLevel = 1},
+                new() {Type = EmployeeType.Sales, SkillLevel = 1},
             }
         };
 
