@@ -25,7 +25,8 @@ public class EmployeeListCommandHandler : BaseCommandHandler, IHandleChatCommand
 
         string employeeList = 
             string.Join(", ", 
-                player.Employees.GroupBy(e => e.Type)
+                player.Employees
+                    .GroupBy(e => e.Type)
                     .Select(g => new
                     {
                         Job = g.Key,
