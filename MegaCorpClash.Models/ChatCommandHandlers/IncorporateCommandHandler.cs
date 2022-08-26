@@ -51,7 +51,12 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
             Id = twitchUserId,
             DisplayName = chatterDisplayName,
             CompanyName = companyName,
-            CreatedOn = DateTime.UtcNow
+            CreatedOn = DateTime.UtcNow,
+            Employees = new List<Employee>
+            {
+                new() {Type = EmployeeType.Manufacturing, SkillLevel = 1},
+                new() {Type = EmployeeType.Sales, SkillLevel = 1},
+            }
         };
 
         _players[twitchUserId] = player;
