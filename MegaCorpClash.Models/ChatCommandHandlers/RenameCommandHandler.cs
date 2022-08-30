@@ -6,10 +6,9 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class RenameCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandName => "rename";
-
-    public RenameCommandHandler(Dictionary<string, Player> players) 
-        : base(players)
+    public RenameCommandHandler(GameSettings gameSettings, 
+        Dictionary<string, Player> players)
+        : base("rename", gameSettings, players)
     {
     }
 

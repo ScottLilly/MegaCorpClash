@@ -5,10 +5,9 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class EmployeeListCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandName => "employees";
-
-    public EmployeeListCommandHandler(Dictionary<string, Player> players)
-        : base(players)
+    public EmployeeListCommandHandler(GameSettings gameSettings, 
+        Dictionary<string, Player> players)
+        : base("employees", gameSettings, players)
     {
     }
 

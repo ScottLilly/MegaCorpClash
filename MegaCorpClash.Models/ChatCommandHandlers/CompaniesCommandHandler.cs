@@ -11,10 +11,9 @@ public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
                 .OrderBy(c => c.CompanyName)
                 .Select(c => $"{c.CompanyName} ({c.DisplayName})"));
 
-    public string CommandName => "companies";
-
-    public CompaniesCommandHandler(Dictionary<string, Player> players)
-        : base(players)
+    public CompaniesCommandHandler(GameSettings gameSettings, 
+        Dictionary<string, Player> players)
+        : base("companies", gameSettings, players)
     {
     }
 
