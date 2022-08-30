@@ -72,30 +72,30 @@ public class GameSession
         var chatCommandHandlers =
             new List<IHandleChatCommand>();
 
-        var incorporateCommandHandler = new IncorporateCommandHandler(_players);
+        var incorporateCommandHandler = new IncorporateCommandHandler(_gameSettings, _players);
         incorporateCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(incorporateCommandHandler);
 
-        var renameCommandHandler = new RenameCommandHandler(_players);
+        var renameCommandHandler = new RenameCommandHandler(_gameSettings, _players);
         renameCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(renameCommandHandler);
 
-        var statusCommandHandler = new StatusCommandHandler(_players, _gameSettings.PointsName);
+        var statusCommandHandler = new StatusCommandHandler(_gameSettings, _players);
         statusCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(statusCommandHandler);
 
-        var companiesCommandHandler = new CompaniesCommandHandler(_players);
+        var companiesCommandHandler = new CompaniesCommandHandler(_gameSettings, _players);
         companiesCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(companiesCommandHandler);
 
-        var setMottoCommandHandler = new SetMottoCommandHandler(_players);
+        var setMottoCommandHandler = new SetMottoCommandHandler(_gameSettings, _players);
         setMottoCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         setMottoCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         chatCommandHandlers.Add(setMottoCommandHandler);
 
-        var employeeListCommandHandler = new EmployeeListCommandHandler(_players);
+        var employeeListCommandHandler = new EmployeeListCommandHandler(_gameSettings, _players);
         employeeListCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
         chatCommandHandlers.Add(employeeListCommandHandler);
 

@@ -6,10 +6,9 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    public string CommandName => "incorporate";
-
-    public IncorporateCommandHandler(Dictionary<string, Player> players)
-        : base(players)
+    public IncorporateCommandHandler(GameSettings gameSettings, 
+        Dictionary<string, Player> players)
+        : base("incorporate", gameSettings, players)
     {
     }
 

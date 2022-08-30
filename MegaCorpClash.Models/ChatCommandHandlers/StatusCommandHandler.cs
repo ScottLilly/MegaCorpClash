@@ -5,14 +5,10 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
 {
-    private readonly string _pointsName;
-
-    public string CommandName => "status";
-
-    public StatusCommandHandler(Dictionary<string, Player> players, string pointsName)
-        : base(players)
+    public StatusCommandHandler(GameSettings gameSettings, 
+        Dictionary<string, Player> players)
+        : base("status", gameSettings, players)
     {
-        _pointsName = pointsName;
     }
 
     public void Execute(ChatCommand chatCommand)
@@ -23,6 +19,6 @@ public class StatusCommandHandler : BaseCommandHandler, IHandleChatCommand
         PublishMessage(chatterDisplayName,
             player == null
                 ? "You do not have a company"
-                : $"At {player.CompanyName} we always say '{player.Motto}'. That's how we earned {player.Points} {_pointsName}");
+                : $"At {player.CompanyName} we always say '{player.Motto}'. That's how we earned {player.Points} {GameSettings.PointsName}");
     }
 }

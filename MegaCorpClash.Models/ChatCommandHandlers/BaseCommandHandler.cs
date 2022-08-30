@@ -8,11 +8,18 @@ public abstract class BaseCommandHandler
 {
     protected readonly Dictionary<string, Player> _players;
 
+    public string CommandName { get; }
+    protected GameSettings GameSettings { get; }
+
+
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
-    protected BaseCommandHandler(Dictionary<string, Player> players)
+    protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
+        Dictionary<string, Player> players)
     {
+        CommandName = commandName;
+        GameSettings = gameSettings;
         _players = players;
     }
 
