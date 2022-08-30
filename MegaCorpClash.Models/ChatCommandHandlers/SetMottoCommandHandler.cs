@@ -3,7 +3,7 @@ using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class SetMottoCommandHandler : BaseCommandHandler, IHandleChatCommand
+public class SetMottoCommandHandler : BaseCommandHandler
 {
     public SetMottoCommandHandler(GameSettings gameSettings,
         Dictionary<string, Player> players)
@@ -11,7 +11,7 @@ public class SetMottoCommandHandler : BaseCommandHandler, IHandleChatCommand
     {
     }
 
-    public void Execute(ChatCommand chatCommand)
+    public override void Execute(ChatCommand chatCommand)
     {
         string chatterDisplayName = chatCommand.ChatterDisplayName();
         Player? player = GetPlayerObjectForChatter(chatCommand);

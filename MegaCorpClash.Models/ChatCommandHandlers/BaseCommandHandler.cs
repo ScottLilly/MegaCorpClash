@@ -11,7 +11,6 @@ public abstract class BaseCommandHandler
     public string CommandName { get; }
     protected GameSettings GameSettings { get; }
 
-
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
@@ -22,6 +21,8 @@ public abstract class BaseCommandHandler
         GameSettings = gameSettings;
         _players = players;
     }
+
+    public abstract void Execute(ChatCommand chatCommand);
 
     protected Player? GetPlayerObjectForChatter(ChatCommand chatCommand)
     {
