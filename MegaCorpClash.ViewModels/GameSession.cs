@@ -67,10 +67,10 @@ public class GameSession
         }
     }
 
-    private List<IHandleChatCommand> GetChatCommandHandlers()
+    private List<BaseCommandHandler> GetChatCommandHandlers()
     {
         var chatCommandHandlers =
-            new List<IHandleChatCommand>();
+            new List<BaseCommandHandler>();
 
         var incorporateCommandHandler = new IncorporateCommandHandler(_gameSettings, _players);
         incorporateCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;

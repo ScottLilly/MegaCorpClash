@@ -4,7 +4,7 @@ using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
+public class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Player> players)
@@ -12,7 +12,7 @@ public class IncorporateCommandHandler : BaseCommandHandler, IHandleChatCommand
     {
     }
 
-    public void Execute(ChatCommand chatCommand)
+    public override void Execute(ChatCommand chatCommand)
     {
         string chatterDisplayName = chatCommand.ChatterDisplayName();
         string? companyName = chatCommand.ArgumentsAsString;

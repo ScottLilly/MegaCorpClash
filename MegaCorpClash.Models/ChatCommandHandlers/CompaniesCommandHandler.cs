@@ -3,7 +3,7 @@ using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
+public class CompaniesCommandHandler : BaseCommandHandler
 {
     private string PlayerList =>
         string.Join(", ", 
@@ -17,7 +17,7 @@ public class CompaniesCommandHandler : BaseCommandHandler, IHandleChatCommand
     {
     }
 
-    public void Execute(ChatCommand chatCommand)
+    public override void Execute(ChatCommand chatCommand)
     {
         PublishMessage(chatCommand.ChatterDisplayName(), $"Companies: {PlayerList}");
     }

@@ -14,7 +14,7 @@ public class TwitchConnector
     private bool _hasConnected;
 
     private readonly string _channelName;
-    private readonly List<IHandleChatCommand> _chatCommandHandlers;
+    private readonly List<BaseCommandHandler> _chatCommandHandlers;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
@@ -24,7 +24,7 @@ public class TwitchConnector
     public event EventHandler<string> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings, 
-        List<IHandleChatCommand> chatCommandHandlers)
+        List<BaseCommandHandler> chatCommandHandlers)
     {
         if (gameSettings == null)
         {
@@ -140,7 +140,7 @@ public class TwitchConnector
         OnPersonChatted?.Invoke(this, 
             new ChattedEventArgs(e.Command.ChatterUserId()));
 
-        IHandleChatCommand? chatCommandHandler = 
+        BaseCommandHandler? chatCommandHandler = 
             _chatCommandHandlers
                 .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText));
 
