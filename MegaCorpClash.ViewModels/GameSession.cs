@@ -69,37 +69,23 @@ public class GameSession
 
     private List<BaseCommandHandler> GetChatCommandHandlers()
     {
-        var chatCommandHandlers =
-            new List<BaseCommandHandler>();
+        var baseType = typeof(BaseCommandHandler);
+        var assembly = baseType.Assembly;
 
-        var incorporateCommandHandler = new IncorporateCommandHandler(_gameSettings, _players);
-        incorporateCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        incorporateCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-        chatCommandHandlers.Add(incorporateCommandHandler);
+        List<BaseCommandHandler> commandHandlers = 
+            assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(baseType))
+            .Select(t => Activator.CreateInstance(t, new object[] {_gameSettings, _players}))
+            .Cast<BaseCommandHandler>()
+            .ToList();
 
-        var renameCommandHandler = new RenameCommandHandler(_gameSettings, _players);
-        renameCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        renameCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-        chatCommandHandlers.Add(renameCommandHandler);
+        foreach(BaseCommandHandler commandHandler in commandHandlers)
+        {
+            commandHandler.OnChatMessagePublished += HandleChatMessagePublished;
+            commandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        }
 
-        var statusCommandHandler = new StatusCommandHandler(_gameSettings, _players);
-        statusCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        chatCommandHandlers.Add(statusCommandHandler);
-
-        var companiesCommandHandler = new CompaniesCommandHandler(_gameSettings, _players);
-        companiesCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        chatCommandHandlers.Add(companiesCommandHandler);
-
-        var setMottoCommandHandler = new SetMottoCommandHandler(_gameSettings, _players);
-        setMottoCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        setMottoCommandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-        chatCommandHandlers.Add(setMottoCommandHandler);
-
-        var employeeListCommandHandler = new EmployeeListCommandHandler(_gameSettings, _players);
-        employeeListCommandHandler.OnChatMessagePublished += HandleChatMessagePublished;
-        chatCommandHandlers.Add(employeeListCommandHandler);
-
-        return chatCommandHandlers;
+        return commandHandlers;
     }
 
     #endregion
