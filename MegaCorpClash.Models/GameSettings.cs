@@ -8,6 +8,7 @@ public class GameSettings
     public string PointsName { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
+    public  List<EmployeeHiringDetails> EmployeeHiringDetails { get; set; }
 
     public class TimedMessageSettings
     {
