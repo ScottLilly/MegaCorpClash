@@ -5,6 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class HelpCommandHandler : BaseCommandHandler
 {
+    private string _commandsAvailable = string.Empty;
+
     public HelpCommandHandler(GameSettings gameSettings,
         Dictionary<string, Player> players)
         : base("help", gameSettings, players)
@@ -13,7 +15,24 @@ public class HelpCommandHandler : BaseCommandHandler
 
     public override void Execute(ChatCommand chatCommand)
     {
+        if(string.IsNullOrWhiteSpace(_commandsAvailable))
+        {
+            var baseType = typeof(BaseCommandHandler);
+            var assembly = baseType.Assembly;
+
+            List<BaseCommandHandler> commandHandlers =
+                assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(baseType))
+                .Select(t => Activator.CreateInstance(t, new object[] { GameSettings, _players }))
+                .Cast<BaseCommandHandler>()
+                .ToList();
+
+            _commandsAvailable = 
+                string.Join(", ", commandHandlers.Select(ch => $"!{ch.CommandName}")
+                .OrderBy(cn => cn));
+        }
+
         PublishMessage(chatCommand.ChatterDisplayName(),
-            "Available MegaCorpClash commands: !incorporate, !companies, !employees, !rename, !setmotto, !status, and !help");
+            $"MegaCorpClash commands: {_commandsAvailable}");
     }
 }
