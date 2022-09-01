@@ -104,7 +104,7 @@ public class GameSession
 
     private void HandlePersonChatted(object? sender, ChattedEventArgs e)
     {
-        _pointsCalculator.RecordChatTimeForPlayer(e.UserId);
+        _pointsCalculator.RecordPlayerChatted(e.UserId);
     }
 
     private void HandleLogMessagePublished(object? sender, string e)
