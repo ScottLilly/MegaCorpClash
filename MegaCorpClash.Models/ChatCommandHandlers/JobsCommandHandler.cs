@@ -15,8 +15,8 @@ public class JobsCommandHandler : BaseCommandHandler
             string.Join(", ",
             GameSettings
             .EmployeeHiringDetails
-            .OrderBy(e => e.EmployeeType)
-            .Select(e => $"{e.EmployeeType} ({e.CostToHire})"));
+            .OrderBy(e => e.Type)
+            .Select(e => $"{e.Type} ({e.CostToHire})"));
     }
 
     public override void Execute(ChatCommand chatCommand)
