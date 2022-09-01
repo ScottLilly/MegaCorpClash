@@ -15,7 +15,7 @@ public class PointsCalculator
         _players = players;
     }
 
-    public void RecordChatTimeForPlayer(string userId)
+    public void RecordPlayerChatted(string userId)
     {
         lock (s_syncLock)
         {
