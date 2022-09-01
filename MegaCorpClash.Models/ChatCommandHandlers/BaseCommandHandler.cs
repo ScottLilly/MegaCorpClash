@@ -6,10 +6,9 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public abstract class BaseCommandHandler
 {
-    protected readonly Dictionary<string, Player> _players;
-
     public string CommandName { get; }
     protected GameSettings GameSettings { get; }
+    protected Dictionary<string, Player> Players { get; }
 
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
@@ -19,14 +18,14 @@ public abstract class BaseCommandHandler
     {
         CommandName = commandName;
         GameSettings = gameSettings;
-        _players = players;
+        Players = players;
     }
 
     public abstract void Execute(ChatCommand chatCommand);
 
     protected Player? GetPlayerObjectForChatter(ChatCommand chatCommand)
     {
-        _players.TryGetValue(chatCommand.ChatterUserId(), out Player? player);
+        Players.TryGetValue(chatCommand.ChatterUserId(), out Player? player);
 
         return player;
     }

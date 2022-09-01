@@ -7,7 +7,7 @@ public class CompaniesCommandHandler : BaseCommandHandler
 {
     private string PlayerList =>
         string.Join(", ", 
-            _players.Values
+            Players.Values
                 .OrderBy(c => c.CompanyName)
                 .Select(c => $"{c.CompanyName} ({c.DisplayName})"));
 

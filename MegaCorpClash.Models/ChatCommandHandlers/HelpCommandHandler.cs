@@ -23,7 +23,7 @@ public class HelpCommandHandler : BaseCommandHandler
             List<BaseCommandHandler> commandHandlers =
                 assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(baseType))
-                .Select(t => Activator.CreateInstance(t, new object[] { GameSettings, _players }))
+                .Select(t => Activator.CreateInstance(t, new object[] { GameSettings, Players }))
                 .Cast<BaseCommandHandler>()
                 .ToList();
 

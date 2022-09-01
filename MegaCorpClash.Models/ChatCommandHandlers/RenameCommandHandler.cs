@@ -35,7 +35,7 @@ public class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (_players.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
+        if (Players.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
         {
             PublishMessage(chatterDisplayName, 
                 $"There is already a company named {newCompanyName}");

@@ -35,7 +35,7 @@ public class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (_players.Values.Any(p => p.CompanyName.Matches(companyName)))
+        if (Players.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
             PublishMessage(chatterDisplayName,
                 $"There is already a company named {companyName}");
@@ -58,7 +58,7 @@ public class IncorporateCommandHandler : BaseCommandHandler
             }
         };
 
-        _players[twitchUserId] = player;
+        Players[twitchUserId] = player;
 
         NotifyPlayerDataUpdated();
 
