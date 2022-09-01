@@ -32,7 +32,7 @@ public abstract class BaseCommandHandler
 
     protected void PublishMessage(string chatterDisplayName, string message)
     {
-        OnChatMessagePublished.Invoke(this, 
+        OnChatMessagePublished?.Invoke(this, 
             new ChatMessageEventArgs(chatterDisplayName, message));
     }
 
