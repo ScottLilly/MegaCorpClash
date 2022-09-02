@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class StatusCommandHandler : BaseCommandHandler
 {
     public StatusCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
-        : base("status", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("status", gameSettings, companies)
     {
     }
 

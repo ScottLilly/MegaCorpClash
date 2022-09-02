@@ -6,8 +6,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
-        : base("incorporate", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("incorporate", gameSettings, companies)
     {
     }
 
@@ -30,7 +30,7 @@ public class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Players.Values.Any(p => p.CompanyName.Matches(companyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
             PublishMessage(chatter.Name,
                 $"There is already a company named {companyName}");
@@ -52,7 +52,7 @@ public class IncorporateCommandHandler : BaseCommandHandler
 
             };
 
-        Players[chatter.Id] = chatter.Company;
+        Companies[chatter.Id] = chatter.Company;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.Name,

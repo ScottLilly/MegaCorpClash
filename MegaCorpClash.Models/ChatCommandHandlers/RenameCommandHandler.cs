@@ -6,8 +6,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
-        : base("rename", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("rename", gameSettings, companies)
     {
     }
 
@@ -30,7 +30,7 @@ public class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Players.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
         {
             PublishMessage(chatter.Name, 
                 $"There is already a company named {newCompanyName}");

@@ -10,23 +10,12 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         GetDefaultGameSettings();
 
     [Fact]
-    public void Test_Instantiate()
-    {
-        Dictionary<string, Company> playerList = new();
-
-        var incorporateCommandHandler = 
-            new IncorporateCommandHandler(_gameSettings, playerList);
-
-        Assert.NotNull(incorporateCommandHandler);
-    }
-
-    [Fact]
     public void Test_NoCompanyNamePassed()
     {
-        Dictionary<string, Company> playerList = new();
+        Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, playerList);
+            new IncorporateCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!incorporate");
 

@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class HireCommandHandler : BaseCommandHandler
 {
     public HireCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> players)
-        : base("hire", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("hire", gameSettings, companies)
     {
     }
 
@@ -23,8 +23,7 @@ public class HireCommandHandler : BaseCommandHandler
 
         if(chatCommand.ArgumentsAsList.Count != 2)
         {
-            PublishMessage(chatter.Name,
-                "To hire an employee, type '!hire <job name> <quantity>'");
+            PublishMessage(chatter.Name, Literals.Hire_InvalidParameters);
             return;
         }
 
@@ -32,15 +31,14 @@ public class HireCommandHandler : BaseCommandHandler
 
         if(hiringDetails.Job == null || hiringDetails.Qty == null)
         {
-            PublishMessage(chatter.Name,
-                "To hire an employee, type '!hire <job name> <quantity>'");
+            PublishMessage(chatter.Name, Literals.Hire_InvalidParameters);
             return;
         }
 
         if (hiringDetails.Qty < 1)
         {
             PublishMessage(chatter.Name,
-                "Quantity must be greater than zero");
+                Literals.Hire_QuantityMustBeGreaterThanZero);
             return;
         }
 
@@ -70,8 +68,12 @@ public class HireCommandHandler : BaseCommandHandler
         }
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.Name,
-            $"Congratulations! You hired {hiringDetails.Qty} {hiringDetails.Job} employees");
+
+        string message =
+            $"Congratulations! You hired {hiringDetails.Qty} {hiringDetails.Job} employee" +
+            (hiringDetails.Qty == 1 ? "." : "s.");
+
+        PublishMessage(chatter.Name, message);
     }
 
     private static (EmployeeType? Job, int? Qty) GetHiringDetails(List<string> arguments)

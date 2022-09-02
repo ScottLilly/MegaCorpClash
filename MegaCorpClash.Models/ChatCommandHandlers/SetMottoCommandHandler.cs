@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class SetMottoCommandHandler : BaseCommandHandler
 {
     public SetMottoCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> players)
-        : base("setmotto", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("setmotto", gameSettings, companies)
     {
     }
 

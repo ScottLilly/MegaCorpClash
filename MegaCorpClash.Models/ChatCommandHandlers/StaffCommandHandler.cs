@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class StaffCommandHandler : BaseCommandHandler
 {
     public StaffCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
-        : base("staff", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("staff", gameSettings, companies)
     {
     }
 

@@ -27,7 +27,7 @@ public abstract class BaseCommandHandlerTest
             DEFAULT_CHATTER_DISPLAY_NAME, command);
     }
 
-    internal static ChatCommand GetChatCommand(string userId,
+    private static ChatCommand GetChatCommand(string userId,
         string displayName, string commandText)
     {
         var chatMessage =

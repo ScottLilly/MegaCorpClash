@@ -61,6 +61,24 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To hire an employee, type &apos;!hire &lt;job name&gt; &lt;quantity&gt;&apos;.
+        /// </summary>
+        public static string Hire_InvalidParameters {
+            get {
+                return ResourceManager.GetString("Hire_InvalidParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity must be greater than zero.
+        /// </summary>
+        public static string Hire_QuantityMustBeGreaterThanZero {
+            get {
+                return ResourceManager.GetString("Hire_QuantityMustBeGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to !incorporate must be followed by a name for your company.
         /// </summary>
         public static string Incorporate_NameRequired {

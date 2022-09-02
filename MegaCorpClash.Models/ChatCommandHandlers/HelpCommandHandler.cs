@@ -7,8 +7,8 @@ public class HelpCommandHandler : BaseCommandHandler
     private string _commandsAvailable = string.Empty;
 
     public HelpCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> players)
-        : base("help", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("help", gameSettings, companies)
     {
     }
 
@@ -34,7 +34,7 @@ public class HelpCommandHandler : BaseCommandHandler
         List<BaseCommandHandler> commandHandlers =
             assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(baseType))
-                .Select(t => Activator.CreateInstance(t, GameSettings, Players))
+                .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
                 .Cast<BaseCommandHandler>()
                 .ToList();
 

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Hire_InvalidParameters" xml:space="preserve">
+    <value>To hire an employee, type '!hire &lt;job name&gt; &lt;quantity&gt;'</value>
+  </data>
+  <data name="Hire_QuantityMustBeGreaterThanZero" xml:space="preserve">
+    <value>Quantity must be greater than zero</value>
+  </data>
   <data name="Incorporate_NameRequired" xml:space="preserve">
     <value>!incorporate must be followed by a name for your company</value>
   </data>

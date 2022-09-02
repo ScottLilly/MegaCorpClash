@@ -8,7 +8,13 @@ public class GameSettings
     public string PointsName { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
-    public List<EmployeeHiringDetails> EmployeeHiringDetails { get; set; }
+    public List<EmployeeHiringDetails> EmployeeHiringDetails { get; set; } = new();
+
+    public string JobsList => 
+        string.Join(", ",
+            EmployeeHiringDetails
+                .OrderBy(e => e.Type)
+                .Select(e => $"{e.Type} ({e.CostToHire})"));
 
     public class TimedMessageSettings
     {

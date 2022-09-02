@@ -5,8 +5,8 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class CompaniesCommandHandler : BaseCommandHandler
 {
     public CompaniesCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
-        : base("companies", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("companies", gameSettings, companies)
     {
     }
 
@@ -14,9 +14,14 @@ public class CompaniesCommandHandler : BaseCommandHandler
     {
         string playerList =
             string.Join(", ",
-                Players.Values
+                Companies.Values
                     .OrderBy(c => c.CompanyName)
                     .Select(c => $"{c.CompanyName} ({c.ChatterName})"));
+
+        if (string.IsNullOrWhiteSpace(playerList))
+        {
+            playerList = "No companies";
+        }
 
         PublishMessage($"Companies: {playerList}");
     }
