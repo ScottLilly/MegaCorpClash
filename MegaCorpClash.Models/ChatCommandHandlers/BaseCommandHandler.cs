@@ -13,6 +13,15 @@ public abstract class BaseCommandHandler
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
+    protected (string Id, string Name, Player? Player) ChatterDetails(ChatCommand chatCommand) =>
+        (chatCommand.ChatMessage.UserId, chatCommand.ChatMessage.DisplayName, Players[chatCommand.ChatMessage.UserId]);
+
+    protected string PlayerList =>
+        string.Join(", ",
+            Players.Values
+                .OrderBy(c => c.CompanyName)
+                .Select(c => $"{c.CompanyName} ({c.DisplayName})"));
+
     protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
         Dictionary<string, Player> players)
     {
@@ -28,6 +37,12 @@ public abstract class BaseCommandHandler
         Players.TryGetValue(chatCommand.ChatterUserId(), out Player? player);
 
         return player;
+    }
+
+    protected void PublishMessage(string message)
+    {
+        OnChatMessagePublished?.Invoke(this,
+            new ChatMessageEventArgs("", message));
     }
 
     protected void PublishMessage(string chatterDisplayName, string message)

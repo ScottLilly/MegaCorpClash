@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -14,14 +13,13 @@ public class IncorporateCommandHandler : BaseCommandHandler
 
     public override void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = chatCommand.ChatterDisplayName();
+        var chatter = ChatterDetails(chatCommand);
         string? companyName = chatCommand.ArgumentsAsString;
 
         if (string.IsNullOrWhiteSpace(companyName))
         {
-            PublishMessage(chatterDisplayName, 
-                "!incorporate must be followed by a name for your company");
-
+            PublishMessage(chatter.Name, 
+                Literals.Incorporate_NameRequired);
             return;
         }
 
@@ -29,40 +27,35 @@ public class IncorporateCommandHandler : BaseCommandHandler
 
         if (player != null)
         {
-            PublishMessage(chatterDisplayName,
+            PublishMessage(chatter.Name,
                 $"You already have a company named {player.CompanyName}");
-
             return;
         }
 
         if (Players.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
-            PublishMessage(chatterDisplayName,
+            PublishMessage(chatter.Name,
                 $"There is already a company named {companyName}");
-
             return;
         }
 
-        string twitchUserId = chatCommand.ChatterUserId();
-
         player = new Player
         {
-            Id = twitchUserId,
-            DisplayName = chatterDisplayName,
+            Id = chatter.Id,
+            DisplayName = chatter.Name,
             CompanyName = companyName,
             CreatedOn = DateTime.UtcNow,
             Employees = new List<Employee>
             {
-                new() {Type = EmployeeType.Manufacturing, SkillLevel = 1},
-                new() {Type = EmployeeType.Sales, SkillLevel = 1},
+                new() { Type = EmployeeType.Manufacturing, SkillLevel = 1 },
+                new() { Type = EmployeeType.Sales, SkillLevel = 1 },
             }
         };
 
-        Players[twitchUserId] = player;
+        Players[chatter.Id] = player;
 
         NotifyPlayerDataUpdated();
-
-        PublishMessage(chatterDisplayName,
+        PublishMessage(chatter.Name,
             $"You are now the proud CEO of {companyName}");
     }
 }

@@ -1,6 +1,4 @@
-﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.ExtensionMethods;
-using TwitchLib.Client.Models;
+﻿using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -14,90 +12,92 @@ public class HireCommandHandler : BaseCommandHandler
 
     public override void Execute(ChatCommand chatCommand)
     {
-        Player? player = GetPlayerObjectForChatter(chatCommand);
+        var chatter = ChatterDetails(chatCommand);
 
-        if(player == null)
+        if(chatter.Player == null)
         {
-            PublishMessage(chatCommand.ChatterDisplayName(), 
-                "You do not have a company");
+            PublishMessage(chatter.Name, 
+                Literals.YouDoNotHaveACompany);
             return;
         }
 
         if(chatCommand.ArgumentsAsList.Count != 2)
         {
-            PublishMessage(chatCommand.ChatterDisplayName(),
+            PublishMessage(chatter.Name,
                 "To hire an employee, type '!hire <employee type> <quantity>'");
             return;
         }
 
-        int? qty = null;
-        EmployeeType? employeeType = null;
+        var hiringDetails = GetHiringDetails(chatCommand.ArgumentsAsList);
 
-        if (int.TryParse(chatCommand.ArgumentsAsList[0], out int qty0))
+        if(hiringDetails.Job == null || hiringDetails.Qty == null)
         {
-            qty = qty0;
-
-            if (Enum.TryParse(chatCommand.ArgumentsAsList[1], true, out EmployeeType emp))
-            {
-                employeeType = emp;
-            }
-        }
-        else if (int.TryParse(chatCommand.ArgumentsAsList[1], out int qty1))
-        {
-            qty = qty1;
-
-            if (Enum.TryParse(chatCommand.ArgumentsAsList[0], true, out EmployeeType emp))
-            {
-                employeeType = emp;
-            }
-        }
-
-        if(qty == null || employeeType == null)
-        {
-            PublishMessage(chatCommand.ChatterDisplayName(),
+            PublishMessage(chatter.Name,
                 "To hire an employee, type '!hire <employee type> <quantity>'");
             return;
         }
 
-        if (qty < 1)
+        if (hiringDetails.Qty < 1)
         {
-            PublishMessage(chatCommand.ChatterDisplayName(),
+            PublishMessage(chatter.Name,
                 "Quantity of employees to hire must be greater than zero");
             return;
         }
 
         var empHiringDetails = 
             GameSettings.EmployeeHiringDetails
-            .First(ehd => ehd.Type == employeeType);
+                .First(ehd => ehd.Type == hiringDetails.Job);
 
-        if(empHiringDetails == null)
+        int? hiringCost = empHiringDetails.CostToHire * hiringDetails.Qty;
+
+        if (hiringCost > chatter.Player.Points)
         {
-            PublishMessage(chatCommand.ChatterDisplayName(),
-                $"MegaCorpClash does not recognize the employee type: {employeeType}");
+            PublishMessage(chatter.Name,
+                $"It would cost {hiringCost} {GameSettings.PointsName} to hire {hiringDetails.Qty} {hiringDetails.Job} employees. You only have {chatter.Player.Points} {GameSettings.PointsName}");
             return;
         }
 
-        int? hiringCost = empHiringDetails.CostToHire * qty;
+        chatter.Player.Points -= (int)hiringCost;
 
-        if (hiringCost > player.Points)
+        for(int i = 0; i < hiringDetails.Qty; i++)
         {
-            PublishMessage(chatCommand.ChatterDisplayName(),
-                $"It would cost {hiringCost} {GameSettings.PointsName} to hire {qty} {employeeType} employees. You only have {player.Points} {GameSettings.PointsName}");
-            return;
-        }
-
-        player.Points -= (int)hiringCost;
-        for(int i = 0; i < qty; i++)
-        {
-            player.Employees.Add(new Employee 
-            { 
-                Type = empHiringDetails.Type, 
-                SkillLevel = 1 
-            });
+            chatter.Player.Employees
+                .Add(new Employee 
+                { 
+                    Type = empHiringDetails.Type, 
+                    SkillLevel = 1
+                });
         }
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatCommand.ChatterDisplayName(),
-            $"Congratulations! You hired {qty} {employeeType} employees");
+        PublishMessage(chatter.Name,
+            $"Congratulations! You hired {hiringDetails.Qty} {hiringDetails.Job} employees");
+    }
+
+    private static (EmployeeType? Job, int? Qty) GetHiringDetails(List<string> arguments)
+    {
+        int? qty = null;
+        EmployeeType? employeeType = null;
+
+        if (int.TryParse(arguments[0], out int qty0))
+        {
+            qty = qty0;
+
+            if (Enum.TryParse(arguments[1], true, out EmployeeType emp))
+            {
+                employeeType = emp;
+            }
+        }
+        else if (int.TryParse(arguments[1], out int qty1))
+        {
+            qty = qty1;
+
+            if (Enum.TryParse(arguments[0], true, out EmployeeType emp))
+            {
+                employeeType = emp;
+            }
+        }
+
+        return (employeeType, qty);
     }
 }

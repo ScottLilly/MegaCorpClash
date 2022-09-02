@@ -1,5 +1,4 @@
-﻿using MegaCorpClash.Models.ExtensionMethods;
-using TwitchLib.Client.Models;
+﻿using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -13,24 +12,25 @@ public class SetMottoCommandHandler : BaseCommandHandler
 
     public override void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = chatCommand.ChatterDisplayName();
-        Player? player = GetPlayerObjectForChatter(chatCommand);
+        var chatter = ChatterDetails(chatCommand);
 
         if (string.IsNullOrWhiteSpace(chatCommand.ArgumentsAsString))
         {
-            PublishMessage(chatterDisplayName, "You must enter a value for the motto");
+            PublishMessage(chatter.Name, 
+                "You must enter a value for the motto");
             return;
         }
 
-        if (player == null)
+        if (chatter.Player == null)
         {
-            PublishMessage(chatterDisplayName, "You do not have a company");
+            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
             return;
         }
 
-        player.Motto = chatCommand.ArgumentsAsString;
+        chatter.Player.Motto = chatCommand.ArgumentsAsString;
+
         NotifyPlayerDataUpdated();
-        PublishMessage(chatterDisplayName,
-                $"Your new company motto is '{player.Motto}'");
+        PublishMessage(chatter.Name,
+                $"Your new company motto is '{chatter.Player.Motto}'");
     }
 }

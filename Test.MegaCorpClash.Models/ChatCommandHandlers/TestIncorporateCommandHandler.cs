@@ -1,25 +1,21 @@
-﻿using System.Drawing;
-using MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models;
-using TwitchLib.Client.Models;
-using Moq;
-using TwitchLib.Client.Enums;
 using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
-public class TestIncorporateCommandHandler
+public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 {
+    private readonly GameSettings _gameSettings = 
+        GetDefaultGameSettings();
+
     [Fact]
     public void Test_Instantiate()
     {
-        GameSettings gameSettings = 
-            new GameSettings();
-        Dictionary<string, Player> playerList = 
-            new Dictionary<string, Player>();
+        Dictionary<string, Player> playerList = new();
 
         var incorporateCommandHandler = 
-            new IncorporateCommandHandler(gameSettings, playerList);
+            new IncorporateCommandHandler(_gameSettings, playerList);
 
         Assert.NotNull(incorporateCommandHandler);
     }
@@ -27,54 +23,48 @@ public class TestIncorporateCommandHandler
     [Fact]
     public void Test_NoCompanyNamePassed()
     {
-        GameSettings gameSettings =
-            new GameSettings();
-        Dictionary<string, Player> playerList =
-            new Dictionary<string, Player>();
+        Dictionary<string, Player> playerList = new();
 
-        var incorporateCommandHandler =
-            new IncorporateCommandHandler(gameSettings, playerList);
+        var commandHandler =
+            new IncorporateCommandHandler(_gameSettings, playerList);
 
-        var chatCommand = 
-            GetChatCommand("123", "CodingWithScott", "!incorporate");
+        var chatCommand = GetChatCommand("!incorporate");
 
-        var evt = Assert.Raises<ChatMessageEventArgs>(
-            h => incorporateCommandHandler.OnChatMessagePublished += h,
-            h => incorporateCommandHandler.OnChatMessagePublished -= h,
-            () => incorporateCommandHandler.Execute(chatCommand));
+        var chatMessageEvent = 
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(chatCommand));
 
-        Assert.NotNull(evt);
-        Assert.Equal("CodingWithScott", evt.Arguments.ChatterDisplayName);
-        Assert.Equal("!incorporate must be followed by a name for your company", evt.Arguments.Message);
-
-        Assert.NotNull(incorporateCommandHandler);
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal(Literals.Incorporate_NameRequired, 
+            chatMessageEvent.Arguments.Message);
     }
 
-    private ChatCommand GetChatCommand(string userId, string displayName, 
-        string commandText)
+    [Fact]
+    public void Test_AlreadyHasACompany()
     {
-        var chatMessage =
-            new ChatMessage("CodingWithScottBot", userId, "codingwithscott",
-                displayName, "", Color.AliceBlue, null, "message goes here",
-                UserType.Viewer, "codingwithscott", "456", false, 0,
-                "789", false, false, false, false, false, false, false, Noisy.False,
-                "", "", new List<KeyValuePair<string, string>>(), new CheerBadge(0),
-                0, 0d);
+        Dictionary<string, Player> playerList = new();
+        playerList.Add(DEFAULT_CHATTER_ID,
+            new Player { CompanyName = "Test" });
 
-        if (commandText[0] == '!')
-        {
-            commandText = commandText.Substring(1);
-        }
+        var commandHandler =
+            new IncorporateCommandHandler(_gameSettings, playerList);
 
-        var commandWords = 
-            commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var chatCommand = GetChatCommand("!incorporate ABC");
 
-        return 
-            new ChatCommand(chatMessage,
-                commandWords[0], 
-                string.Join(' ', commandWords.Skip(1)),
-                commandWords.Skip(1).ToList(),
-                '!');
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(chatCommand));
 
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("You already have a company named Test",
+            chatMessageEvent.Arguments.Message);
     }
 }
