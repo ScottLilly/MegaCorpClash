@@ -1,5 +1,4 @@
-﻿using MegaCorpClash.Models.ExtensionMethods;
-using TwitchLib.Client.Models;
+﻿using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -8,31 +7,39 @@ public class HelpCommandHandler : BaseCommandHandler
     private string _commandsAvailable = string.Empty;
 
     public HelpCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Player> players)
-        : base("help", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("help", gameSettings, companies)
     {
     }
 
     public override void Execute(ChatCommand chatCommand)
     {
-        if(string.IsNullOrWhiteSpace(_commandsAvailable))
-        {
-            var baseType = typeof(BaseCommandHandler);
-            var assembly = baseType.Assembly;
+        PopulateCommandList();
 
-            List<BaseCommandHandler> commandHandlers =
-                assembly.GetTypes()
+        PublishMessage($"MegaCorpClash commands: {_commandsAvailable}");
+    }
+
+    private void PopulateCommandList()
+    {
+        // Don't move this into the constructor.
+        // It would get recursive and cause a stack overflow.
+        if (!string.IsNullOrWhiteSpace(_commandsAvailable))
+        {
+            return;
+        }
+
+        var baseType = typeof(BaseCommandHandler);
+        var assembly = baseType.Assembly;
+
+        List<BaseCommandHandler> commandHandlers =
+            assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(baseType))
-                .Select(t => Activator.CreateInstance(t, new object[] { GameSettings, Players }))
+                .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
                 .Cast<BaseCommandHandler>()
                 .ToList();
 
-            _commandsAvailable = 
-                string.Join(", ", commandHandlers.Select(ch => $"!{ch.CommandName}")
+        _commandsAvailable =
+            string.Join(", ", commandHandlers.Select(ch => $"!{ch.CommandName}")
                 .OrderBy(cn => cn));
-        }
-
-        PublishMessage(chatCommand.ChatterDisplayName(),
-            $"MegaCorpClash commands: {_commandsAvailable}");
     }
 }

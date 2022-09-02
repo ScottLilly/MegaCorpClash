@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -7,21 +6,18 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
-        : base("rename", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("rename", gameSettings, companies)
     {
     }
 
     public override void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = chatCommand.ChatterDisplayName();
-        Player? player = GetPlayerObjectForChatter(chatCommand);
+        var chatter = ChatterDetails(chatCommand);
 
-        if (player == null)
+        if (chatter.Company == null)
         {
-            PublishMessage(chatterDisplayName, 
-                "You don't have a company. Type !incorporate <company name> to start one.");
-
+            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
             return;
         }
 
@@ -29,25 +25,23 @@ public class RenameCommandHandler : BaseCommandHandler
 
         if (string.IsNullOrWhiteSpace(newCompanyName))
         {
-            PublishMessage(chatterDisplayName,
-                "You must provide a new name for your company");
-
+            PublishMessage(chatter.Name,
+                Literals.Rename_YouMustProvideANewName);
             return;
         }
 
-        if (Players.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
         {
-            PublishMessage(chatterDisplayName, 
+            PublishMessage(chatter.Name, 
                 $"There is already a company named {newCompanyName}");
-
             return;
         }
 
-        player.CompanyName = newCompanyName;
+        chatter.Company.CompanyName = newCompanyName;
 
         NotifyPlayerDataUpdated();
 
-        PublishMessage(chatterDisplayName,
-            $"Your company is now named {player.CompanyName}");
+        PublishMessage(chatter.Name,
+            $"Your company is now named {chatter.Company.CompanyName}");
     }
 }

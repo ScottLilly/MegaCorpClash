@@ -32,7 +32,7 @@ do
             case "!clear":
                 Console.Clear();
                 break;
-            case "!players":
+            case "!companies":
                 foreach (string player in gameSession.ShowPlayers())
                 {
                     Console.WriteLine(player);

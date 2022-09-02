@@ -11,7 +11,7 @@ public class GameSession
 {
     private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Player> _players = new();
+    private readonly Dictionary<string, Company> _players = new();
     private readonly TwitchConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
 
@@ -43,8 +43,8 @@ public class GameSession
     public List<string> ShowPlayers()
     {
         return _players
-            .OrderBy(p => p.Value.DisplayName)
-            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
+            .OrderBy(p => p.Value.ChatterName)
+            .Select(p => $"[{p.Value.ChatterName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
             .ToList();
     }
 
@@ -61,9 +61,9 @@ public class GameSession
     {
         var players = PersistenceService.GetPlayerData();
 
-        foreach (Player player in players)
+        foreach (Company player in players)
         {
-            _players.Add(player.Id, player);
+            _players.Add(player.ChatterId, player);
         }
     }
 

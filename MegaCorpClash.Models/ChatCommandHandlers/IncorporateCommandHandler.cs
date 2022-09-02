@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.ExtensionMethods;
 using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -7,62 +6,56 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
-        : base("incorporate", gameSettings, players)
+        Dictionary<string, Company> companies)
+        : base("incorporate", gameSettings, companies)
     {
     }
 
     public override void Execute(ChatCommand chatCommand)
     {
-        string chatterDisplayName = chatCommand.ChatterDisplayName();
+        var chatter = ChatterDetails(chatCommand);
         string? companyName = chatCommand.ArgumentsAsString;
 
         if (string.IsNullOrWhiteSpace(companyName))
         {
-            PublishMessage(chatterDisplayName, 
-                "!incorporate must be followed by a name for your company");
-
+            PublishMessage(chatter.Name, 
+                Literals.Incorporate_NameRequired);
             return;
         }
 
-        Player? player = GetPlayerObjectForChatter(chatCommand);
-
-        if (player != null)
+        if (chatter.Company != null)
         {
-            PublishMessage(chatterDisplayName,
-                $"You already have a company named {player.CompanyName}");
-
+            PublishMessage(chatter.Name,
+                $"You already have a company named {chatter.Company.CompanyName}");
             return;
         }
 
-        if (Players.Values.Any(p => p.CompanyName.Matches(companyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
-            PublishMessage(chatterDisplayName,
+            PublishMessage(chatter.Name,
                 $"There is already a company named {companyName}");
-
             return;
         }
 
-        string twitchUserId = chatCommand.ChatterUserId();
-
-        player = new Player
-        {
-            Id = twitchUserId,
-            DisplayName = chatterDisplayName,
-            CompanyName = companyName,
-            CreatedOn = DateTime.UtcNow,
-            Employees = new List<Employee>
+        chatter.Company = 
+            new Company
             {
-                new() {Type = EmployeeType.Manufacturing, SkillLevel = 1},
-                new() {Type = EmployeeType.Sales, SkillLevel = 1},
-            }
-        };
+                ChatterId = chatter.Id,
+                ChatterName = chatter.Name,
+                CompanyName = companyName,
+                CreatedOn = DateTime.UtcNow,
+                Employees = new List<Employee>
+                {
+                    new() { Type = EmployeeType.Production, SkillLevel = 1 },
+                    new() { Type = EmployeeType.Sales, SkillLevel = 1 },
+                }
 
-        Players[twitchUserId] = player;
+            };
+
+        Companies[chatter.Id] = chatter.Company;
 
         NotifyPlayerDataUpdated();
-
-        PublishMessage(chatterDisplayName,
+        PublishMessage(chatter.Name,
             $"You are now the proud CEO of {companyName}");
     }
 }
