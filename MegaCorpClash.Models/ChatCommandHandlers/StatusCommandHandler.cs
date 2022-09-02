@@ -5,7 +5,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class StatusCommandHandler : BaseCommandHandler
 {
     public StatusCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("status", gameSettings, players)
     {
     }
@@ -15,8 +15,8 @@ public class StatusCommandHandler : BaseCommandHandler
         var chatter = ChatterDetails(chatCommand);
 
         PublishMessage(chatter.Name,
-            chatter.Player == null
+            chatter.Company == null
                 ? Literals.YouDoNotHaveACompany
-                : $"At {chatter.Player.CompanyName} we always say '{chatter.Player.Motto}'. That's how we earned {chatter.Player.Points} {GameSettings.PointsName}");
+                : $"At {chatter.Company.CompanyName} we always say '{chatter.Company.Motto}'. That's how we earned {chatter.Company.Points} {GameSettings.PointsName}");
     }
 }

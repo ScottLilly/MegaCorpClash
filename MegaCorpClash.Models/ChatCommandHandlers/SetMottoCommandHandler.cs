@@ -5,7 +5,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class SetMottoCommandHandler : BaseCommandHandler
 {
     public SetMottoCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("setmotto", gameSettings, players)
     {
     }
@@ -21,16 +21,16 @@ public class SetMottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (chatter.Player == null)
+        if (chatter.Company == null)
         {
             PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
             return;
         }
 
-        chatter.Player.Motto = chatCommand.ArgumentsAsString;
+        chatter.Company.Motto = chatCommand.ArgumentsAsString;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.Name,
-                $"Your new company motto is '{chatter.Player.Motto}'");
+                $"Your new company motto is '{chatter.Company.Motto}'");
     }
 }

@@ -3,13 +3,13 @@
 public class PointsCalculator
 {
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Player> _players;
+    private readonly Dictionary<string, Company> _players;
 
     private static readonly HashSet<string> s_chattersDuringTurn = new();
     private static readonly object s_syncLock = new();
 
     public PointsCalculator(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
     {
         _gameSettings = gameSettings;
         _players = players;
@@ -29,7 +29,7 @@ public class PointsCalculator
         {
             foreach (var player in _players.Values)
             {
-                if (s_chattersDuringTurn.Contains(player.Id))
+                if (s_chattersDuringTurn.Contains(player.ChatterId))
                 {
                     player.Points += 
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter;

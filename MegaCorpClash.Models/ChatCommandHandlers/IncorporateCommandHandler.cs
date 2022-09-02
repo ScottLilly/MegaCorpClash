@@ -6,7 +6,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("incorporate", gameSettings, players)
     {
     }
@@ -23,12 +23,10 @@ public class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        Player? player = GetPlayerObjectForChatter(chatCommand);
-
-        if (player != null)
+        if (chatter.Company != null)
         {
             PublishMessage(chatter.Name,
-                $"You already have a company named {player.CompanyName}");
+                $"You already have a company named {chatter.Company.CompanyName}");
             return;
         }
 
@@ -39,20 +37,22 @@ public class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        player = new Player
-        {
-            Id = chatter.Id,
-            DisplayName = chatter.Name,
-            CompanyName = companyName,
-            CreatedOn = DateTime.UtcNow,
-            Employees = new List<Employee>
+        chatter.Company = 
+            new Company
             {
-                new() { Type = EmployeeType.Manufacturing, SkillLevel = 1 },
-                new() { Type = EmployeeType.Sales, SkillLevel = 1 },
-            }
-        };
+                ChatterId = chatter.Id,
+                ChatterName = chatter.Name,
+                CompanyName = companyName,
+                CreatedOn = DateTime.UtcNow,
+                Employees = new List<Employee>
+                {
+                    new() { Type = EmployeeType.Production, SkillLevel = 1 },
+                    new() { Type = EmployeeType.Sales, SkillLevel = 1 },
+                }
 
-        Players[chatter.Id] = player;
+            };
+
+        Players[chatter.Id] = chatter.Company;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.Name,

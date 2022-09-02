@@ -5,7 +5,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class HireCommandHandler : BaseCommandHandler
 {
     public HireCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("hire", gameSettings, players)
     {
     }
@@ -14,7 +14,7 @@ public class HireCommandHandler : BaseCommandHandler
     {
         var chatter = ChatterDetails(chatCommand);
 
-        if(chatter.Player == null)
+        if(chatter.Company == null)
         {
             PublishMessage(chatter.Name, 
                 Literals.YouDoNotHaveACompany);
@@ -24,7 +24,7 @@ public class HireCommandHandler : BaseCommandHandler
         if(chatCommand.ArgumentsAsList.Count != 2)
         {
             PublishMessage(chatter.Name,
-                "To hire an employee, type '!hire <employee type> <quantity>'");
+                "To hire an employee, type '!hire <job name> <quantity>'");
             return;
         }
 
@@ -33,14 +33,14 @@ public class HireCommandHandler : BaseCommandHandler
         if(hiringDetails.Job == null || hiringDetails.Qty == null)
         {
             PublishMessage(chatter.Name,
-                "To hire an employee, type '!hire <employee type> <quantity>'");
+                "To hire an employee, type '!hire <job name> <quantity>'");
             return;
         }
 
         if (hiringDetails.Qty < 1)
         {
             PublishMessage(chatter.Name,
-                "Quantity of employees to hire must be greater than zero");
+                "Quantity must be greater than zero");
             return;
         }
 
@@ -50,18 +50,18 @@ public class HireCommandHandler : BaseCommandHandler
 
         int? hiringCost = empHiringDetails.CostToHire * hiringDetails.Qty;
 
-        if (hiringCost > chatter.Player.Points)
+        if (hiringCost > chatter.Company.Points)
         {
             PublishMessage(chatter.Name,
-                $"It would cost {hiringCost} {GameSettings.PointsName} to hire {hiringDetails.Qty} {hiringDetails.Job} employees. You only have {chatter.Player.Points} {GameSettings.PointsName}");
+                $"It costs {hiringCost} {GameSettings.PointsName} to hire {hiringDetails.Qty} {hiringDetails.Job} employees. You only have {chatter.Company.Points} {GameSettings.PointsName}");
             return;
         }
 
-        chatter.Player.Points -= (int)hiringCost;
+        chatter.Company.Points -= (int)hiringCost;
 
         for(int i = 0; i < hiringDetails.Qty; i++)
         {
-            chatter.Player.Employees
+            chatter.Company.Employees
                 .Add(new Employee 
                 { 
                     Type = empHiringDetails.Type, 

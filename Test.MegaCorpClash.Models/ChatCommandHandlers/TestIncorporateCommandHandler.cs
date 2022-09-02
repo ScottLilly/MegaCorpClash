@@ -12,7 +12,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_Instantiate()
     {
-        Dictionary<string, Player> playerList = new();
+        Dictionary<string, Company> playerList = new();
 
         var incorporateCommandHandler = 
             new IncorporateCommandHandler(_gameSettings, playerList);
@@ -23,7 +23,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_NoCompanyNamePassed()
     {
-        Dictionary<string, Player> playerList = new();
+        Dictionary<string, Company> playerList = new();
 
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, playerList);
@@ -46,9 +46,9 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_AlreadyHasACompany()
     {
-        Dictionary<string, Player> playerList = new();
+        Dictionary<string, Company> playerList = new();
         playerList.Add(DEFAULT_CHATTER_ID,
-            new Player { CompanyName = "Test" });
+            new Company { CompanyName = "Test" });
 
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, playerList);

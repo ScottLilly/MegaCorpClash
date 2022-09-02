@@ -7,7 +7,7 @@ public class JobsCommandHandler : BaseCommandHandler
     private readonly string _jobList;
 
     public JobsCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("jobs", gameSettings, players)
     {
         _jobList =

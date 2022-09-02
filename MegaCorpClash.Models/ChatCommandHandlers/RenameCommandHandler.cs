@@ -6,7 +6,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 public class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings, 
-        Dictionary<string, Player> players)
+        Dictionary<string, Company> players)
         : base("rename", gameSettings, players)
     {
     }
@@ -15,7 +15,7 @@ public class RenameCommandHandler : BaseCommandHandler
     {
         var chatter = ChatterDetails(chatCommand);
 
-        if (chatter.Player == null)
+        if (chatter.Company == null)
         {
             PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
             return;
@@ -37,11 +37,11 @@ public class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        chatter.Player.CompanyName = newCompanyName;
+        chatter.Company.CompanyName = newCompanyName;
 
         NotifyPlayerDataUpdated();
 
         PublishMessage(chatter.Name,
-            $"Your company is now named {chatter.Player.CompanyName}");
+            $"Your company is now named {chatter.Company.CompanyName}");
     }
 }

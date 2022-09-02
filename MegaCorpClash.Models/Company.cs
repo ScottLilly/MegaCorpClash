@@ -1,15 +1,18 @@
-﻿namespace MegaCorpClash.Models;
+﻿using Newtonsoft.Json;
 
-public class Player
+namespace MegaCorpClash.Models;
+
+public class Company
 {
-    public string Id { get; set; }
+    public string ChatterId { get; set; }
     public DateTime CreatedOn { get; set; }
-    public string DisplayName { get; set; }
+    public string ChatterName { get; set; }
     public string CompanyName { get; set; }
     public string Motto { get; set; } = "We don't need a motto";
     public int Points { get; set; }
     public List<Employee> Employees { get; set; } = new();
 
+    [JsonIgnore]
     public string EmployeeList =>
         string.Join(", ",
             Employees
@@ -20,5 +23,5 @@ public class Player
                     Count = g.Count()
                 })
                 .OrderBy(x => x.Job)
-                .Select(x => $"{x.Job} ({x.Count})"));
+                .Select(x => $"{x.Count} {x.Job}"));
 }
