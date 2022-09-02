@@ -16,12 +16,6 @@ public abstract class BaseCommandHandler
     protected (string Id, string Name, Player? Player) ChatterDetails(ChatCommand chatCommand) =>
         (chatCommand.ChatMessage.UserId, chatCommand.ChatMessage.DisplayName, Players[chatCommand.ChatMessage.UserId]);
 
-    protected string PlayerList =>
-        string.Join(", ",
-            Players.Values
-                .OrderBy(c => c.CompanyName)
-                .Select(c => $"{c.CompanyName} ({c.DisplayName})"));
-
     protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
         Dictionary<string, Player> players)
     {
