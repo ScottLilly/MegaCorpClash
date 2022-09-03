@@ -21,7 +21,7 @@ public class StaffCommandHandler : BaseCommandHandler
         }
 
         string employeeList = 
-            $"You have {chatter.Company.Employees.Count} " + 
+            $"You have {chatter.Company.Employees.Count}" + 
             (chatter.Company.Employees.Count == 1 ? " employee. " : " employees. ") +
             chatter.Company.EmployeeList;
 

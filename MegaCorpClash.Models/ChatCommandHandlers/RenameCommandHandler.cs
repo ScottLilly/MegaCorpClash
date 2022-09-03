@@ -40,7 +40,6 @@ public class RenameCommandHandler : BaseCommandHandler
         chatter.Company.CompanyName = newCompanyName;
 
         NotifyPlayerDataUpdated();
-
         PublishMessage(chatter.Name,
             $"Your company is now named {chatter.Company.CompanyName}");
     }

@@ -14,16 +14,16 @@ public class SetMottoCommandHandler : BaseCommandHandler
     {
         var chatter = ChatterDetails(chatCommand);
 
+        if (chatter.Company == null)
+        {
+            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(chatCommand.ArgumentsAsString))
         {
             PublishMessage(chatter.Name, 
                 "You must enter a value for the motto");
-            return;
-        }
-
-        if (chatter.Company == null)
-        {
-            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
             return;
         }
 

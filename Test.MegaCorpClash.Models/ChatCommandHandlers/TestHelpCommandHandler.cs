@@ -19,7 +19,21 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
 
         var chatCommand = GetChatCommand("!help");
 
+        // Call the first time. List needs to be created.
         var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(chatCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status",
+            chatMessageEvent.Arguments.Message);
+
+        // Call a second time. Should have list created this time.
+        // This is for testing code coverage.
+        chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
