@@ -301,7 +301,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!hire sales 2");
+        var chatCommand = GetChatCommand("!hire 2 sales");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
