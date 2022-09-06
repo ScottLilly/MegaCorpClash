@@ -1,7 +1,4 @@
-﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
-using MegaCorpClash.Models.ExtensionMethods;
+﻿using MegaCorpClash.Models.CustomEventArgs;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -14,17 +11,16 @@ public class TwitchConnector
     private bool _hasConnected;
 
     private readonly string _channelName;
-    private readonly List<BaseCommandHandler> _chatCommandHandlers;
     private readonly ConnectionCredentials _credentials;
     private readonly TwitchClient _client = new();
 
     public event EventHandler OnConnected;
     public event EventHandler OnDisconnected;
     public event EventHandler<ChattedEventArgs> OnPersonChatted;
+    public event EventHandler<GameCommand> OnGameCommandReceived;
     public event EventHandler<string> OnLogMessagePublished;
 
-    public TwitchConnector(GameSettings gameSettings, 
-        List<BaseCommandHandler> chatCommandHandlers)
+    public TwitchConnector(GameSettings gameSettings)
     {
         if (gameSettings == null)
         {
@@ -37,7 +33,6 @@ public class TwitchConnector
         }
 
         _channelName = gameSettings.ChannelName;
-        _chatCommandHandlers = chatCommandHandlers;
         _credentials = CreateCredentials(gameSettings);
 
         SubscribeToEvents();
@@ -137,28 +132,12 @@ public class TwitchConnector
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        OnPersonChatted?.Invoke(this, 
-            new ChattedEventArgs(e.Command.ChatterUserId()));
-
-        BaseCommandHandler? chatCommandHandler = 
-            _chatCommandHandlers
-                .FirstOrDefault(cch => cch.CommandName.Matches(e.Command.CommandText));
-
-        if (chatCommandHandler == null)
-        {
-            return;
-        }
-
-        WriteMessageToLog($"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
-
-        var gameCommand = 
+        OnGameCommandReceived?.Invoke(this, 
             new GameCommand(
                 e.Command.ChatMessage.UserId, 
                 e.Command.ChatMessage.DisplayName,
                 e.Command.CommandText, 
-                e.Command.ArgumentsAsString);
-
-        chatCommandHandler?.Execute(gameCommand);
+                e.Command.ArgumentsAsString));
     }
 
     #endregion
