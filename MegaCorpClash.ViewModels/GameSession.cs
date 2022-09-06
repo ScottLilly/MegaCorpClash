@@ -15,6 +15,7 @@ public class GameSession
     private readonly TwitchConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
 
+    private List<BaseCommandHandler> _gameCommandHandlers = new();
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
     private System.Timers.Timer _pointsTimer;
@@ -24,15 +25,15 @@ public class GameSession
         _gameSettings = gameSettings;
 
         PopulatePlayers();
+        PopulateGameCommandHandlers();
 
         _pointsCalculator = new PointsCalculator(gameSettings, _players);
 
-        var chatCommandHandlers = GetChatCommandHandlers();
-
-        _twitchConnector = new TwitchConnector(gameSettings, chatCommandHandlers);
+        _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnConnected += HandleConnected;
         _twitchConnector.OnDisconnected += HandleDisconnected;
         _twitchConnector.OnPersonChatted += HandlePersonChatted;
+        _twitchConnector.OnGameCommandReceived += HandleGameCommandReceived;
         _twitchConnector.OnLogMessagePublished += HandleLogMessagePublished;
         _twitchConnector.Connect();
 
@@ -67,25 +68,23 @@ public class GameSession
         }
     }
 
-    private List<BaseCommandHandler> GetChatCommandHandlers()
+    private void PopulateGameCommandHandlers()
     {
         var baseType = typeof(BaseCommandHandler);
         var assembly = baseType.Assembly;
 
-        List<BaseCommandHandler> commandHandlers = 
+        _gameCommandHandlers = 
             assembly.GetTypes()
             .Where(t => t.IsSubclassOf(baseType))
-            .Select(t => Activator.CreateInstance(t, new object[] {_gameSettings, _players}))
+            .Select(t => Activator.CreateInstance(t, _gameSettings, _players))
             .Cast<BaseCommandHandler>()
             .ToList();
 
-        foreach(BaseCommandHandler commandHandler in commandHandlers)
+        foreach(BaseCommandHandler commandHandler in _gameCommandHandlers)
         {
             commandHandler.OnChatMessagePublished += HandleChatMessagePublished;
             commandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         }
-
-        return commandHandlers;
     }
 
     #endregion
@@ -115,6 +114,22 @@ public class GameSession
     private void HandleChatMessagePublished(object? sender, ChatMessageEventArgs e)
     {
         WriteMessageToTwitchChat($"{e.ChatterDisplayName} {e.Message}");
+    }
+
+    private void HandleGameCommandReceived(object? sender, GameCommand e)
+    {
+        BaseCommandHandler? gameCommandHandler =
+            _gameCommandHandlers
+                .FirstOrDefault(cch => cch.CommandName.Matches(e.CommandName));
+
+        if (gameCommandHandler == null)
+        {
+            return;
+        }
+
+        WriteMessageToLog($"[{e.ChatterName}] {e.CommandName} {e.Argument}");
+
+        gameCommandHandler?.Execute(e);
     }
 
     private void HandlePlayerDataUpdated(object? sender, EventArgs e)
