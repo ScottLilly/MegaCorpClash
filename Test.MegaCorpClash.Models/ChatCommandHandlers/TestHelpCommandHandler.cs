@@ -17,7 +17,6 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HelpCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!help");
         var gameCommand = GetGameCommand("!help");
 
         // Call the first time. List needs to be created.

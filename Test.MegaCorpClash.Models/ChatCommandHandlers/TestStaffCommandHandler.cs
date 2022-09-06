@@ -17,7 +17,6 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StaffCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!staff");
         var gameCommand = GetGameCommand("!staff");
 
         var chatMessageEvent =
@@ -62,7 +61,6 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StaffCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!staff");
         var gameCommand = GetGameCommand("!staff");
 
         var chatMessageEvent =

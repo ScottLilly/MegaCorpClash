@@ -17,7 +17,6 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!rename");
         var gameCommand = GetGameCommand("!rename");
 
         var chatMessageEvent =
@@ -49,7 +48,6 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!rename");
         var gameCommand = GetGameCommand("!rename");
 
         var chatMessageEvent =
@@ -89,7 +87,6 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!rename FirstCo");
         var gameCommand = GetGameCommand("!rename FirstCo");
 
         var chatMessageEvent =
@@ -129,7 +126,6 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!rename SecondCo");
         var gameCommand = GetGameCommand("!rename SecondCo");
 
         var chatMessageEvent =

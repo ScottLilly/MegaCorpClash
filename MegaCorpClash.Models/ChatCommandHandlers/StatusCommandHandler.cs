@@ -12,7 +12,7 @@ public class StatusCommandHandler : BaseCommandHandler
     {
         var chatter = ChatterDetails(gameCommand);
 
-        PublishMessage(chatter.Name,
+        PublishMessage(chatter.ChatterName,
             chatter.Company == null
                 ? Literals.YouDoNotHaveACompany
                 : $"At {chatter.Company.CompanyName} we always say '{chatter.Company.Motto}'. That's how we earned {chatter.Company.Points} {GameSettings.PointsName}");

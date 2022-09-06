@@ -14,13 +14,13 @@ public class SetMottoCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(gameCommand.Argument))
         {
-            PublishMessage(chatter.Name, 
+            PublishMessage(chatter.ChatterName, 
                 "You must enter a value for the motto");
             return;
         }
@@ -28,7 +28,7 @@ public class SetMottoCommandHandler : BaseCommandHandler
         chatter.Company.Motto = gameCommand.Argument;
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.Name,
+        PublishMessage(chatter.ChatterName,
                 $"Your new company motto is '{chatter.Company.Motto}'");
     }
 }

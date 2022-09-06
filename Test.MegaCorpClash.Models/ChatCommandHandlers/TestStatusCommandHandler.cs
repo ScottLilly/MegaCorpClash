@@ -17,7 +17,6 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!status");
         var gameCommand = GetGameCommand("!status");
 
         var chatMessageEvent =
@@ -49,7 +48,6 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!status");
         var gameCommand = GetGameCommand("!status");
 
         var chatMessageEvent =
@@ -82,7 +80,6 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!status");
         var gameCommand = GetGameCommand("!status");
 
         var chatMessageEvent =

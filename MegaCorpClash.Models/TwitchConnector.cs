@@ -153,7 +153,7 @@ public class TwitchConnector
 
         var gameCommand = 
             new GameCommand(
-                e.Command.ChatMessage.Id, 
+                e.Command.ChatMessage.UserId, 
                 e.Command.ChatMessage.DisplayName,
                 e.Command.CommandText, 
                 e.Command.ArgumentsAsString);

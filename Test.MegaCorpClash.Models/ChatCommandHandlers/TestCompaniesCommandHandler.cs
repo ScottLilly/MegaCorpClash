@@ -17,7 +17,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!companies");
         var gameCommand = GetGameCommand("!companies");
 
         var chatMessageEvent =
@@ -45,7 +44,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!companies");
         var gameCommand = GetGameCommand("!companies");
 
         var chatMessageEvent =
@@ -79,7 +77,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!companies");
         var gameCommand = GetGameCommand("!companies");
 
         var chatMessageEvent =

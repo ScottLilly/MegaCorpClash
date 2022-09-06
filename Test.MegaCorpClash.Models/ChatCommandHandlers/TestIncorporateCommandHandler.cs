@@ -17,7 +17,6 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!incorporate");
         var gameCommand = GetGameCommand("!incorporate");
 
         var chatMessageEvent = 
@@ -43,7 +42,6 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!incorporate ABC");
         var gameCommand = GetGameCommand("!incorporate ABC");
 
         var chatMessageEvent =
@@ -69,7 +67,6 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!incorporate Test");
         var gameCommand = GetGameCommand("!incorporate Test");
 
         var chatMessageEvent =
@@ -93,7 +90,6 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!incorporate Test");
         var gameCommand = GetGameCommand("!incorporate Test");
 
         var chatMessageEvent =

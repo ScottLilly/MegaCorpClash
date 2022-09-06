@@ -32,7 +32,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!hire");
         var gameCommand = GetGameCommand("!hire");
 
         var chatMessageEvent =
@@ -54,7 +53,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire");
         var gameCommand = GetGameCommand("!hire");
 
         var chatMessageEvent =
@@ -76,7 +74,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire 1");
         var gameCommand = GetGameCommand("!hire 1");
 
         var chatMessageEvent =
@@ -98,7 +95,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire asd");
         var gameCommand = GetGameCommand("!hire asd");
 
         var chatMessageEvent =
@@ -120,7 +116,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire asd qwe");
         var gameCommand = GetGameCommand("!hire asd qwe");
 
         var chatMessageEvent =
@@ -142,7 +137,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire 1 2 3");
         var gameCommand = GetGameCommand("!hire 1 2 3");
 
         var chatMessageEvent =
@@ -164,7 +158,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire CEO 1");
         var gameCommand = GetGameCommand("!hire CEO 1");
 
         var chatMessageEvent =
@@ -186,7 +179,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire Sales 0");
         var gameCommand = GetGameCommand("!hire Sales 0");
 
         var chatMessageEvent =
@@ -208,7 +200,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
 
-        var chatCommand = GetChatCommand("!hire Sales -1");
         var gameCommand = GetGameCommand("!hire Sales -1");
 
         var chatMessageEvent =
@@ -241,7 +232,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!hire Sales 1");
         var gameCommand = GetGameCommand("!hire Sales 1");
 
         var chatMessageEvent =
@@ -274,7 +264,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!hire Sales 1");
         var gameCommand = GetGameCommand("!hire Sales 1");
 
         var chatMessageEvent =
@@ -312,7 +301,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!hire 2 sales");
         var gameCommand = GetGameCommand("!hire 2 sales");
 
         var chatMessageEvent =

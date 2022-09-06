@@ -17,7 +17,6 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto");
         var gameCommand = GetGameCommand("!setmotto");
 
         var chatMessageEvent =
@@ -49,7 +48,6 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto");
         var gameCommand = GetGameCommand("!setmotto");
 
         var chatMessageEvent =
@@ -99,7 +97,6 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto This is our new motto");
         var gameCommand = GetGameCommand("!setmotto This is our new motto");
 
         var chatMessageEvent =

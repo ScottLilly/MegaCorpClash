@@ -14,7 +14,7 @@ public class StaffCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
             return;
         }
 
@@ -23,6 +23,6 @@ public class StaffCommandHandler : BaseCommandHandler
             (chatter.Company.Employees.Count == 1 ? " employee. " : " employees. ") +
             chatter.Company.EmployeeList;
 
-        PublishMessage(chatter.Name, employeeList);
+        PublishMessage(chatter.ChatterName, employeeList);
     }
 }

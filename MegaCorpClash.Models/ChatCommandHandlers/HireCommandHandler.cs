@@ -14,14 +14,14 @@ public class HireCommandHandler : BaseCommandHandler
 
         if(chatter.Company == null)
         {
-            PublishMessage(chatter.Name, 
+            PublishMessage(chatter.ChatterName, 
                 Literals.YouDoNotHaveACompany);
             return;
         }
 
         if(gameCommand.ArgumentsAsList.Count != 2)
         {
-            PublishMessage(chatter.Name, Literals.Hire_InvalidParameters);
+            PublishMessage(chatter.ChatterName, Literals.Hire_InvalidParameters);
             return;
         }
 
@@ -29,13 +29,13 @@ public class HireCommandHandler : BaseCommandHandler
 
         if(hiringDetails.Job == null || hiringDetails.Qty == null)
         {
-            PublishMessage(chatter.Name, Literals.Hire_InvalidParameters);
+            PublishMessage(chatter.ChatterName, Literals.Hire_InvalidParameters);
             return;
         }
 
         if (hiringDetails.Qty < 1)
         {
-            PublishMessage(chatter.Name,
+            PublishMessage(chatter.ChatterName,
                 Literals.Hire_QuantityMustBeGreaterThanZero);
             return;
         }
@@ -48,7 +48,7 @@ public class HireCommandHandler : BaseCommandHandler
 
         if (hiringCost > chatter.Company.Points)
         {
-            PublishMessage(chatter.Name,
+            PublishMessage(chatter.ChatterName,
                 $"It costs {hiringCost} {GameSettings.PointsName} to hire {hiringDetails.Qty} {hiringDetails.Job} employees. You only have {chatter.Company.Points} {GameSettings.PointsName}");
             return;
         }
@@ -71,7 +71,7 @@ public class HireCommandHandler : BaseCommandHandler
             $"Congratulations! You hired {hiringDetails.Qty} {hiringDetails.Job} employee" +
             (hiringDetails.Qty == 1 ? "." : "s.");
 
-        PublishMessage(chatter.Name, message);
+        PublishMessage(chatter.ChatterName, message);
     }
 
     private static (EmployeeType? Job, int? Qty) GetHiringDetails(List<string> arguments)

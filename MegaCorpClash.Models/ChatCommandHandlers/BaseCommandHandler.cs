@@ -11,7 +11,7 @@ public abstract class BaseCommandHandler
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
-    protected (string Id, string Name, Company? Company)
+    protected (string ChatterId, string ChatterName, Company? Company)
         ChatterDetails(GameCommand gameCommand) =>
         (gameCommand.ChatterId,
             gameCommand.ChatterName,

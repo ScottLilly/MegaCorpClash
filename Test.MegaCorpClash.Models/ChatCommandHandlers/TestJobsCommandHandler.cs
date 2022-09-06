@@ -32,7 +32,6 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new JobsCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!jobs");
         var gameCommand = GetGameCommand("!jobs");
 
         var chatMessageEvent =
