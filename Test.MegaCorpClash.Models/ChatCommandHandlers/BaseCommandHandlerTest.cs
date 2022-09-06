@@ -1,7 +1,4 @@
 ﻿using MegaCorpClash.Models;
-using System.Drawing;
-using TwitchLib.Client.Enums;
-using TwitchLib.Client.Models;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -21,36 +18,22 @@ public abstract class BaseCommandHandlerTest
         };
     }
 
-    internal static ChatCommand GetChatCommand(string command)
+    internal static GameCommand GetGameCommand(string command)
     {
-        return GetChatCommand(DEFAULT_CHATTER_ID,
-            DEFAULT_CHATTER_DISPLAY_NAME, command);
-    }
+        var commandWords =
+            command.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-    private static ChatCommand GetChatCommand(string userId,
-        string displayName, string commandText)
-    {
-        var chatMessage =
-            new ChatMessage("CodingWithScottBot", userId, "codingwithscott",
-                displayName, "", Color.AliceBlue, null, "message goes here",
-                UserType.Viewer, "codingwithscott", "456", false, 0,
-                "789", false, false, false, false, false, false, false, Noisy.False,
-                "", "", new List<KeyValuePair<string, string>>(), new CheerBadge(0),
-                0, 0d);
+        string commandName = string.Empty;
 
-        if (commandText[0] == COMMAND_PREFIX)
+        if (commandWords[0].StartsWith(COMMAND_PREFIX))
         {
-            commandText = commandText[1..];
+            commandName = commandWords[0][1..];
         }
 
-        var commandWords =
-            commandText.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        return
-            new ChatCommand(chatMessage,
-                commandWords[0],
-                string.Join(' ', commandWords.Skip(1)),
-                commandWords.Skip(1).ToList(),
-                COMMAND_PREFIX);
+        return new GameCommand(
+            DEFAULT_CHATTER_ID,
+            DEFAULT_CHATTER_DISPLAY_NAME,
+            commandName,
+            string.Join(' ', commandWords.Skip(1)));
     }
 }

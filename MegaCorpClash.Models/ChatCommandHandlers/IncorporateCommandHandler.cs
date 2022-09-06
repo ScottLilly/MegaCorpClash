@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -11,28 +10,28 @@ public class IncorporateCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
-        string? companyName = chatCommand.ArgumentsAsString;
+        var chatter = ChatterDetails(gameCommand);
+        string? companyName = gameCommand.Argument;
 
         if (string.IsNullOrWhiteSpace(companyName))
         {
-            PublishMessage(chatter.Name, 
+            PublishMessage(chatter.ChatterName, 
                 Literals.Incorporate_NameRequired);
             return;
         }
 
         if (chatter.Company != null)
         {
-            PublishMessage(chatter.Name,
+            PublishMessage(chatter.ChatterName,
                 $"You already have a company named {chatter.Company.CompanyName}");
             return;
         }
 
         if (Companies.Values.Any(p => p.CompanyName.Matches(companyName)))
         {
-            PublishMessage(chatter.Name,
+            PublishMessage(chatter.ChatterName,
                 $"There is already a company named {companyName}");
             return;
         }
@@ -40,8 +39,8 @@ public class IncorporateCommandHandler : BaseCommandHandler
         chatter.Company = 
             new Company
             {
-                ChatterId = chatter.Id,
-                ChatterName = chatter.Name,
+                ChatterId = chatter.ChatterId,
+                ChatterName = chatter.ChatterName,
                 CompanyName = companyName,
                 CreatedOn = DateTime.UtcNow,
                 Employees = new List<Employee>
@@ -52,10 +51,10 @@ public class IncorporateCommandHandler : BaseCommandHandler
 
             };
 
-        Companies[chatter.Id] = chatter.Company;
+        Companies[chatter.ChatterId] = chatter.Company;
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.Name,
+        PublishMessage(chatter.ChatterName,
             $"You are now the proud CEO of {companyName}");
     }
 }

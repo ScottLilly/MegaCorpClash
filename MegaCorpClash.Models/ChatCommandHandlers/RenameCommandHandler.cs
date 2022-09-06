@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -11,28 +10,28 @@ public class RenameCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
+        var chatter = ChatterDetails(gameCommand);
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.Name, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
             return;
         }
 
-        string newCompanyName = chatCommand.ArgumentsAsString;
+        string newCompanyName = gameCommand.Argument;
 
         if (string.IsNullOrWhiteSpace(newCompanyName))
         {
-            PublishMessage(chatter.Name,
+            PublishMessage(chatter.ChatterName,
                 Literals.Rename_YouMustProvideANewName);
             return;
         }
 
         if (Companies.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
         {
-            PublishMessage(chatter.Name, 
+            PublishMessage(chatter.ChatterName, 
                 $"There is already a company named {newCompanyName}");
             return;
         }
@@ -40,7 +39,7 @@ public class RenameCommandHandler : BaseCommandHandler
         chatter.Company.CompanyName = newCompanyName;
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.Name,
+        PublishMessage(chatter.ChatterName,
             $"Your company is now named {chatter.Company.CompanyName}");
     }
 }

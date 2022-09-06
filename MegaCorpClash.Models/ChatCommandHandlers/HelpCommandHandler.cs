@@ -1,6 +1,4 @@
-﻿using TwitchLib.Client.Models;
-
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class HelpCommandHandler : BaseCommandHandler
 {
@@ -12,7 +10,7 @@ public class HelpCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
         PopulateCommandList();
 

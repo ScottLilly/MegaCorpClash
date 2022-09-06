@@ -1,5 +1,4 @@
 ﻿using MegaCorpClash.Models.CustomEventArgs;
-using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -12,12 +11,12 @@ public abstract class BaseCommandHandler
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
-    protected (string Id, string Name, Company? Company) 
-        ChatterDetails(ChatCommand chatCommand) =>
-        (chatCommand.ChatMessage.UserId, 
-            chatCommand.ChatMessage.DisplayName, 
-            Companies.ContainsKey(chatCommand.ChatMessage.UserId) 
-                ? Companies[chatCommand.ChatMessage.UserId] 
+    protected (string ChatterId, string ChatterName, Company? Company)
+        ChatterDetails(GameCommand gameCommand) =>
+        (gameCommand.ChatterId,
+            gameCommand.ChatterName,
+            Companies.ContainsKey(gameCommand.ChatterId)
+                ? Companies[gameCommand.ChatterId]
                 : null);
 
     protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
@@ -28,7 +27,7 @@ public abstract class BaseCommandHandler
         Companies = companies;
     }
 
-    public abstract void Execute(ChatCommand chatCommand);
+    public abstract void Execute(GameCommand gameCommand);
 
     protected void PublishMessage(string message)
     {

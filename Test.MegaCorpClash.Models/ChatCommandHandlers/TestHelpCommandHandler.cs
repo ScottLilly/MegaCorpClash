@@ -17,14 +17,14 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HelpCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!help");
+        var gameCommand = GetGameCommand("!help");
 
         // Call the first time. List needs to be created.
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
@@ -37,7 +37,7 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);

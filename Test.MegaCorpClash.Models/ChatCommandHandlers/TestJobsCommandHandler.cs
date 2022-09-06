@@ -32,13 +32,13 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new JobsCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!jobs");
+        var gameCommand = GetGameCommand("!jobs");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("",

@@ -17,13 +17,13 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto");
+        var gameCommand = GetGameCommand("!setmotto");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -48,13 +48,13 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto");
+        var gameCommand = GetGameCommand("!setmotto");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -97,13 +97,13 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new SetMottoCommandHandler(_gameSettings, companies);
 
-        var chatCommand = GetChatCommand("!setmotto This is our new motto");
+        var gameCommand = GetGameCommand("!setmotto This is our new motto");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
