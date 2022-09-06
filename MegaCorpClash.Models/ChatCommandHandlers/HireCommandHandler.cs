@@ -1,6 +1,4 @@
-﻿using TwitchLib.Client.Models;
-
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class HireCommandHandler : BaseCommandHandler
 {
@@ -10,9 +8,9 @@ public class HireCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
+        var chatter = ChatterDetails(gameCommand);
 
         if(chatter.Company == null)
         {
@@ -21,13 +19,13 @@ public class HireCommandHandler : BaseCommandHandler
             return;
         }
 
-        if(chatCommand.ArgumentsAsList.Count != 2)
+        if(gameCommand.ArgumentsAsList.Count != 2)
         {
             PublishMessage(chatter.Name, Literals.Hire_InvalidParameters);
             return;
         }
 
-        var hiringDetails = GetHiringDetails(chatCommand.ArgumentsAsList);
+        var hiringDetails = GetHiringDetails(gameCommand.ArgumentsAsList);
 
         if(hiringDetails.Job == null || hiringDetails.Qty == null)
         {

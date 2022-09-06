@@ -18,12 +18,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
             new IncorporateCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!incorporate");
+        var gameCommand = GetGameCommand("!incorporate");
 
         var chatMessageEvent = 
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
@@ -43,12 +44,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
             new IncorporateCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!incorporate ABC");
+        var gameCommand = GetGameCommand("!incorporate ABC");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -68,12 +70,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
             new IncorporateCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!incorporate Test");
+        var gameCommand = GetGameCommand("!incorporate Test");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -91,12 +94,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
             new IncorporateCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!incorporate Test");
+        var gameCommand = GetGameCommand("!incorporate Test");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,

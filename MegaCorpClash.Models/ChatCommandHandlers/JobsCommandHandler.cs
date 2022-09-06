@@ -1,6 +1,4 @@
-﻿using TwitchLib.Client.Models;
-
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class JobsCommandHandler : BaseCommandHandler
 {
@@ -10,7 +8,7 @@ public class JobsCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
         PublishMessage($"Jobs and cost to hire: {GameSettings.JobsList}");
     }

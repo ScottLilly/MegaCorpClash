@@ -33,12 +33,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             new HireCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!hire");
+        var gameCommand = GetGameCommand("!hire");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
@@ -54,12 +55,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire");
+        var gameCommand = GetGameCommand("!hire");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
@@ -75,12 +77,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire 1");
+        var gameCommand = GetGameCommand("!hire 1");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -96,12 +99,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire asd");
+        var gameCommand = GetGameCommand("!hire asd");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -117,12 +121,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire asd qwe");
+        var gameCommand = GetGameCommand("!hire asd qwe");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -138,12 +143,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire 1 2 3");
+        var gameCommand = GetGameCommand("!hire 1 2 3");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -159,12 +165,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire CEO 1");
+        var gameCommand = GetGameCommand("!hire CEO 1");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -180,12 +187,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire Sales 0");
+        var gameCommand = GetGameCommand("!hire Sales 0");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -201,12 +209,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             GetHireCommandHandler();
 
         var chatCommand = GetChatCommand("!hire Sales -1");
+        var gameCommand = GetGameCommand("!hire Sales -1");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -233,12 +242,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             new HireCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!hire Sales 1");
+        var gameCommand = GetGameCommand("!hire Sales 1");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -265,12 +275,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             new HireCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!hire Sales 1");
+        var gameCommand = GetGameCommand("!hire Sales 1");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -302,12 +313,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             new HireCommandHandler(_gameSettings, companies);
 
         var chatCommand = GetChatCommand("!hire 2 sales");
+        var gameCommand = GetGameCommand("!hire 2 sales");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
                 h => commandHandler.OnChatMessagePublished += h,
                 h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(chatCommand));
+                () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,

@@ -151,7 +151,14 @@ public class TwitchConnector
 
         WriteMessageToLog($"[{e.Command.ChatMessage.DisplayName}] {e.Command.ChatMessage.Message}");
 
-        chatCommandHandler?.Execute(e.Command);
+        var gameCommand = 
+            new GameCommand(
+                e.Command.ChatMessage.Id, 
+                e.Command.ChatMessage.DisplayName,
+                e.Command.CommandText, 
+                e.Command.ArgumentsAsString);
+
+        chatCommandHandler?.Execute(gameCommand);
     }
 
     #endregion

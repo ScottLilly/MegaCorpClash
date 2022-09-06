@@ -27,6 +27,18 @@ public abstract class BaseCommandHandlerTest
             DEFAULT_CHATTER_DISPLAY_NAME, command);
     }
 
+    internal static GameCommand GetGameCommand(string command)
+    {
+        var chatCommand = GetChatCommand(command);
+
+        return 
+            new GameCommand(
+                chatCommand.ChatMessage.UserId,
+                chatCommand.ChatMessage.DisplayName,
+                chatCommand.CommandText,
+                chatCommand.ArgumentsAsString);
+    }
+
     private static ChatCommand GetChatCommand(string userId,
         string displayName, string commandText)
     {

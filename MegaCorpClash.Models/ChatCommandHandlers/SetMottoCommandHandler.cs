@@ -1,6 +1,4 @@
-﻿using TwitchLib.Client.Models;
-
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class SetMottoCommandHandler : BaseCommandHandler
 {
@@ -10,9 +8,9 @@ public class SetMottoCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
+        var chatter = ChatterDetails(gameCommand);
 
         if (chatter.Company == null)
         {
@@ -20,14 +18,14 @@ public class SetMottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(chatCommand.ArgumentsAsString))
+        if (string.IsNullOrWhiteSpace(gameCommand.Argument))
         {
             PublishMessage(chatter.Name, 
                 "You must enter a value for the motto");
             return;
         }
 
-        chatter.Company.Motto = chatCommand.ArgumentsAsString;
+        chatter.Company.Motto = gameCommand.Argument;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.Name,

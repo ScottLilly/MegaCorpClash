@@ -1,6 +1,4 @@
-﻿using TwitchLib.Client.Models;
-
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class StaffCommandHandler : BaseCommandHandler
 {
@@ -10,9 +8,9 @@ public class StaffCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
+        var chatter = ChatterDetails(gameCommand);
 
         if (chatter.Company == null)
         {

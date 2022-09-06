@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using TwitchLib.Client.Models;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -11,10 +10,10 @@ public class IncorporateCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(ChatCommand chatCommand)
+    public override void Execute(GameCommand gameCommand)
     {
-        var chatter = ChatterDetails(chatCommand);
-        string? companyName = chatCommand.ArgumentsAsString;
+        var chatter = ChatterDetails(gameCommand);
+        string? companyName = gameCommand.Argument;
 
         if (string.IsNullOrWhiteSpace(companyName))
         {
