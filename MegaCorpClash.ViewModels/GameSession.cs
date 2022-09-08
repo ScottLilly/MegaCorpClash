@@ -2,6 +2,7 @@
 using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Models.ChatConnectors;
 using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Services;
 
@@ -12,7 +13,7 @@ public class GameSession
     private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Company> _players = new();
-    private readonly TwitchConnector? _twitchConnector;
+    private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
 
     private List<BaseCommandHandler> _gameCommandHandlers = new();
