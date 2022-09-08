@@ -29,7 +29,12 @@ public class PointsCalculator
         {
             foreach (var player in _players.Values)
             {
-                if (s_chattersDuringTurn.Contains(player.ChatterId))
+                if (player.IsBroadcaster)
+                {
+                    player.Points +=
+                        _gameSettings.TurnDetails.PointsPerTurn.Chatter * 5;
+                }
+                else if (s_chattersDuringTurn.Contains(player.ChatterId))
                 {
                     player.Points += 
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter;

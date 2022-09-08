@@ -5,6 +5,7 @@ namespace MegaCorpClash.Models;
 public class Company
 {
     public string ChatterId { get; set; }
+    public bool IsBroadcaster { get; set; }
     public DateTime CreatedOn { get; set; }
     public string ChatterName { get; set; }
     public string CompanyName { get; set; }
