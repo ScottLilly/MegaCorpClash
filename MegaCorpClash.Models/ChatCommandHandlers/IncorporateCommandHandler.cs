@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Core;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -19,6 +20,13 @@ public class IncorporateCommandHandler : BaseCommandHandler
         {
             PublishMessage(chatter.ChatterName, 
                 Literals.Incorporate_NameRequired);
+            return;
+        }
+
+        if (!companyName.IsSafeText())
+        {
+            PublishMessage(chatter.ChatterName,
+                Literals.CompanyName_NotSafeText);
             return;
         }
 

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CompanyMotto_NotSafeText" xml:space="preserve">
+    <value>Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
+  </data>
+  <data name="CompanyName_NotSafeText" xml:space="preserve">
+    <value>Company name can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
+  </data>
   <data name="Hire_InvalidParameters" xml:space="preserve">
     <value>To hire an employee, type '!hire &lt;job name&gt; &lt;quantity&gt;'</value>
   </data>

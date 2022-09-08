@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Core;
+
+namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public class SetMottoCommandHandler : BaseCommandHandler
 {
@@ -22,6 +24,13 @@ public class SetMottoCommandHandler : BaseCommandHandler
         {
             PublishMessage(chatter.ChatterName, 
                 "You must enter a value for the motto");
+            return;
+        }
+
+        if (!gameCommand.Argument.IsSafeText())
+        {
+            PublishMessage(chatter.ChatterName,
+                Literals.CompanyMotto_NotSafeText);
             return;
         }
 

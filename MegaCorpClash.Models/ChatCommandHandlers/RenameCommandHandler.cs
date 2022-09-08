@@ -1,4 +1,5 @@
 ﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Core;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -26,6 +27,13 @@ public class RenameCommandHandler : BaseCommandHandler
         {
             PublishMessage(chatter.ChatterName,
                 Literals.Rename_YouMustProvideANewName);
+            return;
+        }
+
+        if (!newCompanyName.IsSafeText())
+        {
+            PublishMessage(chatter.ChatterName,
+                Literals.CompanyName_NotSafeText);
             return;
         }
 
