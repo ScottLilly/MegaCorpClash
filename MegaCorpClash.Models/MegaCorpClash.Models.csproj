@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MegaCorpClash.Core\MegaCorpClash.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Literals.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

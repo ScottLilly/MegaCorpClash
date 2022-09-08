@@ -61,6 +61,24 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        /// </summary>
+        public static string CompanyMotto_NotSafeText {
+            get {
+                return ResourceManager.GetString("CompanyMotto_NotSafeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company name can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        /// </summary>
+        public static string CompanyName_NotSafeText {
+            get {
+                return ResourceManager.GetString("CompanyName_NotSafeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To hire an employee, type &apos;!hire &lt;job name&gt; &lt;quantity&gt;&apos;.
         /// </summary>
         public static string Hire_InvalidParameters {
