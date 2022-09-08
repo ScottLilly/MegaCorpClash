@@ -4,9 +4,9 @@ using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
 
-namespace MegaCorpClash.Models;
+namespace MegaCorpClash.Models.ChatConnectors;
 
-public class TwitchConnector
+public class TwitchConnector : IChatConnector
 {
     private bool _hasConnected;
 
@@ -126,17 +126,17 @@ public class TwitchConnector
 
     private void HandleChatMessageReceived(object? sender, OnMessageReceivedArgs e)
     {
-        OnPersonChatted?.Invoke(this, 
+        OnPersonChatted?.Invoke(this,
             new ChattedEventArgs(e.ChatMessage.UserId));
     }
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
-        OnGameCommandReceived?.Invoke(this, 
+        OnGameCommandReceived?.Invoke(this,
             new GameCommand(
-                e.Command.ChatMessage.UserId, 
+                e.Command.ChatMessage.UserId,
                 e.Command.ChatMessage.DisplayName,
-                e.Command.CommandText, 
+                e.Command.CommandText,
                 e.Command.ArgumentsAsString));
     }
 
