@@ -72,7 +72,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     public void Test_OneNumericParameter()
     {
         HireCommandHandler commandHandler = 
-            GetHireCommandHandler();
+            GetHireCommandHandler(100);
 
         var gameCommand = GetGameCommand("!hire 1");
 
@@ -90,7 +90,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
-    public void Test_OneTextParameter()
+    public void Test_OneInvalidTextParameter()
     {
         HireCommandHandler commandHandler = 
             GetHireCommandHandler();
@@ -107,6 +107,27 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
         Assert.Equal(Literals.Hire_InvalidParameters,
+            chatMessageEvent.Arguments.Message);
+    }
+
+    [Fact]
+    public void Test_OneValidTextParameter()
+    {
+        HireCommandHandler commandHandler =
+            GetHireCommandHandler(100);
+
+        var gameCommand = GetGameCommand("!hire sales");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("Congratulations! You hired 1 Sales employee.",
             chatMessageEvent.Arguments.Message);
     }
 
@@ -156,7 +177,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     public void Test_InvalidJobType()
     {
         HireCommandHandler commandHandler = 
-            GetHireCommandHandler();
+            GetHireCommandHandler(100);
 
         var gameCommand = GetGameCommand("!hire CEO 1");
 
@@ -321,15 +342,17 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal(2, company.Points);
     }
 
-    private HireCommandHandler GetHireCommandHandler()
+    private HireCommandHandler GetHireCommandHandler(int points = 0)
     {
         Dictionary<string, Company> companies = new();
 
-        companies.Add(DEFAULT_CHATTER_ID, new Company
-        {
-            ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
-            CompanyName = DEFAULT_CHATTER_DISPLAY_NAME
-        });
+        companies.Add(DEFAULT_CHATTER_ID, 
+            new Company
+            {
+                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
+                Points = points
+            });
 
         return new HireCommandHandler(_gameSettings, companies);
     }
