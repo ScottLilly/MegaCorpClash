@@ -77,8 +77,8 @@ public class HireCommandHandler : BaseCommandHandler
     {
         int? qty = 1;
         EmployeeType? employeeType = null;
-
-        var employeeTypeArgument = arguments[0];
+        string? employeeTypeArgument = arguments.Count == 1 ? arguments[0] : null;
+        
         if (int.TryParse(arguments[0], out int qty0))
         {
             qty = qty0;
@@ -88,8 +88,10 @@ public class HireCommandHandler : BaseCommandHandler
         else if (arguments.Count > 1 && int.TryParse(arguments[1], out var qty1))
         {
             qty = qty1;
+            employeeTypeArgument = arguments[0];
         }
-        if (Enum.TryParse(employeeTypeArgument, true, out EmployeeType emp0))
+
+        if (!string.IsNullOrWhiteSpace(employeeTypeArgument) &&Enum.TryParse(employeeTypeArgument, true, out EmployeeType emp0))
         {
             employeeType = emp0;
         }
