@@ -11,13 +11,13 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
 
     public TestJobsCommandHandler()
     {
-        _gameSettings.EmployeeHiringDetails.Add(new EmployeeHiringDetails
+        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
         {
             Type = EmployeeType.Sales,
             CostToHire = 10
         });
 
-        _gameSettings.EmployeeHiringDetails.Add(new EmployeeHiringDetails
+        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
         {
             Type = EmployeeType.Marketing,
             CostToHire = 25

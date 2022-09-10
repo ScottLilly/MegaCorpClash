@@ -12,10 +12,29 @@ public abstract class BaseCommandHandlerTest
 
     internal static GameSettings GetDefaultGameSettings()
     {
-        return new GameSettings
+        var gameSettings = new GameSettings
         {
-            PointsName = POINTS_NAME
+            PointsName = POINTS_NAME,
+            StartupDetails = new GameSettings.StartupInfo
+            {
+                InitialPoints = 50,
+                InitialStaff = new List<GameSettings.StartupInfo.StaffDetails>
+                {
+                    new()
+                    {
+                        Type = EmployeeType.Production,
+                        Qty = 1
+                    },
+                    new()
+                    {
+                        Type = EmployeeType.Sales,
+                        Qty = 1
+                    }
+                }
+            }
         };
+
+        return gameSettings;
     }
 
     internal static GameCommand GetGameCommand(string command)
