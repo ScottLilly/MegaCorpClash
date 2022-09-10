@@ -51,13 +51,20 @@ public class IncorporateCommandHandler : BaseCommandHandler
                 ChatterName = chatter.ChatterName,
                 CompanyName = companyName,
                 CreatedOn = DateTime.UtcNow,
-                Employees = new List<Employee>
-                {
-                    new() { Type = EmployeeType.Production, SkillLevel = 1 },
-                    new() { Type = EmployeeType.Sales, SkillLevel = 1 },
-                }
-
+                Points = GameSettings.StartupDetails.InitialPoints
             };
+
+        foreach (var staffDetails in GameSettings.StartupDetails.InitialStaff)
+        {
+            for (int i = 0; i < staffDetails.Qty; i++)
+            {
+                chatter.Company.Employees
+                    .Add(new Employee
+                    {
+                        Type = staffDetails.Type
+                    });
+            }
+        }
 
         Companies[chatter.ChatterId] = chatter.Company;
 
