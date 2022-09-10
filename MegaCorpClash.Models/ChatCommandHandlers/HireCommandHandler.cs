@@ -19,7 +19,7 @@ public class HireCommandHandler : BaseCommandHandler
             return;
         }
 
-        if(gameCommand.ArgumentsAsList.Count != 2)
+        if(gameCommand.ArgumentsAsList.Count is < 1 or > 2)
         {
             PublishMessage(chatter.ChatterName, Literals.Hire_InvalidParameters);
             return;
@@ -27,7 +27,7 @@ public class HireCommandHandler : BaseCommandHandler
 
         var hiringDetails = GetHiringDetails(gameCommand.ArgumentsAsList);
 
-        if(hiringDetails.Job == null || hiringDetails.Qty == null)
+        if(hiringDetails.Job == null)
         {
             PublishMessage(chatter.ChatterName, Literals.Hire_InvalidParameters);
             return;
@@ -76,25 +76,34 @@ public class HireCommandHandler : BaseCommandHandler
 
     private static (EmployeeType? Job, int? Qty) GetHiringDetails(List<string> arguments)
     {
-        int? qty = null;
+        int? qty = 1;
         EmployeeType? employeeType = null;
 
         if (int.TryParse(arguments[0], out int qty0))
         {
             qty = qty0;
 
-            if (Enum.TryParse(arguments[1], true, out EmployeeType emp))
+            if (arguments.Count > 1 &&
+                Enum.TryParse(arguments[1], true, out EmployeeType emp1))
             {
-                employeeType = emp;
+                employeeType = emp1;
             }
         }
-        else if (int.TryParse(arguments[1], out int qty1))
+        else if (arguments.Count > 1 &&
+                 int.TryParse(arguments[1], out int qty1))
         {
             qty = qty1;
 
-            if (Enum.TryParse(arguments[0], true, out EmployeeType emp))
+            if (Enum.TryParse(arguments[0], true, out EmployeeType emp0))
             {
-                employeeType = emp;
+                employeeType = emp0;
+            }
+        }
+        else if (arguments.Count == 1)
+        {
+            if (Enum.TryParse(arguments[0], true, out EmployeeType emp0))
+            {
+                employeeType = emp0;
             }
         }
 
