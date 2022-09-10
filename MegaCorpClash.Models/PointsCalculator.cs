@@ -5,6 +5,7 @@ public class PointsCalculator
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Company> _players;
 
+    private static readonly HashSet<string> s_chattersSinceStartup = new();
     private static readonly HashSet<string> s_chattersDuringTurn = new();
     private static readonly object s_syncLock = new();
     private static int s_bonusPointsNextTurn = 0;
@@ -29,6 +30,7 @@ public class PointsCalculator
         lock (s_syncLock)
         {
             s_chattersDuringTurn.Add(userId);
+            s_chattersSinceStartup.Add(userId);
         }
     }
 
@@ -38,7 +40,10 @@ public class PointsCalculator
         {
             foreach (var player in _players.Values)
             {
-                player.Points += s_bonusPointsNextTurn;
+                if (s_chattersSinceStartup.Contains(player.ChatterId))
+                {
+                    player.Points += s_bonusPointsNextTurn;
+                }
 
                 if (player.IsBroadcaster)
                 {
