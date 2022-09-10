@@ -151,6 +151,27 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal(Literals.Hire_InvalidParameters,
             chatMessageEvent.Arguments.Message);
     }
+    
+    [Fact]
+    public void Test_TwoValidButNoQty()
+    {
+        HireCommandHandler commandHandler =
+            GetHireCommandHandler(100);
+
+        var gameCommand = GetGameCommand("!hire Sales Production");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal(Literals.Hire_InvalidParameters,
+            chatMessageEvent.Arguments.Message);
+    }
 
     [Fact]
     public void Test_TwoTextParameters()
