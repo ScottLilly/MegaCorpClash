@@ -20,8 +20,10 @@ do
 
     if (command.Equals("!help"))
     {
-        Console.WriteLine("!exit                Stop te program");
+        Console.WriteLine("!exit                Stop the program");
+        Console.WriteLine("!bonus <n>           Give bonus <n> points on next tick");
         Console.WriteLine("!clear               Clear console app screen");
+        Console.WriteLine("!companies           List player company details");
     }
     else
     {
@@ -29,6 +31,13 @@ do
 
         switch (commandWords[0].ToLowerInvariant())
         {
+            case "!bonus":
+                if (commandWords.Length > 1 &&
+                    int.TryParse(commandWords[1], out int bonusPoints))
+                {
+                    gameSession.AddBonusPointsNextTurn(bonusPoints);
+                }
+                break;
             case "!clear":
                 Console.Clear();
                 break;

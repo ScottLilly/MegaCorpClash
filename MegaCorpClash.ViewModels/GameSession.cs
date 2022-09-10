@@ -217,4 +217,9 @@ public class GameSession
     }
 
     #endregion
+
+    public void AddBonusPointsNextTurn(int bonusPoints)
+    {
+        _pointsCalculator.SetBonusPointsForNextTurn(bonusPoints);
+    }
 }
