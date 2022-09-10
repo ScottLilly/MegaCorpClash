@@ -112,7 +112,7 @@ public class GameSession
 
     private void HandleLogMessagePublished(object? sender, string e)
     {
-        WriteMessageToLog(e);
+        WriteMessageToLogFile(e);
     }
 
     private void HandleChatMessagePublished(object? sender, ChatMessageEventArgs e)
@@ -131,7 +131,7 @@ public class GameSession
             return;
         }
 
-        WriteMessageToLog($"[{e.ChatterName}] {e.CommandName} {e.Argument}");
+        WriteMessageToLogFile($"[{e.ChatterName}] {e.CommandName} {e.Argument}");
 
         gameCommandHandler?.Execute(e);
     }
@@ -176,7 +176,10 @@ public class GameSession
 
     private void PointsTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        WriteMessageToLog($"Points timer ticked: {DateTime.Now}");
+        string message = $"Points timer ticked: {DateTime.Now}";
+
+        WriteToConsole(message);
+        WriteMessageToLogFile(message);
 
         _pointsCalculator.ApplyPointsForTurn();
 
@@ -191,12 +194,16 @@ public class GameSession
     {
         _twitchConnector?.SendChatMessage(message);
 
-        WriteMessageToLog(message);
+        WriteMessageToLogFile(message);
     }
 
-    private void WriteMessageToLog(string message)
+    private void WriteToConsole(string message)
     {
         Console.WriteLine(message);
+    }
+
+    private void WriteMessageToLogFile(string message)
+    {
         _logWriter.WriteMessage(message);
     }
 
