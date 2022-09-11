@@ -27,12 +27,22 @@ public class TwitchConnector : IChatConnector
             throw new ArgumentNullException(nameof(gameSettings));
         }
 
-        if (string.IsNullOrWhiteSpace(gameSettings.ChannelName))
+        if (gameSettings.TwitchBroadcasterAccount == null)
+        {
+            throw new ArgumentNullException(nameof(gameSettings.TwitchBroadcasterAccount));
+        }
+
+        if (gameSettings.TwitchBotAccount == null)
+        {
+            throw new ArgumentNullException(nameof(gameSettings.TwitchBotAccount));
+        }
+
+        if (string.IsNullOrWhiteSpace(gameSettings.TwitchBroadcasterAccount.Name))
         {
             throw new ArgumentException("ChannelName cannot be empty");
         }
 
-        _channelName = gameSettings.ChannelName;
+        _channelName = gameSettings.TwitchBroadcasterAccount.Name;
         _credentials = CreateCredentials(gameSettings);
 
         SubscribeToEvents();
@@ -85,10 +95,10 @@ public class TwitchConnector : IChatConnector
     private static ConnectionCredentials CreateCredentials(GameSettings gameSettings)
     {
         return new ConnectionCredentials(
-            string.IsNullOrWhiteSpace(gameSettings.BotAccountName)
-                ? gameSettings.ChannelName
-                : gameSettings.BotAccountName,
-            gameSettings.TwitchToken,
+            string.IsNullOrWhiteSpace(gameSettings.TwitchBotAccount?.Name)
+                ? gameSettings.TwitchBroadcasterAccount?.Name
+                : gameSettings.TwitchBotAccount?.Name,
+            gameSettings.TwitchBotAccount?.AuthToken,
             disableUsernameCheck: true);
     }
 
