@@ -24,6 +24,34 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         });
     }
 
+    [Theory]
+    [InlineData("NoParameters", "")]
+    [InlineData("OneNumericParameter", "1")]
+    [InlineData("OneInvalidTextParameter", "asd")]
+    [InlineData("TwoTextParameters", "asd qwe")]
+    [InlineData("TwoValidButNoQty", "Sales Production")]
+    [InlineData("ThreeParameters", "1 2 3")]
+    [InlineData("InvalidJobType", "CEO 1")]
+    public void Test_InvalidParameters(string name, string parameter)
+    {
+        HireCommandHandler commandHandler =
+            GetHireCommandHandler();
+
+        var gameCommand = GetGameCommand($"!hire {parameter}");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal(Literals.Hire_InvalidParameters,
+            chatMessageEvent.Arguments.Message);
+    }
+
     [Fact]
     public void Test_NoCompany()
     {
@@ -44,34 +72,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
         Assert.Equal(Literals.YouDoNotHaveACompany,
-            chatMessageEvent.Arguments.Message);
-    }
-
-    [Theory]
-    [InlineData("NoParameters", "")]
-    [InlineData("OneNumericParameter", "1")]
-    [InlineData("OneInvalidTextParameter", "asd")]
-    [InlineData("TwoTextParameters", "asd qwe")]
-    [InlineData("TwoValidButNoQty", "Sales Production")]
-    [InlineData("ThreeParameters", "1 2 3")]
-    [InlineData("InvalidJobType", "CEO 1")]
-    public void Test_InvalidParameters(string name,string parameter)
-    {
-        HireCommandHandler commandHandler =
-            GetHireCommandHandler();
-
-        var gameCommand = GetGameCommand($"!hire {parameter}");
-
-        var chatMessageEvent =
-            Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
-                () => commandHandler.Execute(gameCommand));
-
-        Assert.NotNull(chatMessageEvent);
-        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal(Literals.Hire_InvalidParameters,
             chatMessageEvent.Arguments.Message);
     }
 
