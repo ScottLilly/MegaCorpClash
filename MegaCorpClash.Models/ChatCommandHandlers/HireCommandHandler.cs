@@ -54,7 +54,6 @@ public class HireCommandHandler : BaseCommandHandler
         }
 
         chatter.Company.Points -= (int)hiringCost;
-
         for(int i = 0; i < hiringDetails.Qty; i++)
         {
             chatter.Company.Employees
@@ -78,35 +77,24 @@ public class HireCommandHandler : BaseCommandHandler
     {
         int? qty = 1;
         EmployeeType? employeeType = null;
-
+        string? employeeTypeArgument = arguments.Count == 1 ? arguments[0] : null;
+        
         if (int.TryParse(arguments[0], out int qty0))
         {
             qty = qty0;
-
-            if (arguments.Count > 1 &&
-                Enum.TryParse(arguments[1], true, out EmployeeType emp1))
-            {
-                employeeType = emp1;
-            }
+            if (arguments.Count < 2) return (employeeType, qty);
+            employeeTypeArgument = arguments[1];
         }
-        else if (arguments.Count > 1 &&
-                 int.TryParse(arguments[1], out int qty1))
+        else if (arguments.Count > 1 && int.TryParse(arguments[1], out var qty1))
         {
             qty = qty1;
-
-            if (Enum.TryParse(arguments[0], true, out EmployeeType emp0))
-            {
-                employeeType = emp0;
-            }
+            employeeTypeArgument = arguments[0];
         }
-        else if (arguments.Count == 1)
+
+        if (!string.IsNullOrWhiteSpace(employeeTypeArgument) &&Enum.TryParse(employeeTypeArgument, true, out EmployeeType emp0))
         {
-            if (Enum.TryParse(arguments[0], true, out EmployeeType emp0))
-            {
-                employeeType = emp0;
-            }
+            employeeType = emp0;
         }
-
         return (employeeType, qty);
     }
 }
