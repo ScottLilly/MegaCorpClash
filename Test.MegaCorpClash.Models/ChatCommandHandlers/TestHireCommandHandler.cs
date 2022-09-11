@@ -47,35 +47,20 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
             chatMessageEvent.Arguments.Message);
     }
 
-    public record InvalidParameter(string Name, string Command)
-    {
-        private static readonly InvalidParameter[] TestCases =
-        {
-            new("NoParameters", ""),
-            new("OneNumericParameter", "1"),
-            new("OneInvalidTextParameter", "asd"),
-            new("TwoTextParameters", "asd qwe"),
-            new("TwoValidButNoQty", "Sales Production"),
-            new("ThreeParameters", "1 2 3"),
-            new("InvalidJobType", "CEO 1"),
-
-        };
-
-        public static IEnumerable<object[]> TestCasesData =>
-            TestCases.Select(testCase => new object[] { testCase });
-
-        public override string ToString() =>
-            $"{Name} -- \"{Command}\"";
-    }
-
     [Theory]
-    [MemberData(nameof(InvalidParameter.TestCasesData), MemberType = typeof(InvalidParameter))]
-    public void Test_InvalidParameter(InvalidParameter parameter)
+    [InlineData("NoParameters", "")]
+    [InlineData("OneNumericParameter", "1")]
+    [InlineData("OneInvalidTextParameter", "asd")]
+    [InlineData("TwoTextParameters", "asd qwe")]
+    [InlineData("TwoValidButNoQty", "Sales Production")]
+    [InlineData("ThreeParameters", "1 2 3")]
+    [InlineData("InvalidJobType", "CEO 1")]
+    public void Test_InvalidParameters(string name,string parameter)
     {
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
 
-        var gameCommand = GetGameCommand($"!hire {parameter.Command}");
+        var gameCommand = GetGameCommand($"!hire {parameter}");
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
