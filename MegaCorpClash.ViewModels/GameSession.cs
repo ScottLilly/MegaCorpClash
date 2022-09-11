@@ -66,7 +66,7 @@ public class GameSession
         foreach (Company player in players)
         {
             player.IsBroadcaster = 
-                player.ChatterName.Matches(_gameSettings.ChannelName);
+                player.ChatterName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
 
             _players.Add(player.ChatterId, player);
         }

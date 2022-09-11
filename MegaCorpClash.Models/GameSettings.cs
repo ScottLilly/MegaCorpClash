@@ -1,23 +1,34 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using CSharpExtender.ExtensionMethods;
+using Newtonsoft.Json.Converters;
 
 namespace MegaCorpClash.Models;
 
 public class GameSettings
 {
-    public string ChannelName { get; set; }
-    public string BotAccountName { get; set; }
-    public string TwitchToken { get; set; }
+    public List<TwitchAccount> TwitchAccounts { get; set; }
     public string PointsName { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public StartupInfo StartupDetails { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
     public List<EmployeeHiringInfo> EmployeeHiringDetails { get; set; } = new();
 
+    public TwitchAccount? TwitchBroadcasterAccount =>
+        TwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Broadcaster"));
+    public TwitchAccount? TwitchBotAccount =>
+        TwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Bot"));
+
     public string JobsList =>
         string.Join(", ",
             EmployeeHiringDetails
                 .OrderBy(e => e.Type)
                 .Select(e => $"{e.Type} ({e.CostToHire})"));
+
+    public class TwitchAccount
+    {
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public string AuthToken { get; set; }
+    }
 
     public class TimedMessageSettings
     {
