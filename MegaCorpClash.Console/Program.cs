@@ -1,8 +1,10 @@
-﻿using MegaCorpClash.Models;
+﻿using MegaCorpClash.Core;
+using MegaCorpClash.Models;
 using MegaCorpClash.Services;
 using MegaCorpClash.ViewModels;
 using Microsoft.Extensions.Configuration;
 
+ArgumentParser argumentParser = new ArgumentParser();
 GameSettings gameSettings = GetGameSettings();
 GameSession gameSession = new GameSession(gameSettings);
 
@@ -28,14 +30,15 @@ do
     else
     {
         var commandWords = command.Split(" ");
+        var parsedArguments = argumentParser.Parse(command);
 
         switch (commandWords[0].ToLowerInvariant())
         {
             case "!bonus":
-                if (commandWords.Length > 1 &&
-                    int.TryParse(commandWords[1], out int bonusPoints))
+                if (parsedArguments.IntegerArguments.Count == 1)
                 {
-                    gameSession.AddBonusPointsNextTurn(bonusPoints);
+                    gameSession
+                        .AddBonusPointsNextTurn(parsedArguments.IntegerArguments.First());
                 }
                 break;
             case "!clear":
