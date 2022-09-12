@@ -9,10 +9,6 @@ public sealed class GameCommand
 
     public bool DoesNotHaveArguments =>
         string.IsNullOrWhiteSpace(Argument);
-    public bool HasArguments =>
-        !DoesNotHaveArguments;
-    public List<string> ArgumentsAsList =>
-        Argument.Split(' ').ToList();
 
     public GameCommand(string chatterId, string chatterName, 
         string commandName, string argument)

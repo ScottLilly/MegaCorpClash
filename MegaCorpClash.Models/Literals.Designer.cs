@@ -61,20 +61,11 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        ///   Looks up a localized string similar to No companies.
         /// </summary>
-        public static string CompanyMotto_NotSafeText {
+        public static string Companies_NoCompaniesInGame {
             get {
-                return ResourceManager.GetString("CompanyMotto_NotSafeText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Company name can only contain letters, numbers, commas, space, ampersand, and hyphens.
-        /// </summary>
-        public static string CompanyName_NotSafeText {
-            get {
-                return ResourceManager.GetString("CompanyName_NotSafeText", resourceCulture);
+                return ResourceManager.GetString("Companies_NoCompaniesInGame", resourceCulture);
             }
         }
         
@@ -106,11 +97,38 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company name can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        /// </summary>
+        public static string Incorporate_NotSafeText {
+            get {
+                return ResourceManager.GetString("Incorporate_NotSafeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must provide a new name for your company.
         /// </summary>
         public static string Rename_YouMustProvideANewName {
             get {
                 return ResourceManager.GetString("Rename_YouMustProvideANewName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must enter a value for the motto.
+        /// </summary>
+        public static string SetMotto_MustProvideMotto {
+            get {
+                return ResourceManager.GetString("SetMotto_MustProvideMotto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        /// </summary>
+        public static string SetMotto_NotSafeText {
+            get {
+                return ResourceManager.GetString("SetMotto_NotSafeText", resourceCulture);
             }
         }
         

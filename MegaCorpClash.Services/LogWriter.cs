@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Services;
 
-public class LogWriter
+public static class LogWriter
 {
     private const string CHAT_LOG_DIRECTORY = "./ChatLogs";
 

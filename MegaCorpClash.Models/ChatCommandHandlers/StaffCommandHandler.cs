@@ -14,7 +14,8 @@ public sealed class StaffCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, 
+                Literals.YouDoNotHaveACompany);
             return;
         }
 

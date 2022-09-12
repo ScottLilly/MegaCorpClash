@@ -17,34 +17,33 @@ public sealed class RenameCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, 
+                Literals.YouDoNotHaveACompany);
             return;
         }
 
-        string newCompanyName = gameCommand.Argument;
-
-        if (string.IsNullOrWhiteSpace(newCompanyName))
+        if (gameCommand.DoesNotHaveArguments)
         {
             PublishMessage(chatter.ChatterName,
                 Literals.Rename_YouMustProvideANewName);
             return;
         }
 
-        if (!newCompanyName.IsSafeText())
+        if (gameCommand.Argument.IsNotSafeText())
         {
             PublishMessage(chatter.ChatterName,
-                Literals.CompanyName_NotSafeText);
+                Literals.Incorporate_NotSafeText);
             return;
         }
 
-        if (Companies.Values.Any(p => p.CompanyName.Matches(newCompanyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommand.Argument)))
         {
             PublishMessage(chatter.ChatterName, 
-                $"There is already a company named {newCompanyName}");
+                $"There is already a company named {gameCommand.Argument}");
             return;
         }
 
-        chatter.Company.CompanyName = newCompanyName;
+        chatter.Company.CompanyName = gameCommand.Argument;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.ChatterName,

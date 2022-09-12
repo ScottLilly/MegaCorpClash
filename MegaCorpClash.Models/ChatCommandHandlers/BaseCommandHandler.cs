@@ -8,6 +8,12 @@ public abstract class BaseCommandHandler
     protected GameSettings GameSettings { get; }
     protected Dictionary<string, Company> Companies { get; }
 
+    protected string CompaniesList =>
+        string.Join(", ",
+            Companies.Values
+                .OrderBy(c => c.CompanyName)
+                .Select(c => $"{c.CompanyName} ({c.ChatterName})"));
+
     public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
     public event EventHandler OnPlayerDataUpdated;
 
