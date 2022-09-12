@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models.CustomEventArgs;
 
-public class ChattedEventArgs : EventArgs
+public sealed class ChattedEventArgs : EventArgs
 {
     public string UserId { get; }
 

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 namespace MegaCorpClash.Models;
 
-public class GameSettings
+public sealed class GameSettings
 {
     public List<TwitchAccount> TwitchAccounts { get; set; }
     public string PointsName { get; set; }

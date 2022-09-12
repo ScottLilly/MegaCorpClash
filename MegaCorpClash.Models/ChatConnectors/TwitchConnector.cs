@@ -6,7 +6,7 @@ using TwitchLib.Communication.Events;
 
 namespace MegaCorpClash.Models.ChatConnectors;
 
-public class TwitchConnector : IChatConnector
+public sealed class TwitchConnector : IChatConnector
 {
     private bool _hasConnected;
 

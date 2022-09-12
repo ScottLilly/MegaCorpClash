@@ -3,7 +3,7 @@ using MegaCorpClash.Core;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class IncorporateCommandHandler : BaseCommandHandler
+public sealed class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Company> companies)

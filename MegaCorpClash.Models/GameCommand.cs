@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models;
 
-public class GameCommand
+public sealed class GameCommand
 {
     public string ChatterId { get; }
     public string ChatterName { get; }

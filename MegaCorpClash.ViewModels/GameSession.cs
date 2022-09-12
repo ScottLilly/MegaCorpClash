@@ -8,9 +8,8 @@ using MegaCorpClash.Services;
 
 namespace MegaCorpClash.ViewModels;
 
-public class GameSession
+public sealed class GameSession
 {
-    private readonly LogWriter _logWriter = new();
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Company> _players = new();
     private readonly IChatConnector? _twitchConnector;
@@ -197,14 +196,14 @@ public class GameSession
         WriteMessageToLogFile(message);
     }
 
-    private void WriteToConsole(string message)
+    private static void WriteToConsole(string message)
     {
         Console.WriteLine(message);
     }
 
-    private void WriteMessageToLogFile(string message)
+    private static void WriteMessageToLogFile(string message)
     {
-        _logWriter.WriteMessage(message);
+        LogWriter.WriteMessage(message);
     }
 
     #endregion

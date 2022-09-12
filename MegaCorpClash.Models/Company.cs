@@ -2,7 +2,7 @@
 
 namespace MegaCorpClash.Models;
 
-public class Company
+public sealed class Company
 {
     public string ChatterId { get; set; }
     public bool IsBroadcaster { get; set; }

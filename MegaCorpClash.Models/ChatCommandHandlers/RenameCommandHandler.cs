@@ -3,7 +3,7 @@ using MegaCorpClash.Core;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class RenameCommandHandler : BaseCommandHandler
+public sealed class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Company> companies)

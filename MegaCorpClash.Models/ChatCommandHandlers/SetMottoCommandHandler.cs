@@ -2,7 +2,7 @@
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class SetMottoCommandHandler : BaseCommandHandler
+public sealed class SetMottoCommandHandler : BaseCommandHandler
 {
     public SetMottoCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)

@@ -4,7 +4,7 @@ public class LogWriter
 {
     private const string CHAT_LOG_DIRECTORY = "./ChatLogs";
 
-    public LogWriter()
+    static LogWriter()
     {
         if (!Directory.Exists(CHAT_LOG_DIRECTORY))
         {
@@ -12,7 +12,7 @@ public class LogWriter
         }
     }
 
-    public void WriteMessage(string message)
+    public static void WriteMessage(string message)
     {
         File.AppendAllText(
             Path.Combine(CHAT_LOG_DIRECTORY, $"MegaCorpClash-{DateTime.Now:yyyy-MM-dd}.log"),

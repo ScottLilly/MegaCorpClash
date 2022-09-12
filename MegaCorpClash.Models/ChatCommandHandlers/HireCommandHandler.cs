@@ -2,7 +2,7 @@
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class HireCommandHandler : BaseCommandHandler
+public sealed class HireCommandHandler : BaseCommandHandler
 {
     private readonly ArgumentParser _argumentParser = new();
 

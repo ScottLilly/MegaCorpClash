@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Core;
 
-public class ArgumentParser
+public sealed class ArgumentParser
 {
     private readonly char[] _separators;
 

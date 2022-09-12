@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class HelpCommandHandler : BaseCommandHandler
+public sealed class HelpCommandHandler : BaseCommandHandler
 {
     private string _commandsAvailable = string.Empty;
 

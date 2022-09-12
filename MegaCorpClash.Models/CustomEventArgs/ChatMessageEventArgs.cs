@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models.CustomEventArgs;
 
-public class ChatMessageEventArgs
+public sealed class ChatMessageEventArgs
 {
     public string ChatterDisplayName { get; }
     public string Message { get; }
