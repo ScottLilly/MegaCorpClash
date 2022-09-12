@@ -6,9 +6,11 @@ using MegaCorpClash.ViewModels;
 using Microsoft.Extensions.Configuration;
 using static MegaCorpClash.Models.GameSettings;
 
-ArgumentParser argumentParser = new ArgumentParser();
+ArgumentParser argumentParser = new();
 GameSettings gameSettings = GetGameSettings();
-GameSession gameSession = new GameSession(gameSettings);
+GameSession gameSession = new(gameSettings);
+
+Console.WriteLine("Starting MegaCorpClash");
 
 // Wait for user commands
 string? command = "";
@@ -39,8 +41,13 @@ do
             case "!bonus":
                 if (parsedArguments.IntegerArguments.Count == 1)
                 {
-                    gameSession
-                        .AddBonusPointsNextTurn(parsedArguments.IntegerArguments.First());
+                    var bonusPoints = parsedArguments.IntegerArguments.First();
+                    gameSession.AddBonusPointsNextTurn(bonusPoints);
+                    Console.WriteLine($"Bonus of {bonusPoints} will be applied on the next tick");
+                }
+                else
+                {
+                    Console.WriteLine("!bonus command requires an integer value to apply");
                 }
                 break;
             case "!clear":
@@ -63,7 +70,7 @@ do
 
 } while (!(command ?? "").Equals("!exit", StringComparison.InvariantCultureIgnoreCase));
 
-GameSettings GetGameSettings()
+static GameSettings GetGameSettings()
 {
     GameSettings settings =
         PersistenceService.ReadGameSettings();

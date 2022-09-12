@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Core;
 
-public class ParsedArguments
+public sealed class ParsedArguments
 {
     public List<string> Arguments { get; }
 

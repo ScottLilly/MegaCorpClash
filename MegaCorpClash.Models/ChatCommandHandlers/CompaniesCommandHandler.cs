@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class CompaniesCommandHandler : BaseCommandHandler
+public sealed class CompaniesCommandHandler : BaseCommandHandler
 {
     public CompaniesCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Company> companies)

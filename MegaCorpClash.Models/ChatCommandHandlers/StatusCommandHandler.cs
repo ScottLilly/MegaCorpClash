@@ -1,6 +1,6 @@
 ﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public class StatusCommandHandler : BaseCommandHandler
+public sealed class StatusCommandHandler : BaseCommandHandler
 {
     public StatusCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Company> companies)
