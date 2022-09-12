@@ -2,7 +2,8 @@
 
 public sealed class HelpCommandHandler : BaseCommandHandler
 {
-    private string _commandsAvailable = string.Empty;
+    private static string s_commandsAvailable = string.Empty;
+    private static readonly object s_syncLock = new();
 
     public HelpCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
@@ -12,32 +13,33 @@ public sealed class HelpCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommand gameCommand)
     {
-        PopulateCommandList();
-
-        PublishMessage($"MegaCorpClash commands: {_commandsAvailable}");
+        PublishMessage($"MegaCorpClash commands: {GetGameCommands()}");
     }
 
-    private void PopulateCommandList()
+    private string GetGameCommands()
     {
-        // Don't move this into the constructor.
-        // It would get recursive and cause a stack overflow.
-        if (!string.IsNullOrWhiteSpace(_commandsAvailable))
+        lock (s_syncLock)
         {
-            return;
+            if (string.IsNullOrWhiteSpace(s_commandsAvailable))
+            {
+                var baseType = typeof(BaseCommandHandler);
+                var assembly = baseType.Assembly;
+
+                List<BaseCommandHandler> commandHandlers =
+                    assembly.GetTypes()
+                        .Where(t => t.IsSubclassOf(baseType))
+                        .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
+                        .Cast<BaseCommandHandler>()
+                        .ToList();
+
+                s_commandsAvailable =
+                    string.Join(", ",
+                        commandHandlers
+                            .Select(ch => $"!{ch.CommandName}")
+                            .OrderBy(cn => cn));
+            }
         }
 
-        var baseType = typeof(BaseCommandHandler);
-        var assembly = baseType.Assembly;
-
-        List<BaseCommandHandler> commandHandlers =
-            assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(baseType))
-                .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
-                .Cast<BaseCommandHandler>()
-                .ToList();
-
-        _commandsAvailable =
-            string.Join(", ", commandHandlers.Select(ch => $"!{ch.CommandName}")
-                .OrderBy(cn => cn));
+        return s_commandsAvailable;
     }
 }

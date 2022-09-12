@@ -90,7 +90,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal(Literals.CompanyMotto_NotSafeText,
+        Assert.Equal(Literals.SetMotto_NotSafeText,
             chatMessageEvent.Arguments.Message);
     }
 

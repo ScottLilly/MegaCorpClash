@@ -51,7 +51,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal(Literals.CompanyName_NotSafeText,
+        Assert.Equal(Literals.Incorporate_NotSafeText,
             chatMessageEvent.Arguments.Message);
     }
 

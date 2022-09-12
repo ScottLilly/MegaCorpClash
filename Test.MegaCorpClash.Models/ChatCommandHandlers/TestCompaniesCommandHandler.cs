@@ -27,7 +27,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("Companies: No companies", chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Companies_NoCompaniesInGame, chatMessageEvent.Arguments.Message);
     }
 
     [Fact]

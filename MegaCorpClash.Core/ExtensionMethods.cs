@@ -9,4 +9,9 @@ public static class ExtensionMethods
             char.IsDigit(c) || 
             c is ',' or ' ' or '-' or '&');
     }
+
+    public static bool IsNotSafeText(this string text)
+    {
+        return !text.IsSafeText();
+    }
 }

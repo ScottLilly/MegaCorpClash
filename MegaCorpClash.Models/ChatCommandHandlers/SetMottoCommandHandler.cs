@@ -16,21 +16,22 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.ChatterName, Literals.YouDoNotHaveACompany);
+            PublishMessage(chatter.ChatterName, 
+                Literals.YouDoNotHaveACompany);
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(gameCommand.Argument))
+        if (gameCommand.DoesNotHaveArguments)
         {
             PublishMessage(chatter.ChatterName, 
-                "You must enter a value for the motto");
+                Literals.SetMotto_MustProvideMotto);
             return;
         }
 
-        if (!gameCommand.Argument.IsSafeText())
+        if (gameCommand.Argument.IsNotSafeText())
         {
             PublishMessage(chatter.ChatterName,
-                Literals.CompanyMotto_NotSafeText);
+                Literals.SetMotto_NotSafeText);
             return;
         }
 

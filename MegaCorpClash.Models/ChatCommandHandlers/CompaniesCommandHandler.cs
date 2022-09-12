@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿using CSharpExtender.ExtensionMethods;
+
+namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public sealed class CompaniesCommandHandler : BaseCommandHandler
 {
@@ -10,17 +12,8 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommand gameCommand)
     {
-        string playerList =
-            string.Join(", ",
-                Companies.Values
-                    .OrderBy(c => c.CompanyName)
-                    .Select(c => $"{c.CompanyName} ({c.ChatterName})"));
-
-        if (string.IsNullOrWhiteSpace(playerList))
-        {
-            playerList = "No companies";
-        }
-
-        PublishMessage($"Companies: {playerList}");
+        PublishMessage(Companies.None()
+            ? Literals.Companies_NoCompaniesInGame
+            : $"Companies: {CompaniesList}");
     }
 }

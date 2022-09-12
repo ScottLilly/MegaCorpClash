@@ -14,19 +14,18 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
     public override void Execute(GameCommand gameCommand)
     {
         var chatter = ChatterDetails(gameCommand);
-        string? companyName = gameCommand.Argument;
 
-        if (string.IsNullOrWhiteSpace(companyName))
+        if (gameCommand.DoesNotHaveArguments)
         {
             PublishMessage(chatter.ChatterName, 
                 Literals.Incorporate_NameRequired);
             return;
         }
 
-        if (!companyName.IsSafeText())
+        if (gameCommand.Argument.IsNotSafeText())
         {
             PublishMessage(chatter.ChatterName,
-                Literals.CompanyName_NotSafeText);
+                Literals.Incorporate_NotSafeText);
             return;
         }
 
@@ -37,10 +36,10 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Companies.Values.Any(p => p.CompanyName.Matches(companyName)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommand.Argument)))
         {
             PublishMessage(chatter.ChatterName,
-                $"There is already a company named {companyName}");
+                $"There is already a company named {gameCommand.Argument}");
             return;
         }
 
@@ -49,7 +48,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             {
                 ChatterId = chatter.ChatterId,
                 ChatterName = chatter.ChatterName,
-                CompanyName = companyName,
+                CompanyName = gameCommand.Argument,
                 CreatedOn = DateTime.UtcNow,
                 Points = GameSettings.StartupDetails.InitialPoints
             };
@@ -70,6 +69,6 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.ChatterName,
-            $"You are now the proud CEO of {companyName}");
+            $"You are now the proud CEO of {gameCommand.Argument}");
     }
 }

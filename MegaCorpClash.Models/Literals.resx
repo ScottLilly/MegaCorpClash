@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CompanyMotto_NotSafeText" xml:space="preserve">
+  <data name="SetMotto_NotSafeText" xml:space="preserve">
     <value>Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
   </data>
-  <data name="CompanyName_NotSafeText" xml:space="preserve">
+  <data name="Incorporate_NotSafeText" xml:space="preserve">
     <value>Company name can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
   </data>
   <data name="Hire_InvalidParameters" xml:space="preserve">
@@ -135,7 +135,13 @@
   <data name="Rename_YouMustProvideANewName" xml:space="preserve">
     <value>You must provide a new name for your company</value>
   </data>
+  <data name="SetMotto_MustProvideMotto" xml:space="preserve">
+    <value>You must enter a value for the motto</value>
+  </data>
   <data name="YouDoNotHaveACompany" xml:space="preserve">
     <value>You don't have a company. Type !incorporate &lt;company name&gt; to start one.</value>
+  </data>
+  <data name="Companies_NoCompaniesInGame" xml:space="preserve">
+    <value>No companies</value>
   </data>
 </root>
