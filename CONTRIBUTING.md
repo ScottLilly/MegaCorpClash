@@ -19,4 +19,4 @@ Please apply the appropriate labels:
 ### Submitting a pull request
 1. Ensure your branch is using the most recent code
 2. Ensure all unit tests run
-3. Ensure the code follows the coding standards (TO BE ADDED)
+3. Ensure the code follows the [coding standards](https://github.com/ScottLilly/MegaCorpClash/blob/master/CODING_STANDARDS.md)
