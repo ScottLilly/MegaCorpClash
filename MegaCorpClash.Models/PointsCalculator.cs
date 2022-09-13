@@ -3,7 +3,7 @@
 public class PointsCalculator
 {
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Company> _players;
+    private readonly Dictionary<string, Company> _companies;
 
     private static readonly HashSet<string> s_chattersSinceStartup = new();
     private static readonly HashSet<string> s_chattersDuringTurn = new();
@@ -11,10 +11,10 @@ public class PointsCalculator
     private static int s_bonusPointsNextTurn = 0;
 
     public PointsCalculator(GameSettings gameSettings, 
-        Dictionary<string, Company> players)
+        Dictionary<string, Company> companies)
     {
         _gameSettings = gameSettings;
-        _players = players;
+        _companies = companies;
     }
 
     public void SetBonusPointsForNextTurn(int bonusPoints)
@@ -38,28 +38,41 @@ public class PointsCalculator
     {
         lock (s_syncLock)
         {
-            foreach (var player in _players.Values)
+            foreach (var company in _companies.Values)
             {
-                if (s_chattersSinceStartup.Contains(player.ChatterId))
-                {
-                    player.Points += s_bonusPointsNextTurn;
-                }
+                // Get base points
+                int pointsForTurn = 0;
 
-                if (player.IsBroadcaster)
+                if (company.IsBroadcaster)
                 {
-                    player.Points +=
+                    pointsForTurn =
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter * 5;
                 }
-                else if (s_chattersDuringTurn.Contains(player.ChatterId))
+                else if (s_chattersDuringTurn.Contains(company.ChatterId))
                 {
-                    player.Points += 
+                    pointsForTurn = 
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter;
                 }
                 else
                 {
-                    player.Points += 
+                    pointsForTurn = 
                         _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
+
+                // Apply multipliers
+                int salesPeople = 
+                    company.Employees.Count(e => e.Type == EmployeeType.Sales);
+
+                pointsForTurn *= salesPeople;
+
+                // Apply bonus
+                if (s_chattersSinceStartup.Contains(company.ChatterId))
+                {
+                    pointsForTurn += s_bonusPointsNextTurn;
+                }
+
+                // Add points to player
+                company.Points += pointsForTurn;
             }
 
             s_chattersDuringTurn.Clear();
