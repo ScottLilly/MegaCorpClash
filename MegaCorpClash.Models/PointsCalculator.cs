@@ -59,8 +59,11 @@ public class PointsCalculator
                         _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
 
-                // Apply multiplier
+                // Apply multipliers
+                int salesPeople = 
+                    company.Employees.Count(e => e.Type == EmployeeType.Sales);
 
+                pointsForTurn *= salesPeople;
 
                 // Apply bonus
                 if (s_chattersSinceStartup.Contains(company.ChatterId))

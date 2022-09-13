@@ -38,6 +38,18 @@ public class TestPointsCalculator
         Assert.Equal(11, companies[CHATTER_2_ID].Points);
         Assert.Equal(2, companies[CHATTER_3_ID].Points);
         Assert.Equal(2, companies[CHATTER_4_ID].Points);
+
+        companies[CHATTER_3_ID].Employees.Add(new Employee
+        {
+            Type = EmployeeType.Sales, SkillLevel = 1
+        });
+
+        pointsCalculator.ApplyPointsForTurn();
+
+        Assert.Equal(150, companies[CHATTER_1_ID].Points);
+        Assert.Equal(12, companies[CHATTER_2_ID].Points);
+        Assert.Equal(4, companies[CHATTER_3_ID].Points);
+        Assert.Equal(3, companies[CHATTER_4_ID].Points);
     }
 
     #region Private support functions
