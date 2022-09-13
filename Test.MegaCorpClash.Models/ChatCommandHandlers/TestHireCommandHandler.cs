@@ -25,14 +25,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     }
 
     [Theory]
-    [InlineData("NoParameters", "")]
-    [InlineData("OneNumericParameter", "1")]
-    [InlineData("OneInvalidTextParameter", "asd")]
-    [InlineData("TwoTextParameters", "asd qwe")]
-    [InlineData("TwoValidButNoQty", "Sales Production")]
-    [InlineData("ThreeParameters", "1 2 3")]
-    [InlineData("InvalidJobType", "CEO 1")]
-    public void Test_InvalidParameters(string name, string parameter)
+    [MemberData(nameof(InvalidParameterTestValues))]
+    public void Test_InvalidParameters(string parameter)
     {
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
@@ -95,6 +89,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal("You hired 1 Sales employee.",
             chatMessageEvent.Arguments.Message);
     }
+
     [Fact]
     public void Test_OneValidTextParameter()
     {
@@ -115,7 +110,6 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.Equal("You hired 1 Sales employee.",
             chatMessageEvent.Arguments.Message);
     }
-
 
     [Fact]
     public void Test_ZeroQuantity()
@@ -263,6 +257,17 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         Assert.Equal(2, company.Employees.Count);
         Assert.Equal(2, company.Points);
+    }
+
+    public static IEnumerable<object[]> InvalidParameterTestValues()
+    {
+        yield return new object[] { "" };
+        yield return new object[] { "1" };
+        yield return new object[] { "asd" };
+        yield return new object[] { "asd qwe" };
+        yield return new object[] { "Sales Production" };
+        yield return new object[] { "1 2 3" };
+        yield return new object[] { "CEO 1" };
     }
 
     private HireCommandHandler GetHireCommandHandler(int points = 0)
