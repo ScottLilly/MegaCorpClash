@@ -1,12 +1,14 @@
-﻿namespace MegaCorpClash.Core;
+﻿using System.Collections.ObjectModel;
+
+namespace MegaCorpClash.Core;
 
 public sealed class ParsedArguments
 {
-    public List<string> Arguments { get; }
+    public ReadOnlyCollection<string> Arguments { get; }
 
-    public List<int> IntegerArguments { get; }
-    public List<decimal> DecimalArguments { get; }
-    public List<string> StringArguments { get; }
+    public ReadOnlyCollection<int> IntegerArguments { get; }
+    public ReadOnlyCollection<decimal> DecimalArguments { get; }
+    public ReadOnlyCollection<string> StringArguments { get; }
 
     // By only trying to parse the StringArguments to the enum,
     // this will ignore integer parameters which could map to an enum value.
@@ -18,9 +20,9 @@ public sealed class ParsedArguments
         List<int> integerArguments, List<decimal> decimalArguments,
         List<string> stringArguments)
     {
-        Arguments = arguments;
-        IntegerArguments = integerArguments;
-        DecimalArguments = decimalArguments;
-        StringArguments = stringArguments;
+        Arguments = arguments.AsReadOnly();
+        IntegerArguments = integerArguments.AsReadOnly();
+        DecimalArguments = decimalArguments.AsReadOnly();
+        StringArguments = stringArguments.AsReadOnly();
     }
 }
