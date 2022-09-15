@@ -86,7 +86,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("You hired 1 Sales employee.",
+        Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
             chatMessageEvent.Arguments.Message);
     }
 
@@ -107,7 +107,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("You hired 1 Sales employee.",
+        Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
             chatMessageEvent.Arguments.Message);
     }
 
@@ -213,7 +213,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("You hired 1 Sales employee.",
+        Assert.Equal("You hired 1 Sales employee and have 1 CorpoBux remaining.",
             chatMessageEvent.Arguments.Message);
 
         var company = companies[DEFAULT_CHATTER_ID];
@@ -250,7 +250,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("You hired 2 Sales employees.",
+        Assert.Equal("You hired 2 Sales employees and have 2 CorpoBux remaining.",
             chatMessageEvent.Arguments.Message);
 
         var company = companies[DEFAULT_CHATTER_ID];
