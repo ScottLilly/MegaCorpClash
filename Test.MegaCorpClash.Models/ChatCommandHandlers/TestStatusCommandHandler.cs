@@ -74,7 +74,7 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
                 ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
                 Motto = "This is our new motto",
-                Points = 99
+                Points = 1000000
             });
 
         var commandHandler =
@@ -91,7 +91,7 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("At ScottCo we always say 'This is our new motto'. That's how we earned 99 CorpoBux",
+        Assert.Equal("At ScottCo we always say 'This is our new motto'. That's how we earned 1,000,000 CorpoBux",
             chatMessageEvent.Arguments.Message);
     }
 }

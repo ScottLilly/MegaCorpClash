@@ -80,7 +80,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
         string message =
             $"You hired {qtyToHire} {empType} employee" +
             (qtyToHire == 1 ? "" : "s") + 
-            $" and have {chatter.Company.Points} {GameSettings.PointsName} remaining.";
+            $" and have {chatter.Company.Points:N0} {GameSettings.PointsName} remaining.";
 
         PublishMessage(chatter.ChatterName, message);
     }
