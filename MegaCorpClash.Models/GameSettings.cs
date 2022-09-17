@@ -44,13 +44,13 @@ public sealed class GameSettings
 
     public class PointsInfo
     {
-        public int Lurker { get; set; }
-        public int Chatter { get; set; }
+        public long Lurker { get; set; }
+        public long Chatter { get; set; }
     }
 
     public class StartupInfo
     {
-        public int InitialPoints { get; set; }
+        public long InitialPoints { get; set; }
         public List<StaffDetails> InitialStaff { get; set; }
 
         public class StaffDetails
