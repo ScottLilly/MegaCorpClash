@@ -29,6 +29,14 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
+        if (gameCommand.Argument.Length > 
+            GameSettings.MaxCompanyNameLength)
+        {
+            PublishMessage(chatter.ChatterName,
+                $"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
+            return;
+        }
+
         if (chatter.Company != null)
         {
             PublishMessage(chatter.ChatterName,
