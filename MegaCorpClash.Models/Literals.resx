@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SetMotto_NotSafeText" xml:space="preserve">
-    <value>Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
+    <value>Company motto can only contain letters, numbers, spaces, or simple punctuation.</value>
   </data>
   <data name="Incorporate_NotSafeText" xml:space="preserve">
     <value>Company name can only contain letters, numbers, commas, space, ampersand, and hyphens</value>

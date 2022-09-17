@@ -35,6 +35,14 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
             return;
         }
 
+        if (gameCommand.Argument.Length > 
+            GameSettings.MaxMottoLength)
+        {
+            PublishMessage(chatter.ChatterName,
+                $"Motto cannot be longer than {GameSettings.MaxMottoLength} characters");
+            return;
+        }
+
         chatter.Company.Motto = gameCommand.Argument;
 
         NotifyPlayerDataUpdated();

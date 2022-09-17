@@ -64,7 +64,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
-    public void Test_CompanyNameNotSafeText()
+    public void Test_CompanyNameTooLong()
     {
         Dictionary<string, Company> companies = new();
         companies.Add(DEFAULT_CHATTER_ID,
@@ -91,6 +91,37 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.ChatterDisplayName);
         Assert.Equal(Literals.Incorporate_NotSafeText,
+            chatMessageEvent.Arguments.Message);
+    }
+
+    [Fact]
+    public void Test_CompanyNameNotSafeText()
+    {
+        Dictionary<string, Company> companies = new();
+        companies.Add(DEFAULT_CHATTER_ID,
+            new Company
+            {
+                ChatterId = DEFAULT_CHATTER_ID,
+                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                CompanyName = "ScottCo",
+                Points = 100
+            });
+
+        var commandHandler =
+            new RenameCommandHandler(_gameSettings, companies);
+
+        var gameCommand = GetGameCommand("!rename 1234567890123456");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("Company name cannot be longer than 15 characters",
             chatMessageEvent.Arguments.Message);
     }
 

@@ -15,6 +15,8 @@ public abstract class BaseCommandHandlerTest
         var gameSettings = new GameSettings
         {
             PointsName = POINTS_NAME,
+            MaxCompanyNameLength = 15,
+            MaxMottoLength = 25,
             StartupDetails = new GameSettings.StartupInfo
             {
                 InitialPoints = 50,

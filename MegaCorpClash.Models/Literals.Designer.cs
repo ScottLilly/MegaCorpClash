@@ -124,7 +124,7 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Company motto can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        ///   Looks up a localized string similar to Company motto can only contain letters, numbers, spaces, or simple punctuation..
         /// </summary>
         public static string SetMotto_NotSafeText {
             get {

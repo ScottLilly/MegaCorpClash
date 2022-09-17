@@ -36,6 +36,14 @@ public sealed class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
+        if (gameCommand.Argument.Length >
+            GameSettings.MaxCompanyNameLength)
+        {
+            PublishMessage(chatter.ChatterName,
+                $"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
+            return;
+        }
+
         if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommand.Argument)))
         {
             PublishMessage(chatter.ChatterName, 

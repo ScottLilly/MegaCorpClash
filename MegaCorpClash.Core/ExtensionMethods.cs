@@ -7,7 +7,7 @@ public static class ExtensionMethods
         return text.All(c => 
             char.IsLetter(c) || 
             char.IsDigit(c) || 
-            c is ',' or ' ' or '-' or '&');
+            c is ',' or ' ' or '-' or '&' or '!' or '.' or '\'');
     }
 
     public static bool IsNotSafeText(this string text)

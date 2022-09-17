@@ -56,6 +56,29 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
+    public void Test_CompanyNameTooLong()
+    {
+        Dictionary<string, Company> companies = new();
+
+        var commandHandler =
+            new IncorporateCommandHandler(_gameSettings, companies);
+
+        var gameCommand = GetGameCommand("!incorporate 1234567890123456");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("Company name cannot be longer than 15 characters",
+            chatMessageEvent.Arguments.Message);
+    }
+
+    [Fact]
     public void Test_AlreadyHasACompany()
     {
         Dictionary<string, Company> companies = new();
