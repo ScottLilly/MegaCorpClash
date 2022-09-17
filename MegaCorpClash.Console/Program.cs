@@ -28,6 +28,7 @@ do
     {
         Console.WriteLine("!exit                Stop the program");
         Console.WriteLine("!bonus <n>           Give bonus <n> points on next tick");
+        Console.WriteLine("!multipletoday <n>   Give bonus multiplier <n> during whole stream");
         Console.WriteLine("!clear               Clear console app screen");
         Console.WriteLine("!companies           List player company details");
     }
@@ -48,6 +49,18 @@ do
                 else
                 {
                     Console.WriteLine("!bonus command requires an integer value to apply");
+                }
+                break;
+            case "!multipletoday":
+                if (parsedArguments.IntegerArguments.Count == 1)
+                {
+                    var multiplier = parsedArguments.IntegerArguments.First();
+                    gameSession.SetStreamMultiplier(multiplier);
+                    Console.WriteLine($"Stream has a multiplier of {multiplier} for today");
+                }
+                else
+                {
+                    Console.WriteLine("!multipletoday command requires an integer value to apply");
                 }
                 break;
             case "!clear":

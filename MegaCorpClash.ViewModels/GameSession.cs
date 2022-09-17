@@ -221,4 +221,9 @@ public sealed class GameSession
     {
         _pointsCalculator.SetBonusPointsForNextTurn(bonusPoints);
     }
+
+    public void SetStreamMultiplier(int multiplier)
+    {
+        _pointsCalculator.SetStreamMultiplier(multiplier);
+    }
 }

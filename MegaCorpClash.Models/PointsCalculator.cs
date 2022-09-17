@@ -9,6 +9,7 @@ public class PointsCalculator
     private static readonly HashSet<string> s_chattersDuringTurn = new();
     private static readonly object s_syncLock = new();
     private static int s_bonusPointsNextTurn = 0;
+    private static int s_streamMultiplier = 1;
 
     public PointsCalculator(GameSettings gameSettings, 
         Dictionary<string, Company> companies)
@@ -19,9 +20,27 @@ public class PointsCalculator
 
     public void SetBonusPointsForNextTurn(int bonusPoints)
     {
+        if (bonusPoints < 0)
+        {
+            return;
+        }
+
         lock (s_syncLock)
         {
             s_bonusPointsNextTurn = bonusPoints;
+        }
+    }
+
+    public void SetStreamMultiplier(int multiplier)
+    {
+        if (multiplier <= 0)
+        {
+            return;
+        }
+
+        lock (s_syncLock)
+        {
+            s_streamMultiplier = multiplier;
         }
     }
 
@@ -59,7 +78,7 @@ public class PointsCalculator
                         _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
 
-                // Apply multipliers
+                // Apply employee multipliers
                 int salesPeople = 
                     company.Employees.Count(e => e.Type == EmployeeType.Sales);
 
@@ -70,6 +89,9 @@ public class PointsCalculator
                 {
                     pointsForTurn += s_bonusPointsNextTurn;
                 }
+
+                // Apply stream multiplier
+                pointsForTurn *= s_streamMultiplier;
 
                 // Add points to player
                 company.Points += pointsForTurn;

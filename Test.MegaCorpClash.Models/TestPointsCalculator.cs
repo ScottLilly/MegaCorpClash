@@ -50,6 +50,16 @@ public class TestPointsCalculator
         Assert.Equal(12, companies[CHATTER_2_ID].Points);
         Assert.Equal(4, companies[CHATTER_3_ID].Points);
         Assert.Equal(3, companies[CHATTER_4_ID].Points);
+
+        pointsCalculator.SetStreamMultiplier(10);
+        pointsCalculator.RecordPlayerChatted(CHATTER_2_ID);
+
+        pointsCalculator.ApplyPointsForTurn();
+
+        Assert.Equal(650, companies[CHATTER_1_ID].Points);
+        Assert.Equal(112, companies[CHATTER_2_ID].Points);
+        Assert.Equal(24, companies[CHATTER_3_ID].Points);
+        Assert.Equal(13, companies[CHATTER_4_ID].Points);
     }
 
     #region Private support functions
