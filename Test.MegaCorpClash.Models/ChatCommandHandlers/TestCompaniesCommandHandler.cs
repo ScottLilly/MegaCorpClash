@@ -38,7 +38,8 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         companies.Add("123", new Company
         {
             ChatterName = "Joe", 
-            CompanyName = "JoeCo"
+            CompanyName = "JoeCo",
+            Points = 99
         });
 
         var commandHandler =
@@ -54,7 +55,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("Companies: JoeCo (Joe)", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Top companies: JoeCo: 99", chatMessageEvent.Arguments.Message);
     }
 
     [Fact]
@@ -65,13 +66,15 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         companies.Add("123", new Company
         {
             ChatterName = "Joe",
-            CompanyName = "JoeCo"
+            CompanyName = "JoeCo",
+            Points = 1111
         });
 
         companies.Add("456", new Company
         {
             ChatterName = "Sue",
-            CompanyName = "SueCo"
+            CompanyName = "SueCo",
+            Points = 2222
         });
 
         var commandHandler =
@@ -87,6 +90,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
-        Assert.Equal("Companies: JoeCo (Joe), SueCo (Sue)", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Top companies: SueCo: 2,222, JoeCo: 1,111", chatMessageEvent.Arguments.Message);
     }
 }
