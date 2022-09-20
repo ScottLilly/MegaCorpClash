@@ -57,10 +57,10 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
                 UserId = chatter.ChatterId,
                 DisplayName = chatter.ChatterName,
                 IsBroadcaster = 
-                    chatter.ChatterName.Matches(GameSettings.TwitchBroadcasterAccount.Name),
+                    chatter.ChatterName.Matches(GameSettings?.TwitchBroadcasterAccount?.Name ?? ""),
                 CompanyName = gameCommand.Argument,
                 CreatedOn = DateTime.UtcNow,
-                Points = GameSettings.StartupDetails.InitialPoints
+                Points = GameSettings?.StartupDetails.InitialPoints ?? 0
             };
 
         foreach (var staffDetails in GameSettings.StartupDetails.InitialStaff)

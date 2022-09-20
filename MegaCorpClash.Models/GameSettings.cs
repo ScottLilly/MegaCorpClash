@@ -15,9 +15,9 @@ public sealed class GameSettings
     public List<EmployeeHiringInfo> EmployeeHiringDetails { get; set; } = new();
 
     public TwitchAccount? TwitchBroadcasterAccount =>
-        TwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Broadcaster"));
+        TwitchAccounts?.FirstOrDefault(ta => ta.Type.Matches("Broadcaster"));
     public TwitchAccount? TwitchBotAccount =>
-        TwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Bot"));
+        TwitchAccounts?.FirstOrDefault(ta => ta.Type.Matches("Bot"));
 
     public string JobsList =>
         string.Join(", ",
