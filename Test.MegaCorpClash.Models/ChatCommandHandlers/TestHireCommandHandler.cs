@@ -186,6 +186,70 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
+    public void Test_ValidParametersMaxHireInsufficientMoney()
+    {
+        Dictionary<string, Company> companies = new();
+
+        companies.Add(
+            DEFAULT_CHATTER_ID,
+            new Company
+            {
+                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
+                Points = 9
+            });
+
+        var commandHandler =
+            new HireCommandHandler(_gameSettings, companies);
+
+        var gameCommand = GetGameCommand("!hire Sales max");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
+            chatMessageEvent.Arguments.Message);
+    }
+
+    [Fact]
+    public void Test_ValidParametersMaxHireSufficientMoney()
+    {
+        Dictionary<string, Company> companies = new();
+
+        companies.Add(
+            DEFAULT_CHATTER_ID,
+            new Company
+            {
+                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
+                Points = 50
+            });
+
+        var commandHandler =
+            new HireCommandHandler(_gameSettings, companies);
+
+        var gameCommand = GetGameCommand("!hire Sales max");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessagePublished += h,
+                h => commandHandler.OnChatMessagePublished -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("You hired 5 Sales employees and have 0 CorpoBux remaining.",
+            chatMessageEvent.Arguments.Message);
+    }
+
+    [Fact]
     public void Test_ValidParametersSufficientMoney_OneEmployee()
     {
         Dictionary<string, Company> companies = new();
