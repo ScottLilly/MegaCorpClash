@@ -21,13 +21,13 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal(Literals.YouDoNotHaveACompany,
             chatMessageEvent.Arguments.Message);
     }
@@ -39,8 +39,8 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         companies.Add(DEFAULT_CHATTER_ID,
             new Company
             {
-                ChatterId = DEFAULT_CHATTER_ID,
-                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                UserId = DEFAULT_CHATTER_ID,
+                DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
                 Points = 100
             });
@@ -52,13 +52,13 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("At ScottCo we always say 'We don't need a motto'. That's how we earned 100 CorpoBux",
             chatMessageEvent.Arguments.Message);
     }
@@ -70,8 +70,8 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         companies.Add(DEFAULT_CHATTER_ID,
             new Company
             {
-                ChatterId = DEFAULT_CHATTER_ID,
-                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                UserId = DEFAULT_CHATTER_ID,
+                DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
                 Motto = "This is our new motto",
                 Points = 1000000
@@ -84,13 +84,13 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("At ScottCo we always say 'This is our new motto'. That's how we earned 1,000,000 CorpoBux",
             chatMessageEvent.Arguments.Message);
     }

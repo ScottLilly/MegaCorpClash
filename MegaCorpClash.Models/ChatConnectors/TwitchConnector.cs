@@ -137,7 +137,7 @@ public sealed class TwitchConnector : IChatConnector
     private void HandleChatMessageReceived(object? sender, OnMessageReceivedArgs e)
     {
         OnPersonChatted?.Invoke(this,
-            new ChattedEventArgs(e.ChatMessage.UserId));
+            new ChattedEventArgs(e.ChatMessage.UserId, e.ChatMessage.DisplayName));
     }
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)

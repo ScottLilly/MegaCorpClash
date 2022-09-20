@@ -22,12 +22,12 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         // Call the first time. List needs to be created.
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
-        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status",
             chatMessageEvent.Arguments.Message);
 
@@ -35,12 +35,12 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         // This is for testing code coverage.
         chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
-        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status",
             chatMessageEvent.Arguments.Message);
     }

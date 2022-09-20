@@ -2,12 +2,12 @@
 
 public sealed class ChatMessageEventArgs
 {
-    public string ChatterDisplayName { get; }
+    public string DisplayName { get; }
     public string Message { get; }
 
-    public ChatMessageEventArgs(string chatterDisplayName, string message)
+    public ChatMessageEventArgs(string displayName, string message)
     {
-        ChatterDisplayName = chatterDisplayName;
+        DisplayName = displayName;
         Message = message;
     }
 }

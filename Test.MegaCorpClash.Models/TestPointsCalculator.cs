@@ -96,9 +96,9 @@ public class TestPointsCalculator
     {
         return new Company
         {
-            ChatterId = chatterId,
+            UserId = chatterId,
             CompanyName = chatterId + "_NAME",
-            ChatterName = chatterName,
+            DisplayName = chatterName,
             IsBroadcaster = (chatterName == BROADCASTER_NAME),
             Points = 0,
             Employees = new List<Employee>

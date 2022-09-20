@@ -41,11 +41,13 @@ public sealed class GameSession
         InitializeTimedMessages(gameSettings.TimedMessages);
     }
 
+    #region Public functions
+
     public List<string> ShowPlayers()
     {
         return _players
-            .OrderBy(p => p.Value.ChatterName)
-            .Select(p => $"[{p.Value.ChatterName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
+            .OrderBy(p => p.Value.DisplayName)
+            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
             .ToList();
     }
 
@@ -56,6 +58,18 @@ public sealed class GameSession
         _twitchConnector?.Disconnect();
     }
 
+    public void AddBonusPointsNextTurn(int bonusPoints)
+    {
+        _pointsCalculator.SetBonusPointsForNextTurn(bonusPoints);
+    }
+
+    public void SetStreamMultiplier(int multiplier)
+    {
+        _pointsCalculator.SetStreamMultiplier(multiplier);
+    }
+
+    #endregion
+
     #region Private startup functions
 
     private void PopulatePlayers()
@@ -65,9 +79,9 @@ public sealed class GameSession
         foreach (Company player in players)
         {
             player.IsBroadcaster = 
-                player.ChatterName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
+                player.DisplayName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
 
-            _players.Add(player.ChatterId, player);
+            _players.Add(player.UserId, player);
         }
     }
 
@@ -85,7 +99,7 @@ public sealed class GameSession
 
         foreach(BaseCommandHandler commandHandler in _gameCommandHandlers)
         {
-            commandHandler.OnChatMessagePublished += HandleChatMessagePublished;
+            commandHandler.OnChatMessageToSend += HandleChatMessageToSend;
             commandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         }
     }
@@ -106,6 +120,8 @@ public sealed class GameSession
 
     private void HandlePersonChatted(object? sender, ChattedEventArgs e)
     {
+        UpdateChatterNameIfChanged(e.UserId, e.DisplayName);
+
         _pointsCalculator.RecordPlayerChatted(e.UserId);
     }
 
@@ -114,13 +130,15 @@ public sealed class GameSession
         WriteMessageToLogFile(e);
     }
 
-    private void HandleChatMessagePublished(object? sender, ChatMessageEventArgs e)
+    private void HandleChatMessageToSend(object? sender, ChatMessageEventArgs e)
     {
-        WriteMessageToTwitchChat($"{e.ChatterDisplayName} {e.Message}");
+        WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
     }
 
     private void HandleGameCommandReceived(object? sender, GameCommand e)
     {
+        UpdateChatterNameIfChanged(e.UserId, e.DisplayName);
+
         BaseCommandHandler? gameCommandHandler =
             _gameCommandHandlers
                 .FirstOrDefault(cch => cch.CommandName.Matches(e.CommandName));
@@ -130,7 +148,7 @@ public sealed class GameSession
             return;
         }
 
-        WriteMessageToLogFile($"[{e.ChatterName}] {e.CommandName} {e.Argument}");
+        WriteMessageToLogFile($"[{e.DisplayName}] {e.CommandName} {e.Argument}");
 
         gameCommandHandler?.Execute(e);
     }
@@ -215,15 +233,16 @@ public sealed class GameSession
         PersistenceService.SavePlayerData(_players.Values);
     }
 
+    private void UpdateChatterNameIfChanged(string userId, string displayName)
+    {
+        if (_players.TryGetValue(userId, out Company? company) &&
+            company.DisplayName != displayName)
+        {
+            company.DisplayName = displayName;
+
+            UpdatePlayerInformation();
+        }
+    }
+
     #endregion
-
-    public void AddBonusPointsNextTurn(int bonusPoints)
-    {
-        _pointsCalculator.SetBonusPointsForNextTurn(bonusPoints);
-    }
-
-    public void SetStreamMultiplier(int multiplier)
-    {
-        _pointsCalculator.SetStreamMultiplier(multiplier);
-    }
 }
