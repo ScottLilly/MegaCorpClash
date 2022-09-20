@@ -1,4 +1,5 @@
-﻿using MegaCorpClash.Core;
+﻿using CSharpExtender.ExtensionMethods;
+using MegaCorpClash.Core;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -41,6 +42,23 @@ public sealed class HireCommandHandler : BaseCommandHandler
                 ? parsedArguments.IntegerArguments.First() 
                 : 1;
 
+        var empType = 
+            parsedArguments.EnumArgumentsOfType<EmployeeType>().First();
+
+        // Determine cost to hire and check if has enough points
+        int costToHireOne = 
+            GameSettings.EmployeeHiringDetails
+                .First(ehd => ehd.Type == empType).CostToHire;
+
+        // Handle if chatter entered "max" for the qty
+        if (parsedArguments.IntegerArguments.None() &&
+            parsedArguments.StringArguments.Any(sa => sa.Matches("max")))
+        {
+            qtyToHire = 
+                (int)Math.Round(chatter.Company.Points / (decimal)costToHireOne, 
+                    MidpointRounding.ToZero);
+        }
+
         if (qtyToHire < 1)
         {
             PublishMessage(chatter.ChatterName,
@@ -48,13 +66,8 @@ public sealed class HireCommandHandler : BaseCommandHandler
             return;
         }
 
-        var empType = 
-            parsedArguments.EnumArgumentsOfType<EmployeeType>().First();
-
-        // Determine cost to hire and check if has enough points
         int? costToHire = 
-            GameSettings.EmployeeHiringDetails
-                .First(ehd => ehd.Type == empType).CostToHire * qtyToHire;
+            costToHireOne * qtyToHire;
 
         if (costToHire > chatter.Company.Points)
         {
