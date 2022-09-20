@@ -1,4 +1,4 @@
-using MegaCorpClash.Core;
+﻿using MegaCorpClash.Core;
 
 namespace Test.MegaCorpClash.Core;
 
@@ -18,6 +18,8 @@ public class TestExtensionMethods
         Assert.False("a$".IsSafeText());
         Assert.False("{a$".IsSafeText());
         Assert.False("}a$".IsSafeText());
+        Assert.False("àáâããåæāăą".IsSafeText());
+        Assert.False("ª½⅛⁴⁸⁹ⁿ".IsSafeText());
     }
 
     [Fact]
@@ -34,5 +36,7 @@ public class TestExtensionMethods
         Assert.True("a$".IsNotSafeText());
         Assert.True("{a$".IsNotSafeText());
         Assert.True("}a$".IsNotSafeText());
+        Assert.True("àáâããåæāăą".IsNotSafeText());
+        Assert.True("ª½⅛⁴⁸⁹ⁿ".IsNotSafeText());
     }
 }
