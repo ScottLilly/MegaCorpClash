@@ -21,13 +21,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent = 
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal(Literals.Incorporate_NameRequired, 
             chatMessageEvent.Arguments.Message);
     }
@@ -44,13 +44,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal(Literals.Incorporate_NotSafeText,
             chatMessageEvent.Arguments.Message);
     }
@@ -67,13 +67,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("Company name cannot be longer than 15 characters",
             chatMessageEvent.Arguments.Message);
     }
@@ -92,13 +92,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("You already have a company named Test",
             chatMessageEvent.Arguments.Message);
     }
@@ -117,13 +117,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("There is already a company named Test",
             chatMessageEvent.Arguments.Message);
     }
@@ -140,13 +140,13 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("You are now the proud CEO of Test",
             chatMessageEvent.Arguments.Message);
 

@@ -21,13 +21,13 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal(Literals.YouDoNotHaveACompany,
             chatMessageEvent.Arguments.Message);
     }
@@ -39,8 +39,8 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         companies.Add(DEFAULT_CHATTER_ID,
             new Company
             {
-                ChatterId = DEFAULT_CHATTER_ID,
-                ChatterName = DEFAULT_CHATTER_DISPLAY_NAME,
+                UserId = DEFAULT_CHATTER_ID,
+                DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
                 Points = 100,
                 Employees = new List<Employee>
@@ -65,13 +65,13 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("You have 2 employees. 1 Production, 1 Sales",
             chatMessageEvent.Arguments.Message);
     }

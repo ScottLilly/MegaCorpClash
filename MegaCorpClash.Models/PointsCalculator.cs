@@ -67,7 +67,7 @@ public class PointsCalculator
                     pointsForTurn =
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter * 5;
                 }
-                else if (s_chattersDuringTurn.Contains(company.ChatterId))
+                else if (s_chattersDuringTurn.Contains(company.UserId))
                 {
                     pointsForTurn = 
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter;
@@ -85,7 +85,7 @@ public class PointsCalculator
                 pointsForTurn *= salesPeople;
 
                 // Apply bonus
-                if (s_chattersSinceStartup.Contains(company.ChatterId))
+                if (s_chattersSinceStartup.Contains(company.UserId))
                 {
                     pointsForTurn += s_bonusPointsNextTurn;
                 }

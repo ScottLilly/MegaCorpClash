@@ -21,12 +21,12 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
-        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
         Assert.Equal(Literals.Companies_NoCompaniesInGame, chatMessageEvent.Arguments.Message);
     }
 
@@ -37,7 +37,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         companies.Add("123", new Company
         {
-            ChatterName = "Joe", 
+            DisplayName = "Joe", 
             CompanyName = "JoeCo",
             Points = 99
         });
@@ -49,12 +49,12 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
-        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("Top companies: JoeCo: 99", chatMessageEvent.Arguments.Message);
     }
 
@@ -65,14 +65,14 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         companies.Add("123", new Company
         {
-            ChatterName = "Joe",
+            DisplayName = "Joe",
             CompanyName = "JoeCo",
             Points = 1111
         });
 
         companies.Add("456", new Company
         {
-            ChatterName = "Sue",
+            DisplayName = "Sue",
             CompanyName = "SueCo",
             Points = 2222
         });
@@ -84,12 +84,12 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
-        Assert.Equal("", chatMessageEvent.Arguments.ChatterDisplayName);
+        Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("Top companies: SueCo: 2,222, JoeCo: 1,111", chatMessageEvent.Arguments.Message);
     }
 }

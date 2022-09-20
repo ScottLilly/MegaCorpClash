@@ -36,13 +36,13 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
 
         var chatMessageEvent =
             Assert.Raises<ChatMessageEventArgs>(
-                h => commandHandler.OnChatMessagePublished += h,
-                h => commandHandler.OnChatMessagePublished -= h,
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
                 () => commandHandler.Execute(gameCommand));
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("",
-            chatMessageEvent.Arguments.ChatterDisplayName);
+            chatMessageEvent.Arguments.DisplayName);
         Assert.Equal("Jobs and cost to hire: Sales (10), Marketing (25)",
             chatMessageEvent.Arguments.Message);
     }
