@@ -14,6 +14,21 @@ public abstract class BaseCommandHandlerTest
     {
         var gameSettings = new GameSettings
         {
+            TwitchAccounts = new List<GameSettings.TwitchAccount>()
+            {
+                new()
+                {
+                    Type = "Broadcaster",
+                    Name = "BroadcasterAccount",
+                    AuthToken = "123"
+                },
+                new()
+                {
+                    Type = "Bot",
+                    Name = "BotAccount",
+                    AuthToken = "123"
+                }
+            },
             PointsName = POINTS_NAME,
             MaxCompanyNameLength = 15,
             MaxMottoLength = 25,
