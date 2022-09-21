@@ -57,28 +57,33 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
                 UserId = chatter.ChatterId,
                 DisplayName = chatter.ChatterName,
                 IsBroadcaster = 
-                    chatter.ChatterName.Matches(GameSettings?.TwitchBroadcasterAccount?.Name ?? ""),
+                    chatter.ChatterName.Matches(GameSettings.TwitchBroadcasterAccount.Name),
                 CompanyName = gameCommand.Argument,
                 CreatedOn = DateTime.UtcNow,
                 Points = GameSettings?.StartupDetails.InitialPoints ?? 0
             };
 
-        foreach (var staffDetails in GameSettings.StartupDetails.InitialStaff)
-        {
-            for (int i = 0; i < staffDetails.Qty; i++)
-            {
-                chatter.Company.Employees
-                    .Add(new Employee
-                    {
-                        Type = staffDetails.Type
-                    });
-            }
-        }
+        GiveDefaultStaff(chatter.Company);
 
         Companies[chatter.ChatterId] = chatter.Company;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.ChatterName,
             $"You are now the proud CEO of {gameCommand.Argument}");
+    }
+
+    private void GiveDefaultStaff(Company company)
+    {
+        foreach (var staffDetails in GameSettings.StartupDetails.InitialStaff)
+        {
+            for (int i = 0; i < staffDetails.Qty; i++)
+            {
+                company.Employees
+                    .Add(new Employee
+                    {
+                        Type = staffDetails.Type
+                    });
+            }
+        }
     }
 }
