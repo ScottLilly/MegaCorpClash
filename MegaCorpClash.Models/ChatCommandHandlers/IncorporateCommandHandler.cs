@@ -1,5 +1,6 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Core;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -11,7 +12,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         var chatter = ChatterDetails(gameCommand);
 
@@ -76,14 +77,12 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
     {
         foreach (var staffDetails in GameSettings.StartupDetails.InitialStaff)
         {
-            for (int i = 0; i < staffDetails.Qty; i++)
-            {
-                company.Employees
-                    .Add(new EmployeeQuantity
-                    {
-                        Type = staffDetails.Type
-                    });
-            }
+            company.Employees
+                .Add(new EmployeeQuantity
+                {
+                    Type = staffDetails.Type,
+                    Quantity = staffDetails.Quantity
+                });
         }
     }
 }

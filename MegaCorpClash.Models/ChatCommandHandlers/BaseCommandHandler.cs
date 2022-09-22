@@ -19,7 +19,7 @@ public abstract class BaseCommandHandler
     public event EventHandler OnPlayerDataUpdated;
 
     protected (string ChatterId, string ChatterName, Company? Company)
-        ChatterDetails(GameCommand gameCommand) =>
+        ChatterDetails(GameCommandArgs gameCommand) =>
         (gameCommand.UserId,
             gameCommand.DisplayName,
             Companies.ContainsKey(gameCommand.UserId)
@@ -34,7 +34,7 @@ public abstract class BaseCommandHandler
         Companies = companies;
     }
 
-    public abstract void Execute(GameCommand gameCommand);
+    public abstract void Execute(GameCommandArgs gameCommand);
 
     protected void PublishMessage(string message)
     {

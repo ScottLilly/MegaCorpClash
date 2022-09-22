@@ -1,5 +1,6 @@
 ﻿using MegaCorpClash.Models.CustomEventArgs;
 using TwitchLib.Client;
+using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
@@ -17,7 +18,7 @@ public sealed class TwitchConnector : IChatConnector
     public event EventHandler OnConnected;
     public event EventHandler OnDisconnected;
     public event EventHandler<ChattedEventArgs> OnPersonChatted;
-    public event EventHandler<GameCommand> OnGameCommandReceived;
+    public event EventHandler<GameCommandArgs> OnGameCommandReceived;
     public event EventHandler<string> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings)
@@ -137,17 +138,25 @@ public sealed class TwitchConnector : IChatConnector
     private void HandleChatMessageReceived(object? sender, OnMessageReceivedArgs e)
     {
         OnPersonChatted?.Invoke(this,
-            new ChattedEventArgs(e.ChatMessage.UserId, e.ChatMessage.DisplayName));
+            new ChattedEventArgs(
+                e.ChatMessage.UserId, 
+                e.ChatMessage.DisplayName,
+                e.ChatMessage.IsSubscriber,
+                e.ChatMessage.IsVip,
+                e.ChatMessage.Noisy == Noisy.True));
     }
 
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
         OnGameCommandReceived?.Invoke(this,
-            new GameCommand(
+            new GameCommandArgs(
                 e.Command.ChatMessage.UserId,
                 e.Command.ChatMessage.DisplayName,
                 e.Command.CommandText,
-                e.Command.ArgumentsAsString));
+                e.Command.ArgumentsAsString,
+                e.Command.ChatMessage.IsSubscriber,
+                e.Command.ChatMessage.IsVip,
+                e.Command.ChatMessage.Noisy == Noisy.True));
     }
 
     #endregion

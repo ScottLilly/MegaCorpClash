@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Models;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -40,12 +41,12 @@ public abstract class BaseCommandHandlerTest
                     new()
                     {
                         Type = EmployeeType.Production,
-                        Qty = 1
+                        Quantity = 1
                     },
                     new()
                     {
                         Type = EmployeeType.Sales,
-                        Qty = 1
+                        Quantity = 1
                     }
                 }
             }
@@ -54,7 +55,7 @@ public abstract class BaseCommandHandlerTest
         return gameSettings;
     }
 
-    internal static GameCommand GetGameCommand(string command)
+    internal static GameCommandArgs GetGameCommand(string command)
     {
         var commandWords =
             command.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -66,10 +67,11 @@ public abstract class BaseCommandHandlerTest
             commandName = commandWords[0][1..];
         }
 
-        return new GameCommand(
+        return new GameCommandArgs(
             DEFAULT_CHATTER_ID,
             DEFAULT_CHATTER_DISPLAY_NAME,
             commandName,
-            string.Join(' ', commandWords.Skip(1)));
+            string.Join(' ', commandWords.Skip(1)),
+            false, false, false);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Models.CustomEventArgs;
+
+namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public sealed class JobsCommandHandler : BaseCommandHandler
 {
@@ -8,7 +10,7 @@ public sealed class JobsCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         PublishMessage($"Jobs and cost to hire: {GameSettings.JobsList}");
     }
