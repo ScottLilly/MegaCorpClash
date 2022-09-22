@@ -80,7 +80,8 @@ public class PointsCalculator
 
                 // Apply employee multipliers
                 int salesPeople = 
-                    company.Employees.Count(e => e.Type == EmployeeType.Sales);
+                    company.Employees.
+                        FirstOrDefault(e => e.Type == EmployeeType.Sales)?.Quantity ?? 1;
 
                 pointsForTurn *= salesPeople;
 

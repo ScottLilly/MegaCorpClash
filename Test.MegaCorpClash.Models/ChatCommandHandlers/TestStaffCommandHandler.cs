@@ -43,17 +43,17 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
                 DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
                 Points = 100,
-                Employees = new List<Employee>
+                Employees = new List<EmployeeQuantity>
                 {
-                    new Employee
+                    new EmployeeQuantity
                     {
                         Type = EmployeeType.Production,
-                        SkillLevel = 1
+                        Quantity = 1
                     },
-                    new Employee
+                    new EmployeeQuantity
                     {
                         Type = EmployeeType.Sales,
-                        SkillLevel = 1
+                        Quantity = 1
                     }
                 }
             });

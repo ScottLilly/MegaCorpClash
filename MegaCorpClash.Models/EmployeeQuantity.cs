@@ -2,9 +2,9 @@
 
 namespace MegaCorpClash.Models;
 
-public sealed class Employee
+public sealed class EmployeeQuantity
 {
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))] 
     public EmployeeType Type { get; set; }
-    public int SkillLevel { get; set; } = 1;
+    public int Quantity { get; set; } = 1;
 }

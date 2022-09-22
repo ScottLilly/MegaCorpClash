@@ -39,10 +39,8 @@ public class TestPointsCalculator
         Assert.Equal(2, companies[CHATTER_3_ID].Points);
         Assert.Equal(2, companies[CHATTER_4_ID].Points);
 
-        companies[CHATTER_3_ID].Employees.Add(new Employee
-        {
-            Type = EmployeeType.Sales, SkillLevel = 1
-        });
+        companies[CHATTER_3_ID].Employees
+            .First(e => e.Type == EmployeeType.Sales).Quantity++;
 
         pointsCalculator.ApplyPointsForTurn();
 
@@ -101,17 +99,17 @@ public class TestPointsCalculator
             DisplayName = chatterName,
             IsBroadcaster = (chatterName == BROADCASTER_NAME),
             Points = 0,
-            Employees = new List<Employee>
+            Employees = new List<EmployeeQuantity>
             {
                 new()
                 {
                     Type = EmployeeType.Sales,
-                    SkillLevel = 1
+                    Quantity = 1
                 },
                 new()
                 {
                     Type = EmployeeType.Production,
-                    SkillLevel = 1
+                    Quantity = 1
                 }
             }
         };

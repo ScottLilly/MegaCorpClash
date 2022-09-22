@@ -319,7 +319,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         var company = companies[DEFAULT_CHATTER_ID];
 
-        Assert.Equal(2, company.Employees.Count);
+        Assert.Equal(2, company.Employees.First(e => e.Type == EmployeeType.Sales).Quantity);
         Assert.Equal(2, company.Points);
     }
 
