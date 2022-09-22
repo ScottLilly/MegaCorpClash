@@ -71,6 +71,7 @@ public abstract class BaseCommandHandlerTest
             DEFAULT_CHATTER_ID,
             DEFAULT_CHATTER_DISPLAY_NAME,
             commandName,
-            string.Join(' ', commandWords.Skip(1)));
+            string.Join(' ', commandWords.Skip(1)),
+            false, false, false);
     }
 }

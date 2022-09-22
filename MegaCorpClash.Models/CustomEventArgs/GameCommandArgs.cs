@@ -9,8 +9,9 @@ public sealed class GameCommandArgs : ChattedEventArgs
         string.IsNullOrWhiteSpace(Argument);
 
     public GameCommandArgs(string userId, string displayName,
-        string commandName, string argument) 
-        : base(userId, displayName)
+        string commandName, string argument,
+        bool isSubscriber, bool isVip, bool isNoisy) 
+        : base(userId, displayName, isSubscriber, isVip, isNoisy)
     {
         CommandName = commandName;
         Argument = argument;

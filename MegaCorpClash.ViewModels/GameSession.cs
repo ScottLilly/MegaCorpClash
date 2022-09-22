@@ -120,24 +120,14 @@ public sealed class GameSession
 
     private void HandlePersonChatted(object? sender, ChattedEventArgs e)
     {
-        UpdateChatterNameIfChanged(e.UserId, e.DisplayName);
+        UpdateChatterDetailsIfChanged(e);
 
         _pointsCalculator.RecordPlayerChatted(e.UserId);
     }
 
-    private void HandleLogMessagePublished(object? sender, string e)
-    {
-        WriteMessageToLogFile(e);
-    }
-
-    private void HandleChatMessageToSend(object? sender, ChatMessageEventArgs e)
-    {
-        WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
-    }
-
     private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
     {
-        UpdateChatterNameIfChanged(e.UserId, e.DisplayName);
+        UpdateChatterDetailsIfChanged(e);
 
         BaseCommandHandler? gameCommandHandler =
             _gameCommandHandlers
@@ -151,6 +141,16 @@ public sealed class GameSession
         WriteMessageToLogFile($"[{e.DisplayName}] {e.CommandName} {e.Argument}");
 
         gameCommandHandler?.Execute(e);
+    }
+
+    private void HandleLogMessagePublished(object? sender, string e)
+    {
+        WriteMessageToLogFile(e);
+    }
+
+    private void HandleChatMessageToSend(object? sender, ChatMessageEventArgs e)
+    {
+        WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
     }
 
     private void HandlePlayerDataUpdated(object? sender, EventArgs e)
@@ -233,12 +233,16 @@ public sealed class GameSession
         PersistenceService.SavePlayerData(_players.Values);
     }
 
-    private void UpdateChatterNameIfChanged(string userId, string displayName)
+    private void UpdateChatterDetailsIfChanged(ChattedEventArgs eventArgs)
     {
-        if (_players.TryGetValue(userId, out Company? company) &&
-            company.DisplayName != displayName)
+        if (_players.TryGetValue(eventArgs.UserId, out Company? company) &&
+            (company.DisplayName != eventArgs.DisplayName ||
+             company.IsSubscriber != eventArgs.IsSubscriber ||
+             company.IsVip != eventArgs.IsVip))
         {
-            company.DisplayName = displayName;
+            company.DisplayName = eventArgs.DisplayName;
+            company.IsSubscriber = eventArgs.IsSubscriber;
+            company.IsVip = eventArgs.IsVip;
 
             UpdatePlayerInformation();
         }
