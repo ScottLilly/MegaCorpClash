@@ -135,7 +135,7 @@ public sealed class GameSession
         WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
     }
 
-    private void HandleGameCommandReceived(object? sender, GameCommand e)
+    private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
     {
         UpdateChatterNameIfChanged(e.UserId, e.DisplayName);
 

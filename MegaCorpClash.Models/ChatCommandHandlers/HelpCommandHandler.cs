@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Models.CustomEventArgs;
+
+namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public sealed class HelpCommandHandler : BaseCommandHandler
 {
@@ -11,7 +13,7 @@ public sealed class HelpCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         PublishMessage($"MegaCorpClash commands: {GetGameCommands()}");
     }

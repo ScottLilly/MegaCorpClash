@@ -59,7 +59,7 @@ public sealed class GameSettings
         {
             [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
             public EmployeeType Type { get; set; }
-            public int Qty { get; set; }
+            public int Quantity { get; set; }
         }
     }
 

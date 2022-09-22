@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Core;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -10,7 +11,7 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         var chatter = ChatterDetails(gameCommand);
 

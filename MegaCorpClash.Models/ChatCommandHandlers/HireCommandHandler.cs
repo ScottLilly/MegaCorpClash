@@ -1,5 +1,6 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Core;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -13,7 +14,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         var chatter = ChatterDetails(gameCommand);
 

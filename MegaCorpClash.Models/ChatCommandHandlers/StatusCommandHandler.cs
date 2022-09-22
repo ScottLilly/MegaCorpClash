@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Models.CustomEventArgs;
+
+namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public sealed class StatusCommandHandler : BaseCommandHandler
 {
@@ -8,7 +10,7 @@ public sealed class StatusCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommand gameCommand)
+    public override void Execute(GameCommandArgs gameCommand)
     {
         var chatter = ChatterDetails(gameCommand);
 

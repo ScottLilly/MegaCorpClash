@@ -17,7 +17,7 @@ public sealed class TwitchConnector : IChatConnector
     public event EventHandler OnConnected;
     public event EventHandler OnDisconnected;
     public event EventHandler<ChattedEventArgs> OnPersonChatted;
-    public event EventHandler<GameCommand> OnGameCommandReceived;
+    public event EventHandler<GameCommandArgs> OnGameCommandReceived;
     public event EventHandler<string> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings)
@@ -143,7 +143,7 @@ public sealed class TwitchConnector : IChatConnector
     private void HandleChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
     {
         OnGameCommandReceived?.Invoke(this,
-            new GameCommand(
+            new GameCommandArgs(
                 e.Command.ChatMessage.UserId,
                 e.Command.ChatMessage.DisplayName,
                 e.Command.CommandText,
