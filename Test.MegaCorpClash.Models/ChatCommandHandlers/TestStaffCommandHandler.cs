@@ -45,15 +45,15 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
                 Points = 100,
                 Employees = new List<EmployeeQuantity>
                 {
-                    new EmployeeQuantity
+                    new()
                     {
                         Type = EmployeeType.Production,
                         Quantity = 1
                     },
-                    new EmployeeQuantity
+                    new()
                     {
                         Type = EmployeeType.Sales,
-                        Quantity = 1
+                        Quantity = 2
                     }
                 }
             });
@@ -72,7 +72,7 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("You have 2 employees. 1 Production, 1 Sales",
+        Assert.Equal("You have 3 employees. 1 Production, 2 Sales",
             chatMessageEvent.Arguments.Message);
     }
 
