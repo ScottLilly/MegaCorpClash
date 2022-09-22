@@ -11,18 +11,12 @@ public sealed class Company
     public string CompanyName { get; set; }
     public string Motto { get; set; } = "We don't need a motto";
     public long Points { get; set; }
-    public List<Employee> Employees { get; set; } = new();
+    public List<EmployeeQuantity> Employees { get; set; } = new();
 
     [JsonIgnore]
     public string EmployeeList =>
         string.Join(", ",
             Employees
-                .GroupBy(e => e.Type)
-                .Select(g => new
-                {
-                    Job = g.Key,
-                    Count = g.Count()
-                })
-                .OrderBy(x => x.Job)
-                .Select(x => $"{x.Count} {x.Job}"));
+                .OrderBy(x => x.Type)
+                .Select(x => $"{x.Quantity} {x.Type}"));
 }

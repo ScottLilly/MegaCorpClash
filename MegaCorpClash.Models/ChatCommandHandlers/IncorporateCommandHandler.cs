@@ -79,7 +79,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             for (int i = 0; i < staffDetails.Qty; i++)
             {
                 company.Employees
-                    .Add(new Employee
+                    .Add(new EmployeeQuantity
                     {
                         Type = staffDetails.Type
                     });

@@ -78,14 +78,22 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         // Success! Hire the employee(s)
         chatter.Company.Points -= (int)costToHire;
-        for(int i = 0; i < qtyToHire; i++)
+
+        var empQtyObject = 
+            chatter.Company.Employees.FirstOrDefault(e => e.Type == empType);
+
+        if (empQtyObject == null)
         {
             chatter.Company.Employees
-                .Add(new Employee 
-                { 
-                    Type = empType, 
-                    SkillLevel = 1
+                .Add(new EmployeeQuantity
+                {
+                    Type = empType,
+                    Quantity = qtyToHire
                 });
+        }
+        else
+        {
+            empQtyObject.Quantity += qtyToHire;
         }
 
         NotifyPlayerDataUpdated();
