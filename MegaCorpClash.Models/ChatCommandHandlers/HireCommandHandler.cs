@@ -51,6 +51,19 @@ public sealed class HireCommandHandler : BaseCommandHandler
             GameSettings.EmployeeHiringDetails
                 .First(ehd => ehd.Type == empType).CostToHire;
 
+        // Apply HR discount
+        int hrEmployeeCount =
+            chatter.Company.Employees
+                .Where(e => e.Type == EmployeeType.HR)
+                .Sum(e => e.Quantity) 
+            + 1;
+
+        int discount = Convert.ToInt32(Math.Log10(hrEmployeeCount) * 10);
+
+        costToHireOne = 
+            Convert.ToInt32(Convert.ToDecimal(costToHireOne) *
+                            Convert.ToDecimal(Math.Max((100 - discount), 25) / 100M));
+
         // Handle if chatter entered "max" for the qty
         if (parsedArguments.IntegerArguments.None() &&
             parsedArguments.StringArguments.Any(sa => sa.Matches("max")))
@@ -67,7 +80,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
             return;
         }
 
-        int? costToHire = 
+        int? costToHire =
             costToHireOne * qtyToHire;
 
         if (costToHire > chatter.Company.Points)

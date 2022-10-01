@@ -287,6 +287,51 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
+    public void Test_ValidParametersSufficientMoney_OneEmployee_WithHRDiscount()
+    {
+        Dictionary<string, Company> companies = new();
+
+        companies.Add(
+            DEFAULT_CHATTER_ID,
+            new Company
+            {
+                DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
+                CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
+                Points = 11,
+                Employees = new List<EmployeeQuantity>
+                {
+                    new()
+                    {
+                        Type = EmployeeType.HR, 
+                        Quantity = 10
+                    }
+                }
+            });
+
+        var commandHandler =
+            new HireCommandHandler(_gameSettings, companies);
+
+        var gameCommand = GetGameCommand("!hire Sales 1");
+
+        var chatMessageEvent =
+            Assert.Raises<ChatMessageEventArgs>(
+                h => commandHandler.OnChatMessageToSend += h,
+                h => commandHandler.OnChatMessageToSend -= h,
+                () => commandHandler.Execute(gameCommand));
+
+        Assert.NotNull(chatMessageEvent);
+        Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
+            chatMessageEvent.Arguments.DisplayName);
+        Assert.Equal("You hired 1 Sales employee and have 2 CorpoBux remaining.",
+            chatMessageEvent.Arguments.Message);
+
+        var company = companies[DEFAULT_CHATTER_ID];
+
+        Assert.Equal(2, company.Employees.Count);
+        Assert.Equal(2, company.Points);
+    }
+
+    [Fact]
     public void Test_ValidParametersSufficientMoney_TwoEmployees()
     {
         Dictionary<string, Company> companies = new();
