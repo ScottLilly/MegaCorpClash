@@ -8,5 +8,7 @@ public enum EmployeeType
     Research,
     HR,
     Legal,
+    Security,
+    IT,
     Spy
 }
