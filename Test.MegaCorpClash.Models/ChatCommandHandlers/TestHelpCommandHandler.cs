@@ -28,7 +28,7 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status",
+        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
             chatMessageEvent.Arguments.Message);
 
         // Call a second time. Should have list created this time.
@@ -41,7 +41,7 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status",
+        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
             chatMessageEvent.Arguments.Message);
     }
 }
