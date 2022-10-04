@@ -7,7 +7,7 @@ namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 {
     private readonly GameSettings _gameSettings = 
-        GetDefaultGameSettings();
+        GetDefaultGameSettings(); 
 
     [Fact]
     public void Test_NoCompanyNamePassed()
