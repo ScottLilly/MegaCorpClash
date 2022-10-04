@@ -62,7 +62,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         costToHireOne = 
             Convert.ToInt32(Convert.ToDecimal(costToHireOne) *
-                            Convert.ToDecimal(Math.Max((100 - discount), 25) / 100M));
+                            Convert.ToDecimal(Math.Max((100 - discount), GameSettings.LowestHrDiscount) / 100M));
 
         // Handle if chatter entered "max" for the qty
         if (parsedArguments.IntegerArguments.None() &&

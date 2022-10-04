@@ -8,6 +8,7 @@ public sealed class GameSettings
     public List<TwitchAccount> TwitchAccounts { get; set; }
     public int MaxCompanyNameLength { get; set; }
     public int MaxMottoLength { get; set; }
+    public int LowestHrDiscount { get; set; }
     public string PointsName { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public StartupInfo StartupDetails { get; set; }
