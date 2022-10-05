@@ -26,6 +26,9 @@ public abstract class BaseCommandHandler
                 ? Companies[gameCommand.UserId]
                 : null);
 
+    protected Company GetBroadcasterCompany =>
+        Companies.First(c => c.Value.IsBroadcaster).Value;
+
     protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
         Dictionary<string, Company> companies)
     {
