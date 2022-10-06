@@ -1,7 +1,6 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using CSharpExtender.Services;
 using MegaCorpClash.Models.CustomEventArgs;
-using Newtonsoft.Json.Linq;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers
 {
@@ -64,7 +63,6 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             {
                 // Success
                 int stolen = (int)broadcasterCompany.Points / 100;
-                //(int)Math.Min(2500, broadcasterCompany.Points);
 
                 chatter.Company.Points += stolen;
                 broadcasterCompany.Points -= stolen;
@@ -74,7 +72,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             }
             else
             {
-                // failure
+                // Failure
                 // "Consume" broadcaster security person
                 var securityEmployeeQuantity =
                     broadcasterCompany.Employees
