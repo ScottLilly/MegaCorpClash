@@ -31,67 +31,114 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 return;
             }
 
-            // "Consume" spy
-            var spyEmployeeQuantity = 
-                chatter.Company.Employees
-                    .First(e => e.Type == EmployeeType.Spy);
+            var parsedArguments =
+                _argumentParser.Parse(gameCommand.Argument);
 
-            if (spyEmployeeQuantity.Quantity == 1)
+            int numberOfAttackingSpies = 1;
+
+            if (parsedArguments.IntegerArguments.Count == 1)
             {
-                chatter.Company.Employees.Remove(spyEmployeeQuantity);
-            }
-            else
-            {
-                spyEmployeeQuantity.Quantity--;
-            }
-
-            var broadcasterCompany = GetBroadcasterCompany;
-
-            // Determine success of attack
-            int securityEmployeeCount =
-                broadcasterCompany.Employees
-                    .Where(e => e.Type == EmployeeType.Security)
-                    .Sum(e => e.Quantity)
-                + 1;
-
-            int broadcasterDefenseBonus = 
-                Math.Max(25, Convert.ToInt32(Math.Log10(securityEmployeeCount) * 10));
-
-            int rand = RngCreator.GetNumberBetween(1, 100);
-
-            if (rand > 50 + broadcasterDefenseBonus)
-            {
-                // Success
-                int stolen = (int)broadcasterCompany.Points / 100;
-
-                chatter.Company.Points += stolen;
-                broadcasterCompany.Points -= stolen;
-
-                PublishMessage(chatter.ChatterName,
-                    $"You stole {stolen} {GameSettings.PointsName} from {broadcasterCompany.CompanyName}");
-            }
-            else
-            {
-                // Failure
-                // "Consume" broadcaster security person
-                var securityEmployeeQuantity =
-                    broadcasterCompany.Employees
-                        .FirstOrDefault(e => e.Type == EmployeeType.Security);
-
-                if (securityEmployeeQuantity == null)
+                if (parsedArguments.IntegerArguments.First() > 1)
                 {
-                }
-                else if(securityEmployeeQuantity.Quantity == 1)
-                {
-                    broadcasterCompany.Employees.Remove(securityEmployeeQuantity);
+                    numberOfAttackingSpies = 
+                        Math.Min(
+                            parsedArguments.IntegerArguments.First(), 
+                            chatter.Company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
                 }
                 else
                 {
-                    securityEmployeeQuantity.Quantity--;
+                    PublishMessage(chatter.ChatterName,
+                        "Number of attacking spies must be greater than 0");
+                    return;
+                }
+            }
+            else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
+            {
+                numberOfAttackingSpies =
+                    chatter.Company.Employees
+                        .First(e => e.Type == EmployeeType.Spy).Quantity;
+            }
+
+            int successCount = 0;
+            int failureCount = 0;
+            long totalPointsStolen = 0;
+
+            var broadcasterCompany = GetBroadcasterCompany;
+
+            for (int i = 0; i < numberOfAttackingSpies; i++)
+            {
+                // "Consume" spy
+                var spyEmployeeQuantity =
+                    chatter.Company.Employees
+                        .First(e => e.Type == EmployeeType.Spy);
+
+                if (spyEmployeeQuantity.Quantity == 1)
+                {
+                    chatter.Company.Employees.Remove(spyEmployeeQuantity);
+                }
+                else
+                {
+                    spyEmployeeQuantity.Quantity--;
                 }
 
+                // Determine success of attack
+                int securityEmployeeCount =
+                    broadcasterCompany.Employees
+                        .Where(e => e.Type == EmployeeType.Security)
+                        .Sum(e => e.Quantity)
+                    + 1;
+
+                int broadcasterDefenseBonus =
+                    Math.Max(25, Convert.ToInt32(Math.Log10(securityEmployeeCount) * 10));
+
+                int rand = RngCreator.GetNumberBetween(1, 100);
+
+                if (rand > 50 + broadcasterDefenseBonus)
+                {
+                    // Success
+                    int stolen = (int)broadcasterCompany.Points / 100;
+
+                    chatter.Company.Points += stolen;
+                    broadcasterCompany.Points -= stolen;
+
+                    successCount++;
+                    totalPointsStolen += stolen;
+                }
+                else
+                {
+                    // Failure
+                    // "Consume" broadcaster security person
+                    var securityEmployeeQuantity =
+                        broadcasterCompany.Employees
+                            .FirstOrDefault(e => e.Type == EmployeeType.Security);
+
+                    if (securityEmployeeQuantity == null)
+                    {
+                    }
+                    else if (securityEmployeeQuantity.Quantity == 1)
+                    {
+                        broadcasterCompany.Employees.Remove(securityEmployeeQuantity);
+                    }
+                    else
+                    {
+                        securityEmployeeQuantity.Quantity--;
+                    }
+
+                    failureCount++;
+                }
+            }
+
+            if (numberOfAttackingSpies == 1)
+            {
                 PublishMessage(chatter.ChatterName,
-                    $"You failed to steal from {broadcasterCompany.CompanyName}");
+                    successCount == 1
+                        ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName}"
+                        : $"Your spy was caught and you got nothing");
+            }
+            else
+            {
+                PublishMessage(chatter.ChatterName,
+                    $"You had {successCount}/{numberOfAttackingSpies} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName}");
             }
 
             NotifyPlayerDataUpdated();

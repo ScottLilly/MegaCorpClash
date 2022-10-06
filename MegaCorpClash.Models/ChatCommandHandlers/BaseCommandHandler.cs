@@ -1,9 +1,12 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Core;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public abstract class BaseCommandHandler
 {
+    protected readonly ArgumentParser _argumentParser = new();
+
     public string CommandName { get; }
     protected GameSettings GameSettings { get; }
     protected Dictionary<string, Company> Companies { get; }

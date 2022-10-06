@@ -6,8 +6,6 @@ namespace MegaCorpClash.Models.ChatCommandHandlers;
 
 public sealed class HireCommandHandler : BaseCommandHandler
 {
-    private readonly ArgumentParser _argumentParser = new();
-
     public HireCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("hire", gameSettings, companies)
