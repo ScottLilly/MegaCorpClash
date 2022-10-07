@@ -11,9 +11,9 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
-        var chatter = ChatterDetails(gameCommand);
+        var chatter = ChatterDetails(gameCommandArgs);
 
         if (chatter.Company == null)
         {
@@ -22,21 +22,21 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (gameCommand.DoesNotHaveArguments)
+        if (gameCommandArgs.DoesNotHaveArguments)
         {
             PublishMessage(chatter.ChatterName, 
                 Literals.SetMotto_MustProvideMotto);
             return;
         }
 
-        if (gameCommand.Argument.IsNotSafeText())
+        if (gameCommandArgs.Argument.IsNotSafeText())
         {
             PublishMessage(chatter.ChatterName,
                 Literals.SetMotto_NotSafeText);
             return;
         }
 
-        if (gameCommand.Argument.Length > 
+        if (gameCommandArgs.Argument.Length > 
             GameSettings.MaxMottoLength)
         {
             PublishMessage(chatter.ChatterName,
@@ -44,7 +44,7 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        chatter.Company.Motto = gameCommand.Argument;
+        chatter.Company.Motto = gameCommandArgs.Argument;
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.ChatterName,

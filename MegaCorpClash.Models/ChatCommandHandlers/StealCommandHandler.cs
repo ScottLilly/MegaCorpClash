@@ -1,6 +1,7 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using CSharpExtender.Services;
 using MegaCorpClash.Models.CustomEventArgs;
+using TwitchLib.Api.Core.Models.Undocumented.Chatters;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers
 {
@@ -12,9 +13,9 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
         {
         }
 
-        public override void Execute(GameCommandArgs gameCommand)
+        public override void Execute(GameCommandArgs gameCommandArgs)
         {
-            var chatter = ChatterDetails(gameCommand);
+            var chatter = ChatterDetails(gameCommandArgs);
 
             if (chatter.Company == null)
             {
@@ -31,39 +32,18 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 return;
             }
 
-            var parsedArguments =
-                _argumentParser.Parse(gameCommand.Argument);
+            int numberOfAttackingSpies = 
+                GetNumberOfAttackingSpies(gameCommandArgs, chatter.Company);
 
-            int numberOfAttackingSpies = 1;
-
-            if (parsedArguments.IntegerArguments.Count == 1)
+            if (numberOfAttackingSpies < 1)
             {
-                if (parsedArguments.IntegerArguments.First() > 1)
-                {
-                    numberOfAttackingSpies = 
-                        Math.Min(
-                            parsedArguments.IntegerArguments.First(), 
-                            chatter.Company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
-                }
-                else
-                {
-                    PublishMessage(chatter.ChatterName,
-                        "Number of attacking spies must be greater than 0");
-                    return;
-                }
-            }
-            else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
-            {
-                numberOfAttackingSpies =
-                    chatter.Company.Employees
-                        .First(e => e.Type == EmployeeType.Spy).Quantity;
+                PublishMessage(chatter.ChatterName,
+                    "Number of attacking spies must be greater than 0");
+                return;
             }
 
             int successCount = 0;
-            int failureCount = 0;
             long totalPointsStolen = 0;
-
-            var broadcasterCompany = GetBroadcasterCompany;
 
             for (int i = 0; i < numberOfAttackingSpies; i++)
             {
@@ -81,35 +61,24 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                     spyEmployeeQuantity.Quantity--;
                 }
 
-                // Determine success of attack
-                int securityEmployeeCount =
-                    broadcasterCompany.Employees
-                        .Where(e => e.Type == EmployeeType.Security)
-                        .Sum(e => e.Quantity)
-                    + 1;
+                var attackSuccessful = IsAttackSuccessful(EmployeeType.Security);
 
-                int broadcasterDefenseBonus =
-                    Math.Max(25, Convert.ToInt32(Math.Log10(securityEmployeeCount) * 10));
-
-                int rand = RngCreator.GetNumberBetween(1, 100);
-
-                if (rand > 50 + broadcasterDefenseBonus)
+                if (attackSuccessful)
                 {
                     // Success
-                    int stolen = (int)broadcasterCompany.Points / 100;
+                    int stolen = (int)GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
 
                     chatter.Company.Points += stolen;
-                    broadcasterCompany.Points -= stolen;
+                    GetBroadcasterCompany.Points -= stolen;
 
                     successCount++;
                     totalPointsStolen += stolen;
                 }
                 else
                 {
-                    // Failure
-                    // "Consume" broadcaster security person
+                    // Failure, consumes broadcaster security person
                     var securityEmployeeQuantity =
-                        broadcasterCompany.Employees
+                        GetBroadcasterCompany.Employees
                             .FirstOrDefault(e => e.Type == EmployeeType.Security);
 
                     if (securityEmployeeQuantity == null)
@@ -117,14 +86,12 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                     }
                     else if (securityEmployeeQuantity.Quantity == 1)
                     {
-                        broadcasterCompany.Employees.Remove(securityEmployeeQuantity);
+                        GetBroadcasterCompany.Employees.Remove(securityEmployeeQuantity);
                     }
                     else
                     {
                         securityEmployeeQuantity.Quantity--;
                     }
-
-                    failureCount++;
                 }
             }
 
@@ -133,7 +100,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 PublishMessage(chatter.ChatterName,
                     successCount == 1
                         ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName}"
-                        : $"Your spy was caught and you got nothing");
+                        : "Your spy was caught and you got nothing");
             }
             else
             {
@@ -142,6 +109,37 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             }
 
             NotifyPlayerDataUpdated();
+        }
+
+        private int GetNumberOfAttackingSpies(GameCommandArgs gameCommand, Company company)
+        {
+            int numberOfAttackingSpies = 1;
+
+            var parsedArguments =
+                _argumentParser.Parse(gameCommand.Argument);
+
+            if (parsedArguments.IntegerArguments.Count == 1)
+            {
+                if (parsedArguments.IntegerArguments.First() > 1)
+                {
+                    numberOfAttackingSpies =
+                        Math.Min(
+                    parsedArguments.IntegerArguments.First(),
+                            company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
+                }
+                else
+                {
+                    numberOfAttackingSpies = 0;
+                }
+            }
+            else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
+            {
+                numberOfAttackingSpies =
+                    company.Employees
+                        .First(e => e.Type == EmployeeType.Spy).Quantity;
+            }
+
+            return numberOfAttackingSpies;
         }
     }
 }
