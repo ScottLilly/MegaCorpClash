@@ -1,4 +1,5 @@
-﻿using MegaCorpClash.Core;
+﻿using CSharpExtender.Services;
+using MegaCorpClash.Core;
 using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
@@ -40,7 +41,25 @@ public abstract class BaseCommandHandler
         Companies = companies;
     }
 
-    public abstract void Execute(GameCommandArgs gameCommand);
+    public abstract void Execute(GameCommandArgs gameCommandArgs);
+
+    protected bool IsAttackSuccessful(EmployeeType guardEmployeeType)
+    {
+        var broadcasterCompany = GetBroadcasterCompany;
+
+        int securityEmployeeCount =
+            broadcasterCompany.Employees
+                .Where(e => e.Type == guardEmployeeType)
+                .Sum(e => e.Quantity)
+            + 1;
+
+        int broadcasterDefenseBonus =
+            Math.Min(25, Convert.ToInt32(Math.Log10(securityEmployeeCount) * 10));
+
+        int rand = RngCreator.GetNumberBetween(1, 100);
+
+        return rand > 50 + broadcasterDefenseBonus;
+    }
 
     protected void PublishMessage(string message)
     {

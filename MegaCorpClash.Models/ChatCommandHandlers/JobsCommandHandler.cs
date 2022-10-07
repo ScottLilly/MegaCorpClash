@@ -10,7 +10,7 @@ public sealed class JobsCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
         PublishMessage($"Jobs and cost to hire: {GameSettings.JobsList}");
     }

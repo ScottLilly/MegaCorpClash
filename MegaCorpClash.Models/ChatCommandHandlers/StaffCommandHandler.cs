@@ -10,9 +10,9 @@ public sealed class StaffCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
-        var chatter = ChatterDetails(gameCommand);
+        var chatter = ChatterDetails(gameCommandArgs);
 
         if (chatter.Company == null)
         {

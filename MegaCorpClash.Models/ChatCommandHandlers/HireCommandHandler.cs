@@ -12,9 +12,9 @@ public sealed class HireCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
-        var chatter = ChatterDetails(gameCommand);
+        var chatter = ChatterDetails(gameCommandArgs);
 
         if(chatter.Company == null)
         {
@@ -25,7 +25,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         // Check that we have valid parameters
         var parsedArguments = 
-            _argumentParser.Parse(gameCommand.Argument);
+            _argumentParser.Parse(gameCommandArgs.Argument);
 
         if(parsedArguments.IntegerArguments.Count > 1 ||
            parsedArguments.EnumArgumentsOfType<EmployeeType>().Count() != 1)

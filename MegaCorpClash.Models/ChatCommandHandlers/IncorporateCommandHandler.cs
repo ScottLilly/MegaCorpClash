@@ -12,25 +12,25 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
-        var chatter = ChatterDetails(gameCommand);
+        var chatter = ChatterDetails(gameCommandArgs);
 
-        if (gameCommand.DoesNotHaveArguments)
+        if (gameCommandArgs.DoesNotHaveArguments)
         {
             PublishMessage(chatter.ChatterName, 
                 Literals.Incorporate_NameRequired);
             return;
         }
 
-        if (gameCommand.Argument.IsNotSafeText())
+        if (gameCommandArgs.Argument.IsNotSafeText())
         {
             PublishMessage(chatter.ChatterName,
                 Literals.Incorporate_NotSafeText);
             return;
         }
 
-        if (gameCommand.Argument.Length > 
+        if (gameCommandArgs.Argument.Length > 
             GameSettings.MaxCompanyNameLength)
         {
             PublishMessage(chatter.ChatterName,
@@ -45,10 +45,10 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommand.Argument)))
+        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommandArgs.Argument)))
         {
             PublishMessage(chatter.ChatterName,
-                $"There is already a company named {gameCommand.Argument}");
+                $"There is already a company named {gameCommandArgs.Argument}");
             return;
         }
 
@@ -59,7 +59,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
                 DisplayName = chatter.ChatterName,
                 IsBroadcaster = 
                     chatter.ChatterName.Matches(GameSettings.TwitchBroadcasterAccount.Name),
-                CompanyName = gameCommand.Argument,
+                CompanyName = gameCommandArgs.Argument,
                 CreatedOn = DateTime.UtcNow,
                 Points = GameSettings?.StartupDetails.InitialPoints ?? 0
             };
@@ -70,7 +70,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 
         NotifyPlayerDataUpdated();
         PublishMessage(chatter.ChatterName,
-            $"You are now the proud CEO of {gameCommand.Argument}");
+            $"You are now the proud CEO of {gameCommandArgs.Argument}");
     }
 
     private void GiveDefaultStaff(Company company)

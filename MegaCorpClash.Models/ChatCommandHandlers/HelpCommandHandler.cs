@@ -13,7 +13,7 @@ public sealed class HelpCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
         PublishMessage($"MegaCorpClash commands: {GetGameCommands()}");
     }

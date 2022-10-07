@@ -11,7 +11,7 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommand)
+    public override void Execute(GameCommandArgs gameCommandArgs)
     {
         PublishMessage(Companies.None()
             ? Literals.Companies_NoCompaniesInGame
