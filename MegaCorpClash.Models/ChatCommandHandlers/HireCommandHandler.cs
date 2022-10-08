@@ -68,6 +68,13 @@ public sealed class HireCommandHandler : BaseCommandHandler
             qtyToHire = 
                 (int)Math.Round(chatter.Company.Points / (decimal)costToHireOne, 
                     MidpointRounding.ToZero);
+
+            if (qtyToHire < 1)
+            {
+                PublishMessage(chatter.ChatterName,
+                    $"It costs {costToHireOne} {GameSettings.PointsName} to hire a {empType} employee. You only have {chatter.Company.Points} {GameSettings.PointsName}");
+                return;
+            }
         }
 
         if (qtyToHire < 1)

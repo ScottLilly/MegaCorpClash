@@ -186,7 +186,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
-    public void Test_ValidParametersMaxHireInsufficientMoney()
+    public void Test_ValidParametersInsufficientMoneyToHireMax()
     {
         Dictionary<string, Company> companies = new();
 
@@ -213,7 +213,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
+        Assert.Equal("It costs 10 CorpoBux to hire a Sales employee. You only have 9 CorpoBux",
             chatMessageEvent.Arguments.Message);
     }
 
