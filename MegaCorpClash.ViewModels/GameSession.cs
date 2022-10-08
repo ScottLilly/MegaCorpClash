@@ -133,7 +133,8 @@ public sealed class GameSession
             _gameCommandHandlers
                 .FirstOrDefault(cch => cch.CommandName.Matches(e.CommandName));
 
-        if (gameCommandHandler == null)
+        if (gameCommandHandler == null ||
+            (e.IsBroadcaster && !gameCommandHandler.BroadcasterCanRun))
         {
             return;
         }

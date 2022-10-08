@@ -10,8 +10,8 @@ public sealed class GameCommandArgs : ChattedEventArgs
 
     public GameCommandArgs(string userId, string displayName,
         string commandName, string argument,
-        bool isSubscriber, bool isVip, bool isNoisy) 
-        : base(userId, displayName, isSubscriber, isVip, isNoisy)
+        bool isBroadcaster, bool isSubscriber, bool isVip, bool isNoisy) 
+        : base(userId, displayName, isBroadcaster, isSubscriber, isVip, isNoisy)
     {
         CommandName = commandName;
         Argument = argument;

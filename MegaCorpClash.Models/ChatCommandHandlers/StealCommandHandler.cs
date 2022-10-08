@@ -10,6 +10,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             Dictionary<string, Company> companies)
             : base("steal", gameSettings, companies)
         {
+            BroadcasterCanRun = false;
         }
 
         public override void Execute(GameCommandArgs gameCommandArgs)
