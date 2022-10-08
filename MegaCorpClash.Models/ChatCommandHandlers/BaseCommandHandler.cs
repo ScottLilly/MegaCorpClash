@@ -9,6 +9,8 @@ public abstract class BaseCommandHandler
     protected readonly ArgumentParser _argumentParser = new();
 
     public string CommandName { get; }
+    public bool BroadcasterCanRun { get; protected init; } = true;
+    public bool NonBroadcasterCanRun { get; protected init; } = true;
     protected GameSettings GameSettings { get; }
     protected Dictionary<string, Company> Companies { get; }
 

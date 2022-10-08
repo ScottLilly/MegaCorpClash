@@ -140,7 +140,8 @@ public sealed class TwitchConnector : IChatConnector
         OnPersonChatted?.Invoke(this,
             new ChattedEventArgs(
                 e.ChatMessage.UserId, 
-                e.ChatMessage.DisplayName,
+                e.ChatMessage.DisplayName, 
+                e.ChatMessage.IsBroadcaster,
                 e.ChatMessage.IsSubscriber,
                 e.ChatMessage.IsVip,
                 e.ChatMessage.Noisy == Noisy.True));
@@ -154,6 +155,7 @@ public sealed class TwitchConnector : IChatConnector
                 e.Command.ChatMessage.DisplayName,
                 e.Command.CommandText,
                 e.Command.ArgumentsAsString,
+                e.Command.ChatMessage.IsBroadcaster,
                 e.Command.ChatMessage.IsSubscriber,
                 e.Command.ChatMessage.IsVip,
                 e.Command.ChatMessage.Noisy == Noisy.True));
