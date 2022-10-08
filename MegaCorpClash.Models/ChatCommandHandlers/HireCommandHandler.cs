@@ -1,5 +1,4 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Core;
 using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;

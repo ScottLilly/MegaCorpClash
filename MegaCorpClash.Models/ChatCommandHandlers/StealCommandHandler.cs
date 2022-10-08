@@ -1,7 +1,6 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using CSharpExtender.Services;
 using MegaCorpClash.Models.CustomEventArgs;
-using TwitchLib.Api.Core.Models.Undocumented.Chatters;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers
 {
