@@ -99,13 +99,13 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             {
                 PublishMessage(chatter.ChatterName,
                     successCount == 1
-                        ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName}"
+                        ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}"
                         : "Your spy was caught and you got nothing");
             }
             else
             {
                 PublishMessage(chatter.ChatterName,
-                    $"You had {successCount}/{numberOfAttackingSpies} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName}");
+                    $"You had {successCount}/{numberOfAttackingSpies} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
             }
 
             NotifyPlayerDataUpdated();
