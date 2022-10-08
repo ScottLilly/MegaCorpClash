@@ -8,6 +8,8 @@ public static class PersistenceService
     private const string GAME_SETTINGS_FILE_NAME = @".\appsettings.json";
     private const string PLAYER_DATA_FILE_NAME = @".\playerData.json";
 
+    private static object s_syncLock = new();
+
     public static GameSettings ReadGameSettings()
     {
         if (!File.Exists(GAME_SETTINGS_FILE_NAME))
@@ -30,8 +32,23 @@ public static class PersistenceService
 
     public static void SavePlayerData(IEnumerable<Company> players)
     {
-        File.WriteAllText(PLAYER_DATA_FILE_NAME,
-            JsonConvert.SerializeObject(players, Formatting.Indented));
+        lock (s_syncLock)
+        {
+            // Make backup
+            var playerDataBackupFile = $"{PLAYER_DATA_FILE_NAME}.backup";
+
+            if (File.Exists(playerDataBackupFile))
+            {
+                File.Delete(playerDataBackupFile);
+            }
+
+            // Backup
+            File.Move(PLAYER_DATA_FILE_NAME, playerDataBackupFile);
+
+            // Write file
+            File.WriteAllText(PLAYER_DATA_FILE_NAME,
+                JsonConvert.SerializeObject(players, Formatting.Indented));
+        }
     }
 
     public static List<Company> GetPlayerData()
