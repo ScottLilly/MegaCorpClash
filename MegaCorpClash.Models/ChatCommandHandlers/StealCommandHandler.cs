@@ -42,6 +42,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 return;
             }
 
+            bool streamerIsBankrupt = false;
             int successCount = 0;
             long totalPointsStolen = 0;
 
@@ -67,6 +68,11 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 {
                     // Success
                     int stolen = (int)GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
+
+                    if (GetBroadcasterCompany.Points < 1000)
+                    {
+                        stolen = (int)GetBroadcasterCompany.Points;
+                    }
 
                     chatter.Company.Points += stolen;
                     GetBroadcasterCompany.Points -= stolen;
@@ -106,6 +112,11 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             {
                 PublishMessage(chatter.ChatterName,
                     $"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+            }
+
+            if (GetBroadcasterCompany.Points == 0)
+            {
+                NotifyBankruptedStreamer();
             }
 
             NotifyPlayerDataUpdated();

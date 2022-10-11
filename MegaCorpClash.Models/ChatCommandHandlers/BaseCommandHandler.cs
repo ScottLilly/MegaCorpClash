@@ -23,6 +23,7 @@ public abstract class BaseCommandHandler
 
     public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
     public event EventHandler OnPlayerDataUpdated;
+    public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
     protected (string ChatterId, string ChatterName, Company? Company)
         ChatterDetails(GameCommandArgs gameCommand) =>
@@ -78,5 +79,10 @@ public abstract class BaseCommandHandler
     protected void NotifyPlayerDataUpdated()
     {
         OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected void NotifyBankruptedStreamer()
+    {
+        OnBankruptedStreamer?.Invoke(this, new BankruptedStreamerArgs());
     }
 }

@@ -101,6 +101,7 @@ public sealed class GameSession
         {
             commandHandler.OnChatMessageToSend += HandleChatMessageToSend;
             commandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+            commandHandler.OnBankruptedStreamer += HandleBankruptedStreamer;
         }
     }
 
@@ -157,6 +158,12 @@ public sealed class GameSession
     private void HandlePlayerDataUpdated(object? sender, EventArgs e)
     {
         UpdatePlayerInformation();
+    }
+
+    private void HandleBankruptedStreamer(object? sender, BankruptedStreamerArgs e)
+    {
+        WriteMessageToLogFile("Bankrupted streamer");
+        WriteMessageToTwitchChat("Bankrupted streamer");
     }
 
     #endregion
