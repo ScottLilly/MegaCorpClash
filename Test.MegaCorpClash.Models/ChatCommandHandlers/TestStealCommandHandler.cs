@@ -49,7 +49,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
             chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("You must have at least one Spy to steal",
+        Assert.Equal("You must have at least one spy to steal",
             chatMessageEvent.Arguments.Message);
     }
 

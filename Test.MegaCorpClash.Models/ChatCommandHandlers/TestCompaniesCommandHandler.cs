@@ -55,7 +55,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("Top companies: JoeCo: 99", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Richest companies: JoeCo [99]", chatMessageEvent.Arguments.Message);
     }
 
     [Fact]
@@ -90,6 +90,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("Top companies: SueCo: 2,222, JoeCo: 1,111", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Richest companies: SueCo [2,222], JoeCo [1,111]", chatMessageEvent.Arguments.Message);
     }
 }

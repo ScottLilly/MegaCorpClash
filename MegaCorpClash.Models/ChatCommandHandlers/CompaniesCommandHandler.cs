@@ -15,6 +15,6 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
     {
         PublishMessage(Companies.None()
             ? Literals.Companies_NoCompaniesInGame
-            : $"Top companies: {CompaniesList}");
+            : $"Richest companies: {CompaniesList}");
     }
 }

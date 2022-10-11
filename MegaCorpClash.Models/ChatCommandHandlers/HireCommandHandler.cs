@@ -72,7 +72,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
             if (qtyToHire < 1)
             {
                 PublishMessage(chatter.ChatterName,
-                    $"It costs {costToHireOne} {GameSettings.PointsName} to hire a {empType} employee. You only have {chatter.Company.Points} {GameSettings.PointsName}");
+                    $"It costs {costToHireOne:N0} {GameSettings.PointsName} to hire a {empType} employee. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
                 return;
             }
         }
@@ -90,7 +90,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
         if (costToHire > chatter.Company.Points)
         {
             PublishMessage(chatter.ChatterName,
-                $"It costs {costToHire} {GameSettings.PointsName} to hire {qtyToHire} {empType} employees. You only have {chatter.Company.Points} {GameSettings.PointsName}");
+                $"It costs {costToHire:N0} {GameSettings.PointsName} to hire {qtyToHire:N0} {empType} employees. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
             return;
         }
 
