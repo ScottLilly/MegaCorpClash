@@ -24,7 +24,7 @@ public sealed class GameSettings
         string.Join(", ",
             EmployeeHiringDetails
                 .OrderBy(e => e.Type.ToString())
-                .Select(e => $"{e.Type} ({e.CostToHire})"));
+                .Select(e => $"{e.Type} [{e.CostToHire:N0}]"));
 
     public class TwitchAccount
     {

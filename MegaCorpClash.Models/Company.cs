@@ -20,5 +20,5 @@ public sealed class Company
         string.Join(", ",
             Employees
                 .OrderBy(x => x.Type)
-                .Select(x => $"{x.Quantity} {x.Type}"));
+                .Select(x => $"{x.Quantity:N0} {x.Type}"));
 }

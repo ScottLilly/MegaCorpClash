@@ -43,7 +43,7 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
         Assert.NotNull(chatMessageEvent);
         Assert.Equal("",
             chatMessageEvent.Arguments.DisplayName);
-        Assert.Equal("Jobs and cost to hire: Marketing (25), Sales (10)",
+        Assert.Equal("Jobs and cost to hire: Marketing [25], Sales [10]",
             chatMessageEvent.Arguments.Message);
     }
 }

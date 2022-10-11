@@ -19,7 +19,7 @@ public abstract class BaseCommandHandler
             Companies.Values
                 .OrderByDescending(c => c.Points)
                 .Take(7)
-                .Select(c => $"{c.CompanyName}: {c.Points:N0}"));
+                .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
     public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
     public event EventHandler OnPlayerDataUpdated;

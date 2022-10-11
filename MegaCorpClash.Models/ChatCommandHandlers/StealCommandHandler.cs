@@ -28,7 +28,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
             {
                 PublishMessage(chatter.ChatterName,
-                    "You must have at least one Spy to steal");
+                    "You must have at least one spy to steal");
                 return;
             }
 
@@ -105,7 +105,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
             else
             {
                 PublishMessage(chatter.ChatterName,
-                    $"You had {successCount}/{numberOfAttackingSpies} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+                    $"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
             }
 
             NotifyPlayerDataUpdated();
