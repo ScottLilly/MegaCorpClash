@@ -38,10 +38,10 @@ public class CommandHandlerFactory
 
     public BaseCommandHandler? GetCommandHandlerForCommand(string command)
     {
-        var commandHandlerType = _commandHandlerTypes[command];
-
-        if (commandHandlerType != null)
+        if (_commandHandlerTypes.ContainsKey(command))
         {
+            var commandHandlerType = _commandHandlerTypes[command];
+
             var instance = 
                 Activator.CreateInstance(commandHandlerType, _gameSettings, _companies);
 
