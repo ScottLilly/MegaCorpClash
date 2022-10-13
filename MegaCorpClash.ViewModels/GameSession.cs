@@ -16,6 +16,7 @@ public sealed class GameSession
     private readonly PointsCalculator _pointsCalculator;
 
     private CommandHandlerFactory _commandHandlerFactory;
+    private readonly CommandHandlerQueueManager _commandHandlerQueueManager = new();
     private List<BaseCommandHandler> _gameCommandHandlers = new();
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -29,8 +30,6 @@ public sealed class GameSession
         PopulateGameCommandHandlers();
         _commandHandlerFactory = 
             new CommandHandlerFactory(_gameSettings, _companies);
-
-        var test = _commandHandlerFactory.GetCommandHandlerForCommand("hire");
 
         _pointsCalculator = new PointsCalculator(gameSettings, _companies);
 
@@ -133,6 +132,14 @@ public sealed class GameSession
 
     private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
     {
+        var command = 
+            _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
+
+        if (command != null)
+        {
+            _commandHandlerQueueManager.Add(command);
+        }
+
         UpdateChatterDetailsIfChanged(e);
 
         BaseCommandHandler? gameCommandHandler =
