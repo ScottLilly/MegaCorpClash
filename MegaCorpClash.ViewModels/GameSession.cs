@@ -11,10 +11,11 @@ namespace MegaCorpClash.ViewModels;
 public sealed class GameSession
 {
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Company> _players = new();
+    private readonly Dictionary<string, Company> _companies = new();
     private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
 
+    private CommandHandlerFactory _commandHandlerFactory;
     private List<BaseCommandHandler> _gameCommandHandlers = new();
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -26,8 +27,12 @@ public sealed class GameSession
 
         PopulatePlayers();
         PopulateGameCommandHandlers();
+        _commandHandlerFactory = 
+            new CommandHandlerFactory(_gameSettings, _companies);
 
-        _pointsCalculator = new PointsCalculator(gameSettings, _players);
+        var test = _commandHandlerFactory.GetCommandHandlerForCommand("hire");
+
+        _pointsCalculator = new PointsCalculator(gameSettings, _companies);
 
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnConnected += HandleConnected;
@@ -45,7 +50,7 @@ public sealed class GameSession
 
     public List<string> ShowPlayers()
     {
-        return _players
+        return _companies
             .OrderBy(p => p.Value.DisplayName)
             .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
             .ToList();
@@ -81,7 +86,7 @@ public sealed class GameSession
             player.IsBroadcaster = 
                 player.DisplayName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
 
-            _players.Add(player.UserId, player);
+            _companies.Add(player.UserId, player);
         }
     }
 
@@ -93,7 +98,7 @@ public sealed class GameSession
         _gameCommandHandlers = 
             assembly.GetTypes()
             .Where(t => t.IsSubclassOf(baseType))
-            .Select(t => Activator.CreateInstance(t, _gameSettings, _players))
+            .Select(t => Activator.CreateInstance(t, _gameSettings, _companies))
             .Cast<BaseCommandHandler>()
             .ToList();
 
@@ -238,12 +243,12 @@ public sealed class GameSession
 
     private void UpdatePlayerInformation()
     {
-        PersistenceService.SavePlayerData(_players.Values);
+        PersistenceService.SavePlayerData(_companies.Values);
     }
 
     private void UpdateChatterDetailsIfChanged(ChattedEventArgs eventArgs)
     {
-        if (_players.TryGetValue(eventArgs.UserId, out Company? company) &&
+        if (_companies.TryGetValue(eventArgs.UserId, out Company? company) &&
             (company.DisplayName != eventArgs.DisplayName ||
              company.IsSubscriber != eventArgs.IsSubscriber ||
              company.IsVip != eventArgs.IsVip))
