@@ -19,11 +19,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -50,11 +46,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -81,11 +73,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename u[k");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -112,11 +100,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename 1234567890123456");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -151,11 +135,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename FirstCo");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -190,11 +170,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!rename SecondCo");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,

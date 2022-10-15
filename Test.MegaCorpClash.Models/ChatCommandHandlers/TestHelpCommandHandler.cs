@@ -20,11 +20,7 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         var gameCommand = GetGameCommand("!help");
 
         // Call the first time. List needs to be created.
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
@@ -33,11 +29,7 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
 
         //// Call a second time. Should have list created this time.
         //// This is for testing code coverage.
-        //chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);

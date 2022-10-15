@@ -19,11 +19,7 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!staff");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -63,11 +59,7 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!staff");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -75,5 +67,4 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         //Assert.Equal("You have 3 employees. 1 Production, 2 Sales",
         //    chatMessageEvent.Arguments.Message);
     }
-
 }

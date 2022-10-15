@@ -19,11 +19,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!companies");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
@@ -47,11 +43,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!companies");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
@@ -82,11 +74,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!companies");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);

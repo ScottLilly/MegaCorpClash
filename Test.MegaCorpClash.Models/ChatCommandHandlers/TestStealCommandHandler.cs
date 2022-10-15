@@ -19,11 +19,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!steal");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -40,11 +36,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!steal");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,

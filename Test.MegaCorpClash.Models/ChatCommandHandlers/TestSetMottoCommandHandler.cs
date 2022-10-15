@@ -19,11 +19,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -50,11 +46,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -81,11 +73,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto kjh*234");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -112,11 +100,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto 12345678901234567890123456");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
@@ -161,11 +145,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto This is our new motto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
         //Assert.NotNull(chatMessageEvent);
         //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
