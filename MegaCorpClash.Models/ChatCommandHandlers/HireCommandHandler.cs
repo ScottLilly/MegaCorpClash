@@ -17,8 +17,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         if(chatter.Company == null)
         {
-            PublishMessage(chatter.ChatterName, 
-                Literals.YouDoNotHaveACompany);
+            PublishMessage(Literals.YouDoNotHaveACompany);
             return;
         }
 
@@ -29,7 +28,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
         if(parsedArguments.IntegerArguments.Count > 1 ||
            parsedArguments.EnumArgumentsOfType<EmployeeType>().Count() != 1)
         {
-            PublishMessage(chatter.ChatterName, Literals.Hire_InvalidParameters);
+            PublishMessage(Literals.Hire_InvalidParameters);
             return;
         }
 
@@ -71,16 +70,14 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
             if (qtyToHire < 1)
             {
-                PublishMessage(chatter.ChatterName,
-                    $"It costs {costToHireOne:N0} {GameSettings.PointsName} to hire a {empType} employee. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+                PublishMessage($"It costs {costToHireOne:N0} {GameSettings.PointsName} to hire a {empType} employee. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
                 return;
             }
         }
 
         if (qtyToHire < 1)
         {
-            PublishMessage(chatter.ChatterName,
-                Literals.Hire_QuantityMustBeGreaterThanZero);
+            PublishMessage(Literals.Hire_QuantityMustBeGreaterThanZero);
             return;
         }
 
@@ -89,8 +86,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         if (costToHire > chatter.Company.Points)
         {
-            PublishMessage(chatter.ChatterName,
-                $"It costs {costToHire:N0} {GameSettings.PointsName} to hire {qtyToHire:N0} {empType} employees. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+            PublishMessage($"It costs {costToHire:N0} {GameSettings.PointsName} to hire {qtyToHire:N0} {empType} employees. You only have {chatter.Company.Points:N0} {GameSettings.PointsName}");
             return;
         }
 
@@ -121,6 +117,6 @@ public sealed class HireCommandHandler : BaseCommandHandler
             (qtyToHire == 1 ? "" : "s") + 
             $" and have {chatter.Company.Points:N0} {GameSettings.PointsName} remaining.";
 
-        PublishMessage(chatter.ChatterName, message);
+        PublishMessage(message);
     }
 }

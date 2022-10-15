@@ -19,16 +19,14 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
 
             if (chatter.Company == null)
             {
-                PublishMessage(chatter.ChatterName,
-                    Literals.YouDoNotHaveACompany);
+                PublishMessage(Literals.YouDoNotHaveACompany);
                 return;
             }
 
             // Check if player has a Spy
             if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
             {
-                PublishMessage(chatter.ChatterName,
-                    "You must have at least one spy to steal");
+                PublishMessage("You must have at least one spy to steal");
                 return;
             }
 
@@ -37,12 +35,10 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
 
             if (numberOfAttackingSpies < 1)
             {
-                PublishMessage(chatter.ChatterName,
-                    "Number of attacking spies must be greater than 0");
+                PublishMessage("Number of attacking spies must be greater than 0");
                 return;
             }
 
-            bool streamerIsBankrupt = false;
             int successCount = 0;
             long totalPointsStolen = 0;
 
@@ -103,15 +99,13 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
 
             if (numberOfAttackingSpies == 1)
             {
-                PublishMessage(chatter.ChatterName,
-                    successCount == 1
+                PublishMessage(successCount == 1
                         ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}"
                         : "Your spy was caught and you got nothing");
             }
             else
             {
-                PublishMessage(chatter.ChatterName,
-                    $"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+                PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
             }
 
             if (GetBroadcasterCompany.Points == 0)

@@ -17,37 +17,32 @@ public sealed class SetMottoCommandHandler : BaseCommandHandler
 
         if (chatter.Company == null)
         {
-            PublishMessage(chatter.ChatterName, 
-                Literals.YouDoNotHaveACompany);
+            PublishMessage(Literals.YouDoNotHaveACompany);
             return;
         }
 
         if (gameCommandArgs.DoesNotHaveArguments)
         {
-            PublishMessage(chatter.ChatterName, 
-                Literals.SetMotto_MustProvideMotto);
+            PublishMessage(Literals.SetMotto_MustProvideMotto);
             return;
         }
 
         if (gameCommandArgs.Argument.IsNotSafeText())
         {
-            PublishMessage(chatter.ChatterName,
-                Literals.SetMotto_NotSafeText);
+            PublishMessage(Literals.SetMotto_NotSafeText);
             return;
         }
 
         if (gameCommandArgs.Argument.Length > 
             GameSettings.MaxMottoLength)
         {
-            PublishMessage(chatter.ChatterName,
-                $"Motto cannot be longer than {GameSettings.MaxMottoLength} characters");
+            PublishMessage($"Motto cannot be longer than {GameSettings.MaxMottoLength} characters");
             return;
         }
 
         chatter.Company.Motto = gameCommandArgs.Argument;
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.ChatterName,
-                $"Your new company motto is '{chatter.Company.Motto}'");
+        PublishMessage($"Your new company motto is '{chatter.Company.Motto}'");
     }
 }

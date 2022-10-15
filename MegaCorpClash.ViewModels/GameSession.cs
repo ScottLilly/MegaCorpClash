@@ -1,7 +1,6 @@
 ﻿using System.Timers;
 using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.ChatConnectors;
 using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Services;
@@ -14,10 +13,9 @@ public sealed class GameSession
     private readonly Dictionary<string, Company> _companies = new();
     private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
-
-    private CommandHandlerFactory _commandHandlerFactory;
+    private readonly CommandHandlerFactory _commandHandlerFactory;
     private readonly CommandHandlerQueueManager _commandHandlerQueueManager = new();
-    private List<BaseCommandHandler> _gameCommandHandlers = new();
+
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
     private System.Timers.Timer _pointsTimer;
@@ -27,9 +25,13 @@ public sealed class GameSession
         _gameSettings = gameSettings;
 
         PopulatePlayers();
-        PopulateGameCommandHandlers();
+
         _commandHandlerFactory = 
             new CommandHandlerFactory(_gameSettings, _companies);
+
+        _commandHandlerQueueManager.OnChatMessageToSend += HandleChatMessageToSend;
+        _commandHandlerQueueManager.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
 
         _pointsCalculator = new PointsCalculator(gameSettings, _companies);
 
@@ -90,26 +92,6 @@ public sealed class GameSession
         }
     }
 
-    private void PopulateGameCommandHandlers()
-    {
-        var baseType = typeof(BaseCommandHandler);
-        var assembly = baseType.Assembly;
-
-        _gameCommandHandlers = 
-            assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(baseType))
-            .Select(t => Activator.CreateInstance(t, _gameSettings, _companies))
-            .Cast<BaseCommandHandler>()
-            .ToList();
-
-        foreach(BaseCommandHandler commandHandler in _gameCommandHandlers)
-        {
-            commandHandler.OnChatMessageToSend += HandleChatMessageToSend;
-            commandHandler.OnPlayerDataUpdated += HandlePlayerDataUpdated;
-            commandHandler.OnBankruptedStreamer += HandleBankruptedStreamer;
-        }
-    }
-
     #endregion
 
     #region Private event handler functions
@@ -136,27 +118,16 @@ public sealed class GameSession
         var command =
             _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
 
-        if (command != null)
-        {
-            _commandHandlerQueueManager.Add((command, e));
-            //_commandHandlerQueueManager.RunItemFromQueue();
-        }
-
-        UpdateChatterDetailsIfChanged(e);
-
-        BaseCommandHandler? gameCommandHandler =
-            _gameCommandHandlers
-                .FirstOrDefault(cch => cch.CommandName.Matches(e.CommandName));
-
-        if (gameCommandHandler == null ||
-            (e.IsBroadcaster && !gameCommandHandler.BroadcasterCanRun))
+        if (command == null)
         {
             return;
         }
 
-        WriteMessageToLogFile($"[{e.DisplayName}] {e.CommandName} {e.Argument}");
+        _commandHandlerQueueManager.Add((command, e));
 
-        gameCommandHandler?.Execute(e);
+        UpdateChatterDetailsIfChanged(e);
+
+        WriteMessageToLogFile($"[{e.DisplayName}] {e.CommandName} {e.Argument}");
     }
 
     private void HandleLogMessagePublished(object? sender, string e)

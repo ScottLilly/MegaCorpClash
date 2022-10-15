@@ -18,37 +18,32 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 
         if (gameCommandArgs.DoesNotHaveArguments)
         {
-            PublishMessage(chatter.ChatterName, 
-                Literals.Incorporate_NameRequired);
+            PublishMessage(Literals.Incorporate_NameRequired);
             return;
         }
 
         if (gameCommandArgs.Argument.IsNotSafeText())
         {
-            PublishMessage(chatter.ChatterName,
-                Literals.Incorporate_NotSafeText);
+            PublishMessage(Literals.Incorporate_NotSafeText);
             return;
         }
 
         if (gameCommandArgs.Argument.Length > 
             GameSettings.MaxCompanyNameLength)
         {
-            PublishMessage(chatter.ChatterName,
-                $"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
+            PublishMessage($"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
             return;
         }
 
         if (chatter.Company != null)
         {
-            PublishMessage(chatter.ChatterName,
-                $"You already have a company named {chatter.Company.CompanyName}");
+            PublishMessage($"You already have a company named {chatter.Company.CompanyName}");
             return;
         }
 
         if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommandArgs.Argument)))
         {
-            PublishMessage(chatter.ChatterName,
-                $"There is already a company named {gameCommandArgs.Argument}");
+            PublishMessage($"There is already a company named {gameCommandArgs.Argument}");
             return;
         }
 
@@ -69,8 +64,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
         Companies[chatter.ChatterId] = chatter.Company;
 
         NotifyPlayerDataUpdated();
-        PublishMessage(chatter.ChatterName,
-            $"You are now the proud CEO of {gameCommandArgs.Argument}");
+        PublishMessage($"You are now the proud CEO of {gameCommandArgs.Argument}");
     }
 
     private void GiveDefaultStaff(Company company)
