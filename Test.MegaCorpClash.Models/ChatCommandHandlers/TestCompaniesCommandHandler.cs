@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -21,9 +20,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Companies_NoCompaniesInGame, chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Companies_NoCompaniesInGame, commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -45,9 +42,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Richest companies: JoeCo [99]", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Richest companies: JoeCo [99]", commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -76,8 +71,6 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Richest companies: SueCo [2,222], JoeCo [1,111]", chatMessageEvent.Arguments.Message);
+        Assert.Equal("Richest companies: SueCo [2,222], JoeCo [1,111]", commandHandler.ChatMessages.First());
     }
 }

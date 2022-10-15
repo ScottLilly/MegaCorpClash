@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -21,11 +20,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME, 
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Incorporate_NameRequired, 
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Incorporate_NameRequired,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -40,11 +36,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Incorporate_NotSafeText,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Incorporate_NotSafeText,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -59,11 +52,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Company name cannot be longer than 15 characters",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("Company name cannot be longer than 15 characters",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -80,11 +70,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You already have a company named Test",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You already have a company named Test",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -101,11 +88,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("There is already a company named Test",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("There is already a company named Test",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -120,11 +104,8 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You are now the proud CEO of Test",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You are now the proud CEO of Test",
+            commandHandler.ChatMessages.First());
 
         Company company = companies[DEFAULT_CHATTER_ID];
 

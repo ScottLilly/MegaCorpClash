@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -21,11 +20,8 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.YouDoNotHaveACompany,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -38,11 +34,8 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You must have at least one spy to steal",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You must have at least one spy to steal",
+            commandHandler.ChatMessages.First());
     }
 
     private StealCommandHandler GetStealCommandHandler(int points, int hiredSpies)

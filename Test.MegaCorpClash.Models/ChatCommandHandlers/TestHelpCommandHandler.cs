@@ -1,5 +1,4 @@
 ﻿using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Models;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
@@ -22,18 +21,14 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         // Call the first time. List needs to be created.
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
+            commandHandler.ChatMessages.First());
 
         //// Call a second time. Should have list created this time.
         //// This is for testing code coverage.
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("", chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !incorporate, !jobs, !rename, !setmotto, !staff, !status, !steal",
+            commandHandler.ChatMessages.First());
     }
 }

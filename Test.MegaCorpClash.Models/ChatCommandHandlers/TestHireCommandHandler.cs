@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -35,11 +34,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Hire_InvalidParameters,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Hire_InvalidParameters,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -54,11 +50,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.YouDoNotHaveACompany,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -71,11 +64,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -88,11 +78,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -105,11 +92,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -122,11 +106,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -150,11 +131,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("It costs 10 CorpoBux to hire 1 Sales employees. You only have 9 CorpoBux",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("It costs 10 CorpoBux to hire 1 Sales employees. You only have 9 CorpoBux",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -178,11 +156,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("It costs 10 CorpoBux to hire a Sales employee. You only have 9 CorpoBux",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("It costs 10 CorpoBux to hire a Sales employee. You only have 9 CorpoBux",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -206,11 +181,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 5 Sales employees and have 0 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 5 Sales employees and have 0 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -234,16 +206,13 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 1 Sales employee and have 1 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 1 Sales employee and have 1 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
 
-        //var company = companies[DEFAULT_CHATTER_ID];
+        var company = companies[DEFAULT_CHATTER_ID];
 
-        //Assert.Single(company.Employees);
-        //Assert.Equal(1, company.Points);
+        Assert.Single(company.Employees);
+        Assert.Equal(1, company.Points);
     }
 
     [Fact]
@@ -275,11 +244,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 1 Sales employee and have 2 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 1 Sales employee and have 2 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
 
         var company = companies[DEFAULT_CHATTER_ID];
 
@@ -308,11 +274,8 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You hired 2 Sales employees and have 2 CorpoBux remaining.",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You hired 2 Sales employees and have 2 CorpoBux remaining.",
+            commandHandler.ChatMessages.First());
 
         var company = companies[DEFAULT_CHATTER_ID];
 

@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -36,10 +35,7 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal("",
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Jobs and cost to hire: Marketing [25], Sales [10]",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("Jobs and cost to hire: Marketing [25], Sales [10]",
+            commandHandler.ChatMessages.First());
     }
 }
