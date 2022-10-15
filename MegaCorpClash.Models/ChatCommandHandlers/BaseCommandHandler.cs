@@ -21,11 +21,11 @@ public abstract class BaseCommandHandler
                 .Take(7)
                 .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
-    public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
-    public event EventHandler OnPlayerDataUpdated;
-    public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
+    public List<string> ChatMessages { get; } = new();
+    public bool PlayerDataUpdated { get; private set; } = false;
+    public bool StreamerBankrupted { get; private set; } = false;
 
-    protected (string ChatterId, string ChatterName, Company? Company)
+    public (string ChatterId, string ChatterName, Company? Company)
         ChatterDetails(GameCommandArgs gameCommand) =>
         (gameCommand.UserId,
             gameCommand.DisplayName,
@@ -66,23 +66,16 @@ public abstract class BaseCommandHandler
 
     protected void PublishMessage(string message)
     {
-        OnChatMessageToSend?.Invoke(this,
-            new ChatMessageEventArgs("", message));
-    }
-
-    protected void PublishMessage(string chatterDisplayName, string message)
-    {
-        OnChatMessageToSend?.Invoke(this, 
-            new ChatMessageEventArgs(chatterDisplayName, message));
+        ChatMessages.Add(message);
     }
 
     protected void NotifyPlayerDataUpdated()
     {
-        OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
+        PlayerDataUpdated = true;
     }
 
     protected void NotifyBankruptedStreamer()
     {
-        OnBankruptedStreamer?.Invoke(this, new BankruptedStreamerArgs());
+        StreamerBankrupted = true;
     }
 }

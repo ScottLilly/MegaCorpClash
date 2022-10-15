@@ -14,8 +14,7 @@ public sealed class StatusCommandHandler : BaseCommandHandler
     {
         var chatter = ChatterDetails(gameCommandArgs);
 
-        PublishMessage(chatter.ChatterName,
-            chatter.Company == null
+        PublishMessage(chatter.Company == null
                 ? Literals.YouDoNotHaveACompany
                 : $"At {chatter.Company.CompanyName} we always say '{chatter.Company.Motto}'. That's how we earned {chatter.Company.Points:N0} {GameSettings.PointsName}");
     }

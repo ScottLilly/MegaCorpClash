@@ -6,16 +6,41 @@ namespace MegaCorpClash.Services;
 public class CommandHandlerQueueManager : 
     BaseQueueManager<(BaseCommandHandler, GameCommandArgs)>
 {
-    public void RunItemFromQueue()
+    public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
+    public event EventHandler OnPlayerDataUpdated;
+    public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
+
+    public CommandHandlerQueueManager()
     {
-        if (_queue.TryDequeue(out var queued))
-        {
-            Execute(queued);
-        }
+        Task.Factory.StartNew(Consumer);
     }
 
-    public override void Execute((BaseCommandHandler, GameCommandArgs) command)
+    private void Consumer()
     {
-        command.Item1.Execute(command.Item2);
+        foreach (var item in _queue.GetConsumingEnumerable())
+        {
+            var commandHandler = item.Item1;
+            var commandArgs = item.Item2;
+            var chatterDetails = commandHandler.ChatterDetails(commandArgs);
+
+            commandHandler.Execute(commandArgs);
+
+            foreach (var message in commandHandler.ChatMessages)
+            {
+                OnChatMessageToSend?.Invoke(this, 
+                    new ChatMessageEventArgs(chatterDetails.ChatterName, message));
+            }
+
+            if (commandHandler.PlayerDataUpdated)
+            {
+                OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
+            }
+
+            if (commandHandler.StreamerBankrupted)
+            {
+                OnBankruptedStreamer?.Invoke(this,
+                    new BankruptedStreamerArgs());
+            }
+        }
     }
 }
