@@ -60,6 +60,7 @@ public sealed class GameSession
         WriteMessageToTwitchChat("Stopping MegaCorpClash game. Thanks for playing!");
 
         _twitchConnector?.Disconnect();
+        _commandHandlerQueueManager.Stop();
     }
 
     public void AddBonusPointsNextTurn(int bonusPoints)
@@ -132,14 +133,14 @@ public sealed class GameSession
 
     private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
     {
-        //var command = 
-        //    _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
+        var command =
+            _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
 
-        //if (command != null)
-        //{
-        //    _commandHandlerQueueManager.Add((command, e));
-        //    _commandHandlerQueueManager.RunItemFromQueue();
-        //}
+        if (command != null)
+        {
+            _commandHandlerQueueManager.Add((command, e));
+            //_commandHandlerQueueManager.RunItemFromQueue();
+        }
 
         UpdateChatterDetailsIfChanged(e);
 

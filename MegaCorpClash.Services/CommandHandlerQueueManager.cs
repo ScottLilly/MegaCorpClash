@@ -6,16 +6,17 @@ namespace MegaCorpClash.Services;
 public class CommandHandlerQueueManager : 
     BaseQueueManager<(BaseCommandHandler, GameCommandArgs)>
 {
-    public void RunItemFromQueue()
+    public CommandHandlerQueueManager()
     {
-        if (_queue.TryDequeue(out var queued))
-        {
-            Execute(queued);
-        }
+        Task.Factory.StartNew(Consumer);
     }
 
-    public override void Execute((BaseCommandHandler, GameCommandArgs) command)
+    private void Consumer()
     {
-        command.Item1.Execute(command.Item2);
+        foreach (var item in _queue.GetConsumingEnumerable())
+        {
+            item.Item1.Execute(item.Item2);
+            Console.WriteLine(item.Item1.CommandName);
+        }
     }
 }
