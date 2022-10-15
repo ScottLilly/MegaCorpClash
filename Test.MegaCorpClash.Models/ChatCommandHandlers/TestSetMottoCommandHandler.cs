@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -19,17 +18,10 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.YouDoNotHaveACompany,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -50,17 +42,10 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You must enter a value for the motto",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You must enter a value for the motto",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -81,17 +66,10 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto kjh*234");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.SetMotto_NotSafeText,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.SetMotto_NotSafeText,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -112,17 +90,10 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto 12345678901234567890123456");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Motto cannot be longer than 25 characters",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("Motto cannot be longer than 25 characters",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -161,16 +132,9 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!setmotto This is our new motto");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("Your new company motto is 'This is our new motto'",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("Your new company motto is 'This is our new motto'",
+            commandHandler.ChatMessages.First());
     }
 }

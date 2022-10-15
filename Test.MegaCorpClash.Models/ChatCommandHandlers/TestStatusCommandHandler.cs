@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -19,17 +18,10 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!status");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.YouDoNotHaveACompany,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -50,17 +42,10 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!status");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("At ScottCo we always say 'We don't need a motto'. That's how we earned 100 CorpoBux",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("At ScottCo we always say 'We don't need a motto'. That's how we earned 100 CorpoBux",
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -82,16 +67,9 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!status");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("At ScottCo we always say 'This is our new motto'. That's how we earned 1,000,000 CorpoBux",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("At ScottCo we always say 'This is our new motto'. That's how we earned 1,000,000 CorpoBux",
+            commandHandler.ChatMessages.First());
     }
 }

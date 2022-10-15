@@ -1,6 +1,5 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -19,17 +18,10 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!staff");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal(Literals.YouDoNotHaveACompany,
+            commandHandler.ChatMessages.First());
     }
 
     [Fact]
@@ -63,17 +55,9 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
 
         var gameCommand = GetGameCommand("!staff");
 
-        //var chatMessageEvent =
-        //    Assert.Raises<ChatMessageEventArgs>(
-        //        h => commandHandler.OnChatMessageToSend += h,
-        //        h => commandHandler.OnChatMessageToSend -= h,
-        //        () => commandHandler.Execute(gameCommand));
+        commandHandler.Execute(gameCommand);
 
-        //Assert.NotNull(chatMessageEvent);
-        //Assert.Equal(DEFAULT_CHATTER_DISPLAY_NAME,
-        //    chatMessageEvent.Arguments.DisplayName);
-        //Assert.Equal("You have 3 employees. 1 Production, 2 Sales",
-        //    chatMessageEvent.Arguments.Message);
+        Assert.Equal("You have 3 employees. 1 Production, 2 Sales",
+            commandHandler.ChatMessages.First());
     }
-
 }
