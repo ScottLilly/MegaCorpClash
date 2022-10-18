@@ -19,7 +19,7 @@ public sealed class TwitchConnector : IChatConnector
     public event EventHandler OnDisconnected;
     public event EventHandler<ChattedEventArgs> OnPersonChatted;
     public event EventHandler<GameCommandArgs> OnGameCommandReceived;
-    public event EventHandler<string> OnLogMessagePublished;
+    public event EventHandler<LogMessageEventArgs> OnLogMessagePublished;
 
     public TwitchConnector(GameSettings gameSettings)
     {
@@ -167,7 +167,7 @@ public sealed class TwitchConnector : IChatConnector
 
     private void WriteMessageToLog(string message)
     {
-        OnLogMessagePublished.Invoke(this, message);
+        OnLogMessagePublished.Invoke(this, new LogMessageEventArgs(message));
     }
 
     #endregion

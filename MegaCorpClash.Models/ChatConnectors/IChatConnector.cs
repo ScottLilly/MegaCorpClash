@@ -8,7 +8,7 @@ public interface IChatConnector
     event EventHandler OnDisconnected;
     event EventHandler<ChattedEventArgs> OnPersonChatted;
     event EventHandler<GameCommandArgs> OnGameCommandReceived;
-    event EventHandler<string> OnLogMessagePublished;
+    event EventHandler<LogMessageEventArgs> OnLogMessagePublished;
     void Connect();
     void Disconnect();
     void SendChatMessage(string? message);
