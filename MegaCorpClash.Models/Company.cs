@@ -12,7 +12,7 @@ public sealed class Company
     public DateTime CreatedOn { get; set; }
     public string CompanyName { get; set; }
     public string Motto { get; set; } = "We don't need a motto";
-    public long Points { get; set; }
+    public int Points { get; set; }
     public int Victories { get; set; }
     public List<EmployeeQuantity> Employees { get; set; } = new();
 

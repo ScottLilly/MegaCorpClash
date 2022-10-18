@@ -60,7 +60,7 @@ public class PointsCalculator
             foreach (var company in _companies.Values)
             {
                 // Get base points
-                long pointsForTurn = 0;
+                int pointsForTurn = 0;
 
                 if (company.IsBroadcaster)
                 {
