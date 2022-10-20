@@ -14,7 +14,7 @@ public sealed class GameSession
     private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
     private readonly CommandHandlerFactory _commandHandlerFactory;
-    private readonly CommandHandlerQueueManager _commandHandlerQueueManager = new();
+    private readonly CommandHandlerQueueManager _commandHandlerQueueManager;
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -23,6 +23,9 @@ public sealed class GameSession
     public GameSession(GameSettings gameSettings)
     {
         _gameSettings = gameSettings;
+
+        _commandHandlerQueueManager = 
+            new CommandHandlerQueueManager(_gameSettings.MinimumSecondsBetweenCommands);
 
         PopulatePlayers();
 
