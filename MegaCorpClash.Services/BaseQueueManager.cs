@@ -23,7 +23,8 @@ public abstract class BaseQueueManager<T>
 
     protected void PublishLogMessage(string message)
     {
-        OnLogMessagePublished.Invoke(this, new LogMessageEventArgs(message));
+        OnLogMessagePublished.Invoke(this, 
+            new LogMessageEventArgs(message));
     }
 
     #endregion

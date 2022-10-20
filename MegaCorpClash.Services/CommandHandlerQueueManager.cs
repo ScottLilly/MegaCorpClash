@@ -23,7 +23,7 @@ public class CommandHandlerQueueManager :
             var commandArgs = item.Item2;
             var chatterDetails = commandHandler.ChatterDetails(commandArgs);
 
-            PublishLogMessage($"{DateTime.UtcNow:u} [{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
+            PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
 
             commandHandler.Execute(commandArgs);
 
