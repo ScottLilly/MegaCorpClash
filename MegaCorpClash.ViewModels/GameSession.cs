@@ -213,7 +213,7 @@ public sealed class GameSession
 
     private static void WriteMessageToLogFile(string message)
     {
-        LogWriter.WriteMessage(message);
+        LogWriter.WriteMessage($"{DateTime.UtcNow:u} {message}");
     }
 
     #endregion
