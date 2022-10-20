@@ -13,7 +13,7 @@ public sealed class Company
     public string CompanyName { get; set; }
     public string Motto { get; set; } = "We don't need a motto";
     public int Points { get; set; }
-    public int Victories { get; set; }
+    public int VictoryCount { get; set; }
     public List<EmployeeQuantity> Employees { get; set; } = new();
 
     [JsonIgnore]
