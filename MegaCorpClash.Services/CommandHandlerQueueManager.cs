@@ -33,15 +33,18 @@ public class CommandHandlerQueueManager :
                     new ChatMessageEventArgs(chatterDetails.ChatterName, message));
             }
 
-            if (commandHandler.PlayerDataUpdated)
-            {
-                OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
-            }
-
             if (commandHandler.StreamerBankrupted)
             {
+                chatterDetails.Company.VictoryCount++;
+
                 OnBankruptedStreamer?.Invoke(this,
                     new BankruptedStreamerArgs());
+            }
+
+            if (commandHandler.PlayerDataUpdated || 
+                commandHandler.StreamerBankrupted)
+            {
+                OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
     }
