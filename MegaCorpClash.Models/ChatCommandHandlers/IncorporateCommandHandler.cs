@@ -8,7 +8,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 {
     public IncorporateCommandHandler(GameSettings gameSettings, 
         Dictionary<string, Company> companies)
-        : base("incorporate", gameSettings, companies)
+        : base("start", gameSettings, companies)
     {
     }
 
