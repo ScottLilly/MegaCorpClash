@@ -10,6 +10,7 @@ public sealed class GameSettings
     public int MaxMottoLength { get; set; }
     public int LowestHrDiscount { get; set; }
     public string PointsName { get; set; }
+    public int MinimumSecondsBetweenCommands { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public StartupInfo StartupDetails { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
