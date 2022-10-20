@@ -23,6 +23,8 @@ public class CommandHandlerQueueManager :
             var commandArgs = item.Item2;
             var chatterDetails = commandHandler.ChatterDetails(commandArgs);
 
+            PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
+
             commandHandler.Execute(commandArgs);
 
             foreach (var message in commandHandler.ChatMessages)

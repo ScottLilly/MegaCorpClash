@@ -32,6 +32,7 @@ public sealed class GameSession
         _commandHandlerQueueManager.OnChatMessageToSend += HandleChatMessageToSend;
         _commandHandlerQueueManager.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
+        _commandHandlerQueueManager.OnLogMessagePublished += HandleLogMessagePublished;
 
         _pointsCalculator = new PointsCalculator(gameSettings, _companies);
 
@@ -46,7 +47,7 @@ public sealed class GameSession
         InitializePointsTimer();
         InitializeTimedMessages(gameSettings.TimedMessages);
     }
-
+    
     #region Public functions
 
     public List<string> ShowPlayers()
@@ -129,13 +130,11 @@ public sealed class GameSession
         _commandHandlerQueueManager.Add((command, e));
 
         UpdateChatterDetailsIfChanged(e);
-
-        WriteMessageToLogFile($"[{e.DisplayName}] {e.CommandName} {e.Argument}");
     }
 
-    private void HandleLogMessagePublished(object? sender, string e)
+    private void HandleLogMessagePublished(object? sender, LogMessageEventArgs e)
     {
-        WriteMessageToLogFile(e);
+        WriteMessageToLogFile(e.Message);
     }
 
     private void HandleChatMessageToSend(object? sender, ChatMessageEventArgs e)
@@ -223,7 +222,7 @@ public sealed class GameSession
 
     private static void WriteMessageToLogFile(string message)
     {
-        LogWriter.WriteMessage(message);
+        LogWriter.WriteMessage($"{DateTime.UtcNow:u} {message}");
     }
 
     #endregion

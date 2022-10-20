@@ -12,3 +12,11 @@ public enum EmployeeType
     IT,
     Spy
 }
+
+[Flags]
+public enum LogMessageDestination
+{
+    None = 0,
+    Console = 1,
+    Disk = 2
+}
