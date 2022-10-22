@@ -8,7 +8,7 @@ public class CommandHandlerQueueManager :
     BaseQueueManager<(BaseCommandHandler, GameCommandArgs)>
 {
     private readonly int _minimumSecondsBetweenCommands;
-    private readonly ConcurrentDictionary<string, DateTime> _lastCommandRun = new();
+    private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandRun = new();
 
     public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
     public event EventHandler OnPlayerDataUpdated;
@@ -33,17 +33,24 @@ public class CommandHandlerQueueManager :
                 _lastCommandRun.ContainsKey(chatterDetails.ChatterId))
             {
                 if ((DateTime.UtcNow - 
-                     _lastCommandRun[chatterDetails.ChatterId]).TotalSeconds < _minimumSecondsBetweenCommands)
+                     _lastCommandRun[chatterDetails.ChatterId].TimeChatted).TotalSeconds < 
+                     _minimumSecondsBetweenCommands)
                 {
-                    OnChatMessageToSend?.Invoke(this,
-                        new ChatMessageEventArgs(chatterDetails.ChatterName, 
-                            $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
+                    if (_lastCommandRun[chatterDetails.ChatterId].HasBeenWarned == false)
+                    {
+                        OnChatMessageToSend?.Invoke(this,
+                            new ChatMessageEventArgs(chatterDetails.ChatterName,
+                                $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
+
+                        _lastCommandRun[chatterDetails.ChatterId].HasBeenWarned = true;
+                    }
 
                     continue;
                 }
             }
 
-            _lastCommandRun[chatterDetails.ChatterId] = DateTime.UtcNow;
+            _lastCommandRun[chatterDetails.ChatterId] = 
+                new CommandTimestamp(DateTime.UtcNow, false);
 
             PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
 
@@ -70,4 +77,17 @@ public class CommandHandlerQueueManager :
             }
         }
     }
+
+    private class CommandTimestamp
+    {
+        public DateTime TimeChatted { get; set; }
+        public bool HasBeenWarned { get; set; }
+
+        public CommandTimestamp(DateTime timeChatted, bool hasBeenWarned)
+        {
+            TimeChatted = timeChatted;
+            HasBeenWarned = hasBeenWarned;
+        }
+    }
+
 }
