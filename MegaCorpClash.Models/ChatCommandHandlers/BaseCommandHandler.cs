@@ -25,13 +25,13 @@ public abstract class BaseCommandHandler
     public bool PlayerDataUpdated { get; private set; } = false;
     public bool StreamerBankrupted { get; private set; } = false;
 
-    public (string ChatterId, string ChatterName, Company? Company)
+    public ChatterDetails
         ChatterDetails(GameCommandArgs gameCommand) =>
-        (gameCommand.UserId,
+        new ChatterDetails(gameCommand.UserId,
             gameCommand.DisplayName,
             Companies.ContainsKey(gameCommand.UserId)
-                ? Companies[gameCommand.UserId]
-                : null);
+            ? Companies[gameCommand.UserId]
+            : null);
 
     protected Company GetBroadcasterCompany =>
         Companies.First(c => c.Value.IsBroadcaster).Value;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 
@@ -32,24 +33,17 @@ public class CommandHandlerQueueManager :
             if (_minimumSecondsBetweenCommands > 0 &&
                 _lastCommandRun.ContainsKey(chatterDetails.ChatterId))
             {
-                if ((DateTime.UtcNow - 
-                     _lastCommandRun[chatterDetails.ChatterId].TimeChatted).TotalSeconds < 
+                if ((DateTime.UtcNow -
+                     _lastCommandRun[chatterDetails.ChatterId].TimeChatted).TotalSeconds <
                      _minimumSecondsBetweenCommands)
                 {
-                    if (_lastCommandRun[chatterDetails.ChatterId].HasBeenWarned == false)
-                    {
-                        OnChatMessageToSend?.Invoke(this,
-                            new ChatMessageEventArgs(chatterDetails.ChatterName,
-                                $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
-
-                        _lastCommandRun[chatterDetails.ChatterId].HasBeenWarned = true;
-                    }
+                    WarnChatterOfThrottlingCondition(chatterDetails);
 
                     continue;
                 }
             }
 
-            _lastCommandRun[chatterDetails.ChatterId] = 
+            _lastCommandRun[chatterDetails.ChatterId] =
                 new CommandTimestamp(DateTime.UtcNow, false);
 
             PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
@@ -58,23 +52,49 @@ public class CommandHandlerQueueManager :
 
             foreach (var message in commandHandler.ChatMessages)
             {
-                OnChatMessageToSend?.Invoke(this, 
+                OnChatMessageToSend?.Invoke(this,
                     new ChatMessageEventArgs(chatterDetails.ChatterName, message));
             }
 
-            if (commandHandler.StreamerBankrupted)
-            {
-                chatterDetails.Company.VictoryCount++;
+            NotifyIfStreamerBankrupted(commandHandler, chatterDetails);
 
-                OnBankruptedStreamer?.Invoke(this,
-                    new BankruptedStreamerArgs());
-            }
+            NotifyDataNeedsUpdate(commandHandler);
+        }
+    }
 
-            if (commandHandler.PlayerDataUpdated || 
-                commandHandler.StreamerBankrupted)
-            {
-                OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
-            }
+    private void WarnChatterOfThrottlingCondition(
+        ChatterDetails chatterDetails)
+    {
+        if (_lastCommandRun[chatterDetails.ChatterId].HasBeenWarned)
+        {
+            return;
+        }
+
+        OnChatMessageToSend?.Invoke(this,
+            new ChatMessageEventArgs(chatterDetails.ChatterName,
+                $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
+
+        _lastCommandRun[chatterDetails.ChatterId].HasBeenWarned = true;
+    }
+
+    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler, 
+        ChatterDetails chatterDetails)
+    {
+        if (commandHandler.StreamerBankrupted)
+        {
+            chatterDetails.Company.VictoryCount++;
+
+            OnBankruptedStreamer?.Invoke(this,
+                new BankruptedStreamerArgs());
+        }
+    }
+
+    private void NotifyDataNeedsUpdate(BaseCommandHandler commandHandler)
+    {
+        if (commandHandler.PlayerDataUpdated ||
+            commandHandler.StreamerBankrupted)
+        {
+            OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 
