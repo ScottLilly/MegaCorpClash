@@ -40,7 +40,7 @@ public class TestPointsCalculator
         Assert.Equal(2, companies[CHATTER_4_ID].Points);
 
         companies[CHATTER_3_ID].Employees
-            .First(e => e.Type == EmployeeType.Sales).Quantity++;
+            .First(e => e.Type == EmployeeType.Sales).Quantity += 9;
 
         pointsCalculator.ApplyPointsForTurn();
 
