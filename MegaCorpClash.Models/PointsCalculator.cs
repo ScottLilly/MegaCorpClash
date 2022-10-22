@@ -83,7 +83,10 @@ public class PointsCalculator
                     company.Employees.
                         FirstOrDefault(e => e.Type == EmployeeType.Sales)?.Quantity ?? 1;
 
-                pointsForTurn *= salesPeople;
+                pointsForTurn *=
+                    Math.Max(1,
+                    Convert.ToInt32(Math.Round(Convert.ToDecimal(salesPeople) / 5M,
+                    MidpointRounding.AwayFromZero)));
 
                 // Apply bonus
                 if (s_chattersSinceStartup.Contains(company.UserId))
