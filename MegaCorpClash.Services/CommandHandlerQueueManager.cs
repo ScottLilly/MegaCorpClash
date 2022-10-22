@@ -63,7 +63,7 @@ public class CommandHandlerQueueManager :
     }
 
     private void WarnChatterOfThrottlingCondition(
-        (string ChatterId, string ChatterName, Company Company) chatterDetails)
+        ChatterDetails chatterDetails)
     {
         if (_lastCommandRun[chatterDetails.ChatterId].HasBeenWarned)
         {
@@ -78,7 +78,7 @@ public class CommandHandlerQueueManager :
     }
 
     private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler, 
-        (string ChatterId, string ChatterName, Company Company) chatterDetails)
+        ChatterDetails chatterDetails)
     {
         if (commandHandler.StreamerBankrupted)
         {
