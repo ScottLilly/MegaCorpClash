@@ -3,19 +3,17 @@ using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 
-namespace MegaCorpClash.Services;
+namespace MegaCorpClash.Services.Queues;
 
-public class CommandHandlerQueueManager : 
-    BaseQueueManager<(BaseCommandHandler, GameCommandArgs)>
+public class CommandHandlerQueue :
+    BaseTypedQueue<(BaseCommandHandler, GameCommandArgs)>
 {
     private readonly int _minimumSecondsBetweenCommands;
     private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandRun = new();
-
-    public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
     public event EventHandler OnPlayerDataUpdated;
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
-    public CommandHandlerQueueManager(int minimumSecondsBetweenCommands)
+    public CommandHandlerQueue(int minimumSecondsBetweenCommands)
     {
         _minimumSecondsBetweenCommands = minimumSecondsBetweenCommands;
 
@@ -52,8 +50,7 @@ public class CommandHandlerQueueManager :
 
             foreach (var message in commandHandler.ChatMessages)
             {
-                OnChatMessageToSend?.Invoke(this,
-                    new ChatMessageEventArgs(chatterDetails.ChatterName, message));
+                PublishChatMessage(chatterDetails.ChatterName, message);
             }
 
             NotifyIfStreamerBankrupted(commandHandler, chatterDetails);
@@ -70,14 +67,14 @@ public class CommandHandlerQueueManager :
             return;
         }
 
-        OnChatMessageToSend?.Invoke(this,
-            new ChatMessageEventArgs(chatterDetails.ChatterName,
-                $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
+        PublishChatMessage(
+            chatterDetails.ChatterName,
+            $"Please wait {_minimumSecondsBetweenCommands} seconds between commands");
 
         _lastCommandRun[chatterDetails.ChatterId].HasBeenWarned = true;
     }
 
-    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler, 
+    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler,
         ChatterDetails chatterDetails)
     {
         if (commandHandler.StreamerBankrupted)

@@ -1,13 +1,15 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Models.CustomEventArgs;
 using System.Collections.Concurrent;
 
-namespace MegaCorpClash.Services;
+namespace MegaCorpClash.Services.Queues;
 
-public abstract class BaseQueueManager<T>
+public abstract class BaseTypedQueue<T>
 {
     protected readonly BlockingCollection<T> _queue = new();
 
     public event EventHandler<LogMessageEventArgs> OnLogMessagePublished;
+    public event EventHandler<ChatMessageEventArgs> OnChatMessagePublished;
 
     public void Add(T obj)
     {
@@ -23,8 +25,14 @@ public abstract class BaseQueueManager<T>
 
     protected void PublishLogMessage(string message)
     {
-        OnLogMessagePublished.Invoke(this, 
+        OnLogMessagePublished.Invoke(this,
             new LogMessageEventArgs(message));
+    }
+
+    protected void PublishChatMessage(string chatterName, string message)
+    {
+        OnChatMessagePublished?.Invoke(this,
+            new ChatMessageEventArgs(chatterName, message));
     }
 
     #endregion

@@ -4,6 +4,7 @@ using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatConnectors;
 using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Services;
+using MegaCorpClash.Services.Queues;
 
 namespace MegaCorpClash.ViewModels;
 
@@ -14,7 +15,7 @@ public sealed class GameSession
     private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
     private readonly CommandHandlerFactory _commandHandlerFactory;
-    private readonly CommandHandlerQueueManager _commandHandlerQueueManager;
+    private readonly CommandHandlerQueue _commandHandlerQueueManager;
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -25,14 +26,14 @@ public sealed class GameSession
         _gameSettings = gameSettings;
 
         _commandHandlerQueueManager = 
-            new CommandHandlerQueueManager(_gameSettings.MinimumSecondsBetweenCommands);
+            new CommandHandlerQueue(_gameSettings.MinimumSecondsBetweenCommands);
 
         PopulatePlayers();
 
         _commandHandlerFactory = 
             new CommandHandlerFactory(_gameSettings, _companies);
 
-        _commandHandlerQueueManager.OnChatMessageToSend += HandleChatMessageToSend;
+        _commandHandlerQueueManager.OnChatMessagePublished += HandleChatMessageToSend;
         _commandHandlerQueueManager.OnPlayerDataUpdated += HandlePlayerDataUpdated;
         _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
         _commandHandlerQueueManager.OnLogMessagePublished += HandleLogMessagePublished;
