@@ -14,7 +14,7 @@ public abstract class BaseCommandHandler
     protected GameSettings GameSettings { get; }
     protected Dictionary<string, Company> Companies { get; }
 
-    protected string CompaniesList =>
+    protected string TopCompaniesByPoints =>
         string.Join(", ",
             Companies.Values
                 .OrderByDescending(c => c.Points)
