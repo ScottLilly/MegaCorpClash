@@ -14,7 +14,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new SetMottoCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
         var gameCommand = GetGameCommand("!setmotto");
 
@@ -38,7 +38,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new SetMottoCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
         var gameCommand = GetGameCommand("!setmotto");
 
@@ -62,7 +62,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new SetMottoCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
         var gameCommand = GetGameCommand("!setmotto kjh*234");
 
@@ -86,7 +86,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new SetMottoCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
         var gameCommand = GetGameCommand("!setmotto 12345678901234567890123456");
 
@@ -128,7 +128,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new SetMottoCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
         var gameCommand = GetGameCommand("!setmotto This is our new motto");
 

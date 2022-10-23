@@ -3,11 +3,11 @@ using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
-public sealed class SetMottoCommandHandler : BaseCommandHandler
+public sealed class MottoCommandHandler : BaseCommandHandler
 {
-    public SetMottoCommandHandler(GameSettings gameSettings,
+    public MottoCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
-        : base("setmotto", gameSettings, companies)
+        : base("motto", gameSettings, companies)
     {
     }
 
