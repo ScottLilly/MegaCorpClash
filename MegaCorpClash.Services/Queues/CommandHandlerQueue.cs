@@ -3,19 +3,17 @@ using MegaCorpClash.Models;
 using MegaCorpClash.Models.ChatCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
 
-namespace MegaCorpClash.Services;
+namespace MegaCorpClash.Services.Queues;
 
-public class CommandHandlerQueueManager : 
-    BaseQueueManager<(BaseCommandHandler, GameCommandArgs)>
+public class CommandHandlerQueue :
+    BaseTypedQueue<(BaseCommandHandler, GameCommandArgs)>
 {
     private readonly int _minimumSecondsBetweenCommands;
-    private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandRun = new();
-
-    public event EventHandler<ChatMessageEventArgs> OnChatMessageToSend;
+    private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandTimestamp = new();
     public event EventHandler OnPlayerDataUpdated;
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
-    public CommandHandlerQueueManager(int minimumSecondsBetweenCommands)
+    public CommandHandlerQueue(int minimumSecondsBetweenCommands)
     {
         _minimumSecondsBetweenCommands = minimumSecondsBetweenCommands;
 
@@ -30,11 +28,15 @@ public class CommandHandlerQueueManager :
             var commandArgs = item.Item2;
             var chatterDetails = commandHandler.ChatterDetails(commandArgs);
 
-            if (_minimumSecondsBetweenCommands > 0 &&
-                _lastCommandRun.ContainsKey(chatterDetails.ChatterId))
+            _lastCommandTimestamp.TryGetValue(
+                chatterDetails.ChatterId, 
+                out var chattersLastCommand);
+
+            if (ChatIsThrottled() &&
+                chattersLastCommand != null)
             {
                 if ((DateTime.UtcNow -
-                     _lastCommandRun[chatterDetails.ChatterId].TimeChatted).TotalSeconds <
+                     chattersLastCommand.TimeChatted).TotalSeconds <
                      _minimumSecondsBetweenCommands)
                 {
                     WarnChatterOfThrottlingCondition(chatterDetails);
@@ -43,7 +45,7 @@ public class CommandHandlerQueueManager :
                 }
             }
 
-            _lastCommandRun[chatterDetails.ChatterId] =
+            _lastCommandTimestamp[chatterDetails.ChatterId] =
                 new CommandTimestamp(DateTime.UtcNow, false);
 
             PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
@@ -52,8 +54,7 @@ public class CommandHandlerQueueManager :
 
             foreach (var message in commandHandler.ChatMessages)
             {
-                OnChatMessageToSend?.Invoke(this,
-                    new ChatMessageEventArgs(chatterDetails.ChatterName, message));
+                PublishChatMessage(chatterDetails.ChatterName, message);
             }
 
             NotifyIfStreamerBankrupted(commandHandler, chatterDetails);
@@ -65,19 +66,19 @@ public class CommandHandlerQueueManager :
     private void WarnChatterOfThrottlingCondition(
         ChatterDetails chatterDetails)
     {
-        if (_lastCommandRun[chatterDetails.ChatterId].HasBeenWarned)
+        if (_lastCommandTimestamp[chatterDetails.ChatterId].HasBeenWarned)
         {
             return;
         }
 
-        OnChatMessageToSend?.Invoke(this,
-            new ChatMessageEventArgs(chatterDetails.ChatterName,
-                $"Please wait {_minimumSecondsBetweenCommands} seconds between commands"));
+        PublishChatMessage(
+            chatterDetails.ChatterName,
+            $"Please wait {_minimumSecondsBetweenCommands} seconds between commands");
 
-        _lastCommandRun[chatterDetails.ChatterId].HasBeenWarned = true;
+        _lastCommandTimestamp[chatterDetails.ChatterId].HasBeenWarned = true;
     }
 
-    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler, 
+    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler,
         ChatterDetails chatterDetails)
     {
         if (commandHandler.StreamerBankrupted)
@@ -97,6 +98,9 @@ public class CommandHandlerQueueManager :
             OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
+
+    private bool ChatIsThrottled() =>
+        _minimumSecondsBetweenCommands > 0;
 
     private class CommandTimestamp
     {
