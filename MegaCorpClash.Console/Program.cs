@@ -106,10 +106,26 @@ static GameSettings GetGameSettings()
     // Populate missing appsettings value (should only happen in development)
     if (settings.TwitchBroadcasterAccount != null &&
         secretsBroadcasterAccount != null &&
+        string.IsNullOrWhiteSpace(settings.TwitchBroadcasterAccount.Name))
+    {
+        settings.TwitchBroadcasterAccount.Name =
+            secretsBroadcasterAccount.Name;
+    }
+
+    if (settings.TwitchBroadcasterAccount != null &&
+        secretsBroadcasterAccount != null &&
         string.IsNullOrWhiteSpace(settings.TwitchBroadcasterAccount.AuthToken))
     {
         settings.TwitchBroadcasterAccount.AuthToken =
             secretsBroadcasterAccount.AuthToken;
+    }
+
+    if (settings.TwitchBotAccount != null &&
+        secretsBotAccount != null &&
+        string.IsNullOrWhiteSpace(settings.TwitchBotAccount.Name))
+    {
+        settings.TwitchBotAccount.Name =
+            secretsBotAccount.Name;
     }
 
     if (settings.TwitchBotAccount != null &&
