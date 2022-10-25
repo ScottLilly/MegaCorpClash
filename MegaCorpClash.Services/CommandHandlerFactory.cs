@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Models;
+using MegaCorpClash.Models.BroadcasterCommandHandlers;
 using MegaCorpClash.Models.ChatCommandHandlers;
 
 namespace MegaCorpClash.Services;
@@ -21,7 +22,7 @@ public class CommandHandlerFactory
 
         var commandHandlerTypes = 
             assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(baseType));
+                .Where(t => t.IsSubclassOf(baseType) && !t.IsAbstract);
 
         foreach (var commandHandlerType in commandHandlerTypes)
         {

@@ -1,4 +1,5 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models.BroadcasterCommandHandlers;
+using MegaCorpClash.Models.CustomEventArgs;
 
 namespace MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -29,7 +30,9 @@ public sealed class HelpCommandHandler : BaseCommandHandler
 
                 List<BaseCommandHandler> commandHandlers =
                     assembly.GetTypes()
-                        .Where(t => t.IsSubclassOf(baseType))
+                        .Where(t => t.IsSubclassOf(baseType) &&
+                        !t.IsAbstract &&
+                        !t.IsSubclassOf(typeof(BroadcasterOnlyCommandHandler)))
                         .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
                         .Cast<BaseCommandHandler>()
                         .ToList();
