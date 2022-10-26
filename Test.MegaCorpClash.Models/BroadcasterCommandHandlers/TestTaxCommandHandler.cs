@@ -1,8 +1,9 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Models.BroadcasterCommandHandlers;
 using MegaCorpClash.Models.CustomEventArgs;
+using Test.MegaCorpClash.Models.ChatCommandHandlers;
 
-namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
+namespace Test.MegaCorpClash.Models.BroadcasterCommandHandlers;
 
 public class TestTaxCommandHandler : BaseCommandHandlerTest
 {
@@ -24,7 +25,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new TaxCommandHandler(_gameSettings, companies);
 
-        var gameCommandArgs = 
+        var gameCommandArgs =
             new GameCommandArgs("123321", "NOT_BROADCASTER", "tax", "5", false, false, false, false);
 
         commandHandler.Execute(gameCommandArgs);

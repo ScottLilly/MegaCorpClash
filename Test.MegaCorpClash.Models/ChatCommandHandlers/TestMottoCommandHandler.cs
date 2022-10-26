@@ -3,7 +3,7 @@ using MegaCorpClash.Models.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
-public class TestSetMottoCommandHandler : BaseCommandHandlerTest
+public class TestMottoCommandHandler : BaseCommandHandlerTest
 {
     private readonly GameSettings _gameSettings =
         GetDefaultGameSettings();
