@@ -16,7 +16,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!setmotto");
+        var gameCommand = GetGameCommandArgs("!setmotto");
 
         commandHandler.Execute(gameCommand);
 
@@ -40,7 +40,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!setmotto");
+        var gameCommand = GetGameCommandArgs("!setmotto");
 
         commandHandler.Execute(gameCommand);
 
@@ -64,7 +64,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!setmotto kjh*234");
+        var gameCommand = GetGameCommandArgs("!setmotto kjh*234");
 
         commandHandler.Execute(gameCommand);
 
@@ -88,7 +88,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!setmotto 12345678901234567890123456");
+        var gameCommand = GetGameCommandArgs("!setmotto 12345678901234567890123456");
 
         commandHandler.Execute(gameCommand);
 
@@ -130,7 +130,7 @@ public class TestSetMottoCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!setmotto This is our new motto");
+        var gameCommand = GetGameCommandArgs("!setmotto This is our new motto");
 
         commandHandler.Execute(gameCommand);
 
