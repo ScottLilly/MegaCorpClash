@@ -1,5 +1,5 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Services.CustomEventArgs;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 

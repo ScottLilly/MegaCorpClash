@@ -1,12 +1,13 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Core;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class IncorporateCommandHandler : BaseCommandHandler
 {
-    public IncorporateCommandHandler(GameSettings gameSettings, 
+    public IncorporateCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("start", gameSettings, companies)
     {
@@ -28,7 +29,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (gameCommandArgs.Argument.Length > 
+        if (gameCommandArgs.Argument.Length >
             GameSettings.MaxCompanyNameLength)
         {
             PublishMessage($"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
@@ -47,12 +48,12 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
             return;
         }
 
-        chatter.Company = 
+        chatter.Company =
             new Company
             {
                 UserId = chatter.ChatterId,
                 DisplayName = chatter.ChatterName,
-                IsBroadcaster = 
+                IsBroadcaster =
                     chatter.ChatterName.Matches(GameSettings.TwitchBroadcasterAccount.Name),
                 CompanyName = gameCommandArgs.Argument,
                 CreatedOn = DateTime.UtcNow,

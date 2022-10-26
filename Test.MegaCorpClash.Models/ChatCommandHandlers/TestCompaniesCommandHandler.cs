@@ -1,5 +1,5 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Services.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -30,7 +30,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 
         companies.Add("123", new Company
         {
-            DisplayName = "Joe", 
+            DisplayName = "Joe",
             CompanyName = "JoeCo",
             Points = 99
         });

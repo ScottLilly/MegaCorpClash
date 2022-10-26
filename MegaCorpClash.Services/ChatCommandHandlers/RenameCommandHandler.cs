@@ -1,12 +1,13 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Core;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class RenameCommandHandler : BaseCommandHandler
 {
-    public RenameCommandHandler(GameSettings gameSettings, 
+    public RenameCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("rename", gameSettings, companies)
     {

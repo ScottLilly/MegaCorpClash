@@ -1,8 +1,9 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using CSharpExtender.Services;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers
+namespace MegaCorpClash.Services.ChatCommandHandlers
 {
     public class StealCommandHandler : BaseCommandHandler
     {
@@ -30,7 +31,7 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 return;
             }
 
-            int numberOfAttackingSpies = 
+            int numberOfAttackingSpies =
                 GetNumberOfAttackingSpies(gameCommandArgs, chatter.Company);
 
             if (numberOfAttackingSpies < 1)
@@ -63,11 +64,11 @@ namespace MegaCorpClash.Models.ChatCommandHandlers
                 if (attackSuccessful)
                 {
                     // Success
-                    int stolen = (int)GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
+                    int stolen = GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
 
                     if (GetBroadcasterCompany.Points < 1000)
                     {
-                        stolen = (int)GetBroadcasterCompany.Points;
+                        stolen = GetBroadcasterCompany.Points;
                     }
 
                     chatter.Company.Points += stolen;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Services.ChatCommandHandlers;
+using MegaCorpClash.Services.CustomEventArgs;
 
 namespace MegaCorpClash.Services.Queues;
 

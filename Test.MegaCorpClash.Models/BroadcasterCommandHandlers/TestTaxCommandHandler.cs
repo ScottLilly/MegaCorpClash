@@ -1,6 +1,6 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.BroadcasterCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Services.BroadcasterCommandHandlers;
+using MegaCorpClash.Services.CustomEventArgs;
 using Test.MegaCorpClash.Models.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.BroadcasterCommandHandlers;

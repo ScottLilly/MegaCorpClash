@@ -1,10 +1,11 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class StaffCommandHandler : BaseCommandHandler
 {
-    public StaffCommandHandler(GameSettings gameSettings, 
+    public StaffCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("staff", gameSettings, companies)
     {
@@ -20,8 +21,8 @@ public sealed class StaffCommandHandler : BaseCommandHandler
             return;
         }
 
-        string employeeList = 
-            $"You have {chatter.Company.Employees.Sum(e => e.Quantity):N0}" + 
+        string employeeList =
+            $"You have {chatter.Company.Employees.Sum(e => e.Quantity):N0}" +
             (chatter.Company.Employees.Count == 1 ? " employee. " : " employees. ") +
             chatter.Company.EmployeeList;
 

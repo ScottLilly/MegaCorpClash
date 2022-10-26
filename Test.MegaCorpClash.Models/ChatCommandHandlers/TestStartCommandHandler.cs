@@ -1,12 +1,12 @@
-﻿using MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Models;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
 public class TestStartCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings = 
-        GetDefaultGameSettings(); 
+    private readonly GameSettings _gameSettings =
+        GetDefaultGameSettings();
 
     [Fact]
     public void Test_NoCompanyNamePassed()
