@@ -16,7 +16,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!companies");
+        var gameCommand = GetGameCommandArgs("!companies");
 
         commandHandler.Execute(gameCommand);
 
@@ -38,7 +38,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!companies");
+        var gameCommand = GetGameCommandArgs("!companies");
 
         commandHandler.Execute(gameCommand);
 
@@ -67,7 +67,7 @@ public class TestCompaniesCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new CompaniesCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!companies");
+        var gameCommand = GetGameCommandArgs("!companies");
 
         commandHandler.Execute(gameCommand);
 

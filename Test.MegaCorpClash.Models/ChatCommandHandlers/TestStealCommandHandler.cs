@@ -16,7 +16,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StealCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!steal");
+        var gameCommand = GetGameCommandArgs("!steal");
 
         commandHandler.Execute(gameCommand);
 
@@ -30,7 +30,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             GetStealCommandHandler(100, 0);
 
-        var gameCommand = GetGameCommand("!steal");
+        var gameCommand = GetGameCommandArgs("!steal");
 
         commandHandler.Execute(gameCommand);
 

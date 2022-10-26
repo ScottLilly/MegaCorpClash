@@ -16,7 +16,7 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StaffCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!staff");
+        var gameCommand = GetGameCommandArgs("!staff");
 
         commandHandler.Execute(gameCommand);
 
@@ -53,7 +53,7 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StaffCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!staff");
+        var gameCommand = GetGameCommandArgs("!staff");
 
         commandHandler.Execute(gameCommand);
 

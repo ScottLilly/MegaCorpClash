@@ -30,7 +30,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
 
-        var gameCommand = GetGameCommand($"!hire {parameter}");
+        var gameCommand = GetGameCommandArgs($"!hire {parameter}");
 
         commandHandler.Execute(gameCommand);
 
@@ -46,7 +46,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire");
+        var gameCommand = GetGameCommandArgs("!hire");
 
         commandHandler.Execute(gameCommand);
 
@@ -60,7 +60,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler(100);
 
-        var gameCommand = GetGameCommand("!hire Sales gibberish");
+        var gameCommand = GetGameCommandArgs("!hire Sales gibberish");
 
         commandHandler.Execute(gameCommand);
 
@@ -74,7 +74,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler(100);
 
-        var gameCommand = GetGameCommand("!hire sales");
+        var gameCommand = GetGameCommandArgs("!hire sales");
 
         commandHandler.Execute(gameCommand);
 
@@ -88,7 +88,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
 
-        var gameCommand = GetGameCommand("!hire Sales 0");
+        var gameCommand = GetGameCommandArgs("!hire Sales 0");
 
         commandHandler.Execute(gameCommand);
 
@@ -102,7 +102,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         HireCommandHandler commandHandler =
             GetHireCommandHandler();
 
-        var gameCommand = GetGameCommand("!hire Sales -1");
+        var gameCommand = GetGameCommandArgs("!hire Sales -1");
 
         commandHandler.Execute(gameCommand);
 
@@ -127,7 +127,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire Sales 1");
+        var gameCommand = GetGameCommandArgs("!hire Sales 1");
 
         commandHandler.Execute(gameCommand);
 
@@ -152,7 +152,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire Sales max");
+        var gameCommand = GetGameCommandArgs("!hire Sales max");
 
         commandHandler.Execute(gameCommand);
 
@@ -177,7 +177,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire Sales max");
+        var gameCommand = GetGameCommandArgs("!hire Sales max");
 
         commandHandler.Execute(gameCommand);
 
@@ -202,7 +202,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire Sales 1");
+        var gameCommand = GetGameCommandArgs("!hire Sales 1");
 
         commandHandler.Execute(gameCommand);
 
@@ -240,7 +240,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire Sales 1");
+        var gameCommand = GetGameCommandArgs("!hire Sales 1");
 
         commandHandler.Execute(gameCommand);
 
@@ -270,7 +270,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new HireCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!hire 2 sales");
+        var gameCommand = GetGameCommandArgs("!hire 2 sales");
 
         commandHandler.Execute(gameCommand);
 
