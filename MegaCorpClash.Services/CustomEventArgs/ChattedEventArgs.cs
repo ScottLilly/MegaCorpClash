@@ -1,4 +1,4 @@
-﻿namespace MegaCorpClash.Models.CustomEventArgs;
+﻿namespace MegaCorpClash.Services.CustomEventArgs;
 
 public class ChattedEventArgs : EventArgs
 {

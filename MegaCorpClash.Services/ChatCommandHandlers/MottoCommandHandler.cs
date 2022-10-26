@@ -1,7 +1,8 @@
 ﻿using MegaCorpClash.Core;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class MottoCommandHandler : BaseCommandHandler
 {
@@ -33,7 +34,7 @@ public sealed class MottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (gameCommandArgs.Argument.Length > 
+        if (gameCommandArgs.Argument.Length >
             GameSettings.MaxMottoLength)
         {
             PublishMessage($"Motto cannot be longer than {GameSettings.MaxMottoLength} characters");

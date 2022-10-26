@@ -1,6 +1,7 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.BroadcasterCommandHandlers;
+namespace MegaCorpClash.Services.BroadcasterCommandHandlers;
 
 public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 {

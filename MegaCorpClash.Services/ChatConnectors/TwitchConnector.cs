@@ -1,11 +1,12 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
 
-namespace MegaCorpClash.Models.ChatConnectors;
+namespace MegaCorpClash.Services.ChatConnectors;
 
 public sealed class TwitchConnector : IChatConnector
 {
@@ -139,8 +140,8 @@ public sealed class TwitchConnector : IChatConnector
     {
         OnPersonChatted?.Invoke(this,
             new ChattedEventArgs(
-                e.ChatMessage.UserId, 
-                e.ChatMessage.DisplayName, 
+                e.ChatMessage.UserId,
+                e.ChatMessage.DisplayName,
                 e.ChatMessage.IsBroadcaster,
                 e.ChatMessage.IsSubscriber,
                 e.ChatMessage.IsVip,

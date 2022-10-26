@@ -1,4 +1,4 @@
-﻿namespace MegaCorpClash.Models.CustomEventArgs;
+﻿namespace MegaCorpClash.Services.CustomEventArgs;
 
 public sealed class GameCommandArgs : ChattedEventArgs
 {
@@ -10,7 +10,7 @@ public sealed class GameCommandArgs : ChattedEventArgs
 
     public GameCommandArgs(string userId, string displayName,
         string commandName, string argument,
-        bool isBroadcaster, bool isSubscriber, bool isVip, bool isNoisy) 
+        bool isBroadcaster, bool isSubscriber, bool isVip, bool isNoisy)
         : base(userId, displayName, isBroadcaster, isSubscriber, isVip, isNoisy)
     {
         CommandName = commandName;

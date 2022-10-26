@@ -1,6 +1,7 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class JobsCommandHandler : BaseCommandHandler
 {

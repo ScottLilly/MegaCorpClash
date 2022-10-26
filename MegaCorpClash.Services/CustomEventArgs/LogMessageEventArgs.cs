@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+
+namespace MegaCorpClash.Services.CustomEventArgs;
 
 public class LogMessageEventArgs : EventArgs
 {

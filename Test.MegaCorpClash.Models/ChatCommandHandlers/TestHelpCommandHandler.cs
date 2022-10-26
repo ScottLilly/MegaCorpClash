@@ -1,4 +1,4 @@
-﻿using MegaCorpClash.Models.ChatCommandHandlers;
+﻿using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Models;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;

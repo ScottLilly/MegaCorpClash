@@ -1,5 +1,5 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Services.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -231,7 +231,7 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
                 {
                     new()
                     {
-                        Type = EmployeeType.HR, 
+                        Type = EmployeeType.HR,
                         Quantity = 10
                     }
                 }

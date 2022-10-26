@@ -1,9 +1,9 @@
 ﻿using System.Timers;
 using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatConnectors;
-using MegaCorpClash.Models.CustomEventArgs;
 using MegaCorpClash.Services;
+using MegaCorpClash.Services.ChatConnectors;
+using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Queues;
 
 namespace MegaCorpClash.ViewModels;
