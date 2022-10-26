@@ -31,7 +31,7 @@ public class TestJobsCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new JobsCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!jobs");
+        var gameCommand = GetGameCommandArgs("!jobs");
 
         commandHandler.Execute(gameCommand);
 

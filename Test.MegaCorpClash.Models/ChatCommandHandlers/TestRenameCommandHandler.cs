@@ -16,7 +16,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename");
+        var gameCommand = GetGameCommandArgs("!rename");
 
         commandHandler.Execute(gameCommand);
 
@@ -40,7 +40,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename");
+        var gameCommand = GetGameCommandArgs("!rename");
 
         commandHandler.Execute(gameCommand);
 
@@ -64,7 +64,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename u[k");
+        var gameCommand = GetGameCommandArgs("!rename u[k");
 
         commandHandler.Execute(gameCommand);
 
@@ -88,7 +88,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename 1234567890123456");
+        var gameCommand = GetGameCommandArgs("!rename 1234567890123456");
 
         commandHandler.Execute(gameCommand);
 
@@ -120,7 +120,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename FirstCo");
+        var gameCommand = GetGameCommandArgs("!rename FirstCo");
 
         commandHandler.Execute(gameCommand);
 
@@ -152,7 +152,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new RenameCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!rename SecondCo");
+        var gameCommand = GetGameCommandArgs("!rename SecondCo");
 
         commandHandler.Execute(gameCommand);
 

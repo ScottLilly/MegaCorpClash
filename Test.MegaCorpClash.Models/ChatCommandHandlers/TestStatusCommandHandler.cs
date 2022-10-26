@@ -16,7 +16,7 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!status");
+        var gameCommand = GetGameCommandArgs("!status");
 
         commandHandler.Execute(gameCommand);
 
@@ -40,7 +40,7 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!status");
+        var gameCommand = GetGameCommandArgs("!status");
 
         commandHandler.Execute(gameCommand);
 
@@ -65,7 +65,7 @@ public class TestStatusCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new StatusCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!status");
+        var gameCommand = GetGameCommandArgs("!status");
 
         commandHandler.Execute(gameCommand);
 

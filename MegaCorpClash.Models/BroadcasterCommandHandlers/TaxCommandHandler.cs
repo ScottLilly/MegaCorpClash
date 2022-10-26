@@ -38,7 +38,7 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
                     ((100M - parsedArguments.IntegerArguments.First()) / 100M));
         }
 
-        PublishMessage($"A tax of {parsedArguments.IntegerArguments.First()} has been applied");
+        PublishMessage($"A {parsedArguments.IntegerArguments.First()}% tax was applied to all companies");
 
         NotifyPlayerDataUpdated();
     }

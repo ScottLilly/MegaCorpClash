@@ -16,7 +16,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate");
+        var gameCommand = GetGameCommandArgs("!incorporate");
 
         commandHandler.Execute(gameCommand);
 
@@ -32,7 +32,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate 1{a");
+        var gameCommand = GetGameCommandArgs("!incorporate 1{a");
 
         commandHandler.Execute(gameCommand);
 
@@ -48,7 +48,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate 1234567890123456");
+        var gameCommand = GetGameCommandArgs("!incorporate 1234567890123456");
 
         commandHandler.Execute(gameCommand);
 
@@ -66,7 +66,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate ABC");
+        var gameCommand = GetGameCommandArgs("!incorporate ABC");
 
         commandHandler.Execute(gameCommand);
 
@@ -84,7 +84,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate Test");
+        var gameCommand = GetGameCommandArgs("!incorporate Test");
 
         commandHandler.Execute(gameCommand);
 
@@ -100,7 +100,7 @@ public class TestIncorporateCommandHandler : BaseCommandHandlerTest
         var commandHandler =
             new IncorporateCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommand("!incorporate Test");
+        var gameCommand = GetGameCommandArgs("!incorporate Test");
 
         commandHandler.Execute(gameCommand);
 

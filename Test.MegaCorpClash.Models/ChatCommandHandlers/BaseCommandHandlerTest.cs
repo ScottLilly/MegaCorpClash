@@ -56,7 +56,7 @@ public abstract class BaseCommandHandlerTest
         return gameSettings;
     }
 
-    internal static GameCommandArgs GetGameCommand(string command)
+    internal static GameCommandArgs GetGameCommandArgs(string command)
     {
         var commandWords =
             command.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
