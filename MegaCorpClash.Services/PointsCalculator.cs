@@ -1,4 +1,6 @@
-﻿namespace MegaCorpClash.Models;
+﻿using MegaCorpClash.Models;
+
+namespace MegaCorpClash.Services;
 
 public class PointsCalculator
 {
@@ -11,7 +13,7 @@ public class PointsCalculator
     private static int s_bonusPointsNextTurn = 0;
     private static int s_streamMultiplier = 1;
 
-    public PointsCalculator(GameSettings gameSettings, 
+    public PointsCalculator(GameSettings gameSettings,
         Dictionary<string, Company> companies)
     {
         _gameSettings = gameSettings;
@@ -69,17 +71,17 @@ public class PointsCalculator
                 }
                 else if (s_chattersDuringTurn.Contains(company.UserId))
                 {
-                    pointsForTurn = 
+                    pointsForTurn =
                         _gameSettings.TurnDetails.PointsPerTurn.Chatter;
                 }
                 else
                 {
-                    pointsForTurn = 
+                    pointsForTurn =
                         _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
 
                 // Apply employee multipliers
-                int salesPeople = 
+                int salesPeople =
                     company.Employees.
                         FirstOrDefault(e => e.Type == EmployeeType.Sales)?.Quantity ?? 1;
 

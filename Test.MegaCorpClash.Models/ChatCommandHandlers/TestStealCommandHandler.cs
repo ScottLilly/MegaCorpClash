@@ -1,5 +1,5 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Services.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
@@ -52,7 +52,7 @@ public class TestStealCommandHandler : BaseCommandHandlerTest
 
         if (hiredSpies > 0)
         {
-            companies[DEFAULT_CHATTER_ID].Employees = 
+            companies[DEFAULT_CHATTER_ID].Employees =
                 new List<EmployeeQuantity> {
                     new()
                     {

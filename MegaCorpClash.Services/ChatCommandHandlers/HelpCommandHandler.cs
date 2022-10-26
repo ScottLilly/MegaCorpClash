@@ -1,7 +1,8 @@
-﻿using MegaCorpClash.Models.BroadcasterCommandHandlers;
-using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.BroadcasterCommandHandlers;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class HelpCommandHandler : BaseCommandHandler
 {

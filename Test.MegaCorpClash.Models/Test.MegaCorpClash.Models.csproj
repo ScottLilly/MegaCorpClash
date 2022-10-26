@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MegaCorpClash.Models\MegaCorpClash.Models.csproj" />
+    <ProjectReference Include="..\MegaCorpClash.Services\MegaCorpClash.Services.csproj" />
   </ItemGroup>
 
 </Project>

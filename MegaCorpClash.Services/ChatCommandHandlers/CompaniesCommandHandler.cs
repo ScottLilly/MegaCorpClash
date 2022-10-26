@@ -1,11 +1,12 @@
 ﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class CompaniesCommandHandler : BaseCommandHandler
 {
-    public CompaniesCommandHandler(GameSettings gameSettings, 
+    public CompaniesCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("companies", gameSettings, companies)
     {

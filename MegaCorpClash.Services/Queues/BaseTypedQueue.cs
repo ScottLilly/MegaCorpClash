@@ -1,5 +1,5 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Services.CustomEventArgs;
 using System.Collections.Concurrent;
 
 namespace MegaCorpClash.Services.Queues;

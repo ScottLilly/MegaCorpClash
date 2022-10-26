@@ -1,8 +1,9 @@
 ﻿using CSharpExtender.Services;
 using MegaCorpClash.Core;
-using MegaCorpClash.Models.CustomEventArgs;
+using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public abstract class BaseCommandHandler
 {
@@ -36,7 +37,7 @@ public abstract class BaseCommandHandler
     protected Company GetBroadcasterCompany =>
         Companies.First(c => c.Value.IsBroadcaster).Value;
 
-    protected BaseCommandHandler(string commandName, GameSettings gameSettings, 
+    protected BaseCommandHandler(string commandName, GameSettings gameSettings,
         Dictionary<string, Company> companies)
     {
         CommandName = commandName;

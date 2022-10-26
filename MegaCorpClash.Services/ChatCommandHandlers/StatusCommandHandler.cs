@@ -1,10 +1,11 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatCommandHandlers;
+namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class StatusCommandHandler : BaseCommandHandler
 {
-    public StatusCommandHandler(GameSettings gameSettings, 
+    public StatusCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("status", gameSettings, companies)
     {

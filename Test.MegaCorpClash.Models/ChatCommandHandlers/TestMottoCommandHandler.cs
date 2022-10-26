@@ -1,9 +1,9 @@
 ﻿using MegaCorpClash.Models;
-using MegaCorpClash.Models.ChatCommandHandlers;
+using MegaCorpClash.Services.ChatCommandHandlers;
 
 namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
 
-public class TestSetMottoCommandHandler : BaseCommandHandlerTest
+public class TestMottoCommandHandler : BaseCommandHandlerTest
 {
     private readonly GameSettings _gameSettings =
         GetDefaultGameSettings();

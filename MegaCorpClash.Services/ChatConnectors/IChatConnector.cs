@@ -1,6 +1,6 @@
-﻿using MegaCorpClash.Models.CustomEventArgs;
+﻿using MegaCorpClash.Services.CustomEventArgs;
 
-namespace MegaCorpClash.Models.ChatConnectors;
+namespace MegaCorpClash.Services.ChatConnectors;
 
 public interface IChatConnector
 {
