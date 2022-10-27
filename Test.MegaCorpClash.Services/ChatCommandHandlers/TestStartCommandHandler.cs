@@ -1,7 +1,7 @@
 ﻿using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Models;
 
-namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
+namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestStartCommandHandler : BaseCommandHandlerTest
 {

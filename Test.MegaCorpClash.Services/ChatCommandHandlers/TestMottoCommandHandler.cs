@@ -1,9 +1,9 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
 
-namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
+namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
-public class TestRenameCommandHandler : BaseCommandHandlerTest
+public class TestMottoCommandHandler : BaseCommandHandlerTest
 {
     private readonly GameSettings _gameSettings =
         GetDefaultGameSettings();
@@ -14,9 +14,9 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!rename");
+        var gameCommand = GetGameCommandArgs("!setmotto");
 
         commandHandler.Execute(gameCommand);
 
@@ -25,7 +25,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
     }
 
     [Fact]
-    public void Test_NoCompanyNamePassed()
+    public void Test_HasCompanyMissingMottoParameter()
     {
         Dictionary<string, Company> companies = new();
         companies.Add(DEFAULT_CHATTER_ID,
@@ -38,18 +38,18 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!rename");
+        var gameCommand = GetGameCommandArgs("!setmotto");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal(Literals.Rename_YouMustProvideANewName,
+        Assert.Equal("You must enter a value for the motto",
             commandHandler.ChatMessages.First());
     }
 
     [Fact]
-    public void Test_CompanyNameTooLong()
+    public void Test_CompanyMottoNotSafeText()
     {
         Dictionary<string, Company> companies = new();
         companies.Add(DEFAULT_CHATTER_ID,
@@ -62,18 +62,18 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!rename u[k");
+        var gameCommand = GetGameCommandArgs("!setmotto kjh*234");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal(Literals.Incorporate_NotSafeText,
+        Assert.Equal(Literals.SetMotto_NotSafeText,
             commandHandler.ChatMessages.First());
     }
 
     [Fact]
-    public void Test_CompanyNameNotSafeText()
+    public void Test_CompanyMottoTooLong()
     {
         Dictionary<string, Company> companies = new();
         companies.Add(DEFAULT_CHATTER_ID,
@@ -86,28 +86,20 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
             });
 
         var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!rename 1234567890123456");
+        var gameCommand = GetGameCommandArgs("!setmotto 12345678901234567890123456");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal("Company name cannot be longer than 15 characters",
+        Assert.Equal("Motto cannot be longer than 25 characters",
             commandHandler.ChatMessages.First());
     }
 
     [Fact]
-    public void Test_CompanyNameAlreadyUsed()
+    public void Test_Success_DefaultMotto()
     {
         Dictionary<string, Company> companies = new();
-        companies.Add("999",
-            new Company
-            {
-                UserId = "999",
-                DisplayName = "OtherPlayer",
-                CompanyName = "FirstCo",
-                Points = 100
-            });
         companies.Add(DEFAULT_CHATTER_ID,
             new Company
             {
@@ -117,46 +109,32 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
                 Points = 100
             });
 
-        var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+        var company = companies[DEFAULT_CHATTER_ID];
 
-        var gameCommand = GetGameCommandArgs("!rename FirstCo");
-
-        commandHandler.Execute(gameCommand);
-
-        Assert.Equal("There is already a company named FirstCo",
-            commandHandler.ChatMessages.First());
+        Assert.Equal("We don't need a motto", company.Motto);
     }
 
     [Fact]
-    public void Test_Success()
+    public void Test_Success_ModifiedMotto()
     {
         Dictionary<string, Company> companies = new();
-        companies.Add("999",
-            new Company
-            {
-                UserId = "999",
-                DisplayName = "OtherPlayer",
-                CompanyName = "FirstCo",
-                Points = 100
-            });
         companies.Add(DEFAULT_CHATTER_ID,
             new Company
             {
                 UserId = DEFAULT_CHATTER_ID,
                 DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
                 CompanyName = "ScottCo",
-                Points = 100
+                Points = 99
             });
 
         var commandHandler =
-            new RenameCommandHandler(_gameSettings, companies);
+            new MottoCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!rename SecondCo");
+        var gameCommand = GetGameCommandArgs("!setmotto This is our new motto");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal("Your company is now named SecondCo",
+        Assert.Equal("Your new company motto is 'This is our new motto'",
             commandHandler.ChatMessages.First());
     }
 }

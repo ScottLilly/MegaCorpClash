@@ -1,7 +1,7 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
 
-namespace Test.MegaCorpClash.Models.ChatCommandHandlers;
+namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public abstract class BaseCommandHandlerTest
 {

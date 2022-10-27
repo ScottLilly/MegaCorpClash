@@ -1,7 +1,7 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services;
 
-namespace Test.MegaCorpClash.Models;
+namespace Test.MegaCorpClash.Services;
 
 public class TestPointsCalculator
 {
