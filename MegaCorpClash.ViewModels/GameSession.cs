@@ -19,7 +19,7 @@ public sealed class GameSession
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
-    private System.Timers.Timer _pointsTimer;
+    private System.Timers.Timer _pointsCalculatorTimer;
 
     public GameSession(GameSettings gameSettings)
     {
@@ -66,8 +66,11 @@ public sealed class GameSession
     {
         WriteMessageToTwitchChat("Stopping MegaCorpClash game. Thanks for playing!");
 
-        _twitchConnector?.Disconnect();
+        _timedMessagesTimer?.Stop();
+        _pointsCalculatorTimer?.Stop();
         _commandHandlerQueueManager.Stop();
+
+        _twitchConnector?.Disconnect();
     }
 
     public void AddBonusPointsNextTurn(int bonusPoints)
@@ -176,10 +179,10 @@ public sealed class GameSession
 
     private void InitializePointsTimer()
     {
-        _pointsTimer =
+        _pointsCalculatorTimer =
             new System.Timers.Timer(_gameSettings.TurnDetails.MinutesPerTurn * 60 * 1000);
-        _pointsTimer.Elapsed += PointsTimer_Elapsed;
-        _pointsTimer.Enabled = true;
+        _pointsCalculatorTimer.Elapsed += PointsCalculatorTimerElapsed;
+        _pointsCalculatorTimer.Enabled = true;
     }
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
@@ -187,7 +190,7 @@ public sealed class GameSession
         WriteMessageToTwitchChat(_timedMessages?.RandomElement() ?? "");
     }
 
-    private void PointsTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    private void PointsCalculatorTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         string message = $"Points timer ticked: {DateTime.Now}";
 
@@ -197,6 +200,12 @@ public sealed class GameSession
         _pointsCalculator.ApplyPointsForTurn();
 
         UpdatePlayerInformation();
+    }
+
+    private void StopTimers()
+    {
+        _timedMessagesTimer?.Stop();
+        _pointsCalculatorTimer?.Stop();
     }
 
     #endregion

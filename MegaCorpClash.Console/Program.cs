@@ -36,8 +36,9 @@ do
     {
         var commandWords = command.Split(" ");
         var parsedArguments = argumentParser.Parse(command);
+        command = commandWords[0].ToLowerInvariant();
 
-        switch (commandWords[0].ToLowerInvariant())
+        switch (command)
         {
             case "!bonus":
                 if (parsedArguments.IntegerArguments.Count == 1)

@@ -1,9 +1,9 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.BroadcasterCommandHandlers;
 using MegaCorpClash.Services.CustomEventArgs;
-using Test.MegaCorpClash.Models.ChatCommandHandlers;
+using Test.MegaCorpClash.Services.ChatCommandHandlers;
 
-namespace Test.MegaCorpClash.Models.BroadcasterCommandHandlers;
+namespace Test.MegaCorpClash.Services.BroadcasterCommandHandlers;
 
 public class TestTaxCommandHandler : BaseCommandHandlerTest
 {
