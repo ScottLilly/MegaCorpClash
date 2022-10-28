@@ -1,5 +1,6 @@
-﻿using MegaCorpClash.Models;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using MegaCorpClash.Models;
 
 namespace MegaCorpClash.Services;
 
@@ -20,7 +21,14 @@ public static class PersistenceService
         string text = File.ReadAllText(GAME_SETTINGS_FILE_NAME);
 
         GameSettings? gameSettings = 
-            JsonConvert.DeserializeObject<GameSettings>(text);
+            JsonSerializer.Deserialize<GameSettings>(text, 
+            new JsonSerializerOptions
+            {
+                Converters = { new JsonStringEnumConverter() },
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString
+            });
 
         if (gameSettings == null)
         {
@@ -47,7 +55,15 @@ public static class PersistenceService
 
             // Write file
             File.WriteAllText(PLAYER_DATA_FILE_NAME,
-                JsonConvert.SerializeObject(players, Formatting.Indented));
+                JsonSerializer.Serialize(players, 
+                new JsonSerializerOptions 
+                {
+                    Converters = { new JsonStringEnumConverter() },
+                    IgnoreReadOnlyFields = true,
+                    IgnoreReadOnlyProperties = true,
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                    WriteIndented = true 
+                }));
         }
     }
 
@@ -55,8 +71,15 @@ public static class PersistenceService
     {
         if (File.Exists(PLAYER_DATA_FILE_NAME))
         {
-            return JsonConvert.DeserializeObject<List<Company>>(
-                File.ReadAllText(PLAYER_DATA_FILE_NAME)) ?? new List<Company>();
+            return JsonSerializer.Deserialize<List<Company>>(
+                File.ReadAllText(PLAYER_DATA_FILE_NAME), 
+                new JsonSerializerOptions
+                {
+                    Converters = { new JsonStringEnumConverter() },
+                    IgnoreReadOnlyFields = true,
+                    IgnoreReadOnlyProperties = true,
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString
+                }) ?? new List<Company>();
         }
 
         return new List<Company>();
