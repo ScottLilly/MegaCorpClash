@@ -24,7 +24,7 @@ namespace MegaCorpClash.Services.ChatCommandHandlers
                 return;
             }
 
-            // Check if player has a Spy
+            // Check if player's company has a Spy
             if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
             {
                 PublishMessage("You must have at least one spy to steal");
@@ -114,7 +114,7 @@ namespace MegaCorpClash.Services.ChatCommandHandlers
                 NotifyBankruptedStreamer();
             }
 
-            NotifyPlayerDataUpdated();
+            NotifyCompanyDataUpdated();
         }
 
         private int GetNumberOfAttackingSpies(GameCommandArgs gameCommand, Company company)

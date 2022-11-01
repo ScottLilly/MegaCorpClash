@@ -43,7 +43,7 @@ public sealed class MottoCommandHandler : BaseCommandHandler
 
         chatter.Company.Motto = gameCommandArgs.Argument;
 
-        NotifyPlayerDataUpdated();
+        NotifyCompanyDataUpdated();
         PublishMessage($"Your new company motto is '{chatter.Company.Motto}'");
     }
 }

@@ -10,7 +10,7 @@ public class CommandHandlerQueue :
 {
     private readonly int _minimumSecondsBetweenCommands;
     private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandTimestamp = new();
-    public event EventHandler OnPlayerDataUpdated;
+    public event EventHandler OnCompanyDataUpdated;
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
     public CommandHandlerQueue(int minimumSecondsBetweenCommands)
@@ -92,10 +92,10 @@ public class CommandHandlerQueue :
 
     private void NotifyDataNeedsUpdate(BaseCommandHandler commandHandler)
     {
-        if (commandHandler.PlayerDataUpdated ||
+        if (commandHandler.CompanyDataUpdated ||
             commandHandler.StreamerBankrupted)
         {
-            OnPlayerDataUpdated?.Invoke(this, EventArgs.Empty);
+            OnCompanyDataUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 

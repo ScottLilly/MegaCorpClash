@@ -41,6 +41,6 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 
         PublishMessage($"A {parsedArguments.IntegerArguments.First()}% tax was applied to all companies");
 
-        NotifyPlayerDataUpdated();
+        NotifyCompanyDataUpdated();
     }
 }
