@@ -27,38 +27,38 @@ public class TestPointsCalculator
 
         pointsCalculator.ApplyPointsForTurn();
 
-        Assert.Equal(50, companies[CHATTER_1_ID].Points);
+        Assert.Equal(100, companies[CHATTER_1_ID].Points);
         Assert.Equal(1, companies[CHATTER_2_ID].Points);
         Assert.Equal(1, companies[CHATTER_3_ID].Points);
-        Assert.Equal(1, companies[CHATTER_4_ID].Points);
+        Assert.Equal(2, companies[CHATTER_4_ID].Points);
 
         pointsCalculator.RecordPlayerChatted(CHATTER_2_ID);
         pointsCalculator.ApplyPointsForTurn();
 
-        Assert.Equal(100, companies[CHATTER_1_ID].Points);
+        Assert.Equal(200, companies[CHATTER_1_ID].Points);
         Assert.Equal(11, companies[CHATTER_2_ID].Points);
         Assert.Equal(2, companies[CHATTER_3_ID].Points);
-        Assert.Equal(2, companies[CHATTER_4_ID].Points);
+        Assert.Equal(4, companies[CHATTER_4_ID].Points);
 
         companies[CHATTER_3_ID].Employees
             .First(e => e.Type == EmployeeType.Sales).Quantity += 9;
 
         pointsCalculator.ApplyPointsForTurn();
 
-        Assert.Equal(150, companies[CHATTER_1_ID].Points);
+        Assert.Equal(300, companies[CHATTER_1_ID].Points);
         Assert.Equal(12, companies[CHATTER_2_ID].Points);
         Assert.Equal(4, companies[CHATTER_3_ID].Points);
-        Assert.Equal(3, companies[CHATTER_4_ID].Points);
+        Assert.Equal(6, companies[CHATTER_4_ID].Points);
 
         pointsCalculator.SetStreamMultiplier(10);
         pointsCalculator.RecordPlayerChatted(CHATTER_2_ID);
 
         pointsCalculator.ApplyPointsForTurn();
 
-        Assert.Equal(650, companies[CHATTER_1_ID].Points);
+        Assert.Equal(1300, companies[CHATTER_1_ID].Points);
         Assert.Equal(112, companies[CHATTER_2_ID].Points);
         Assert.Equal(24, companies[CHATTER_3_ID].Points);
-        Assert.Equal(13, companies[CHATTER_4_ID].Points);
+        Assert.Equal(26, companies[CHATTER_4_ID].Points);
     }
 
     #region Private support functions
@@ -74,7 +74,8 @@ public class TestPointsCalculator
                     PointsPerTurn = new GameSettings.PointsInfo
                     {
                         Chatter = 10,
-                        Lurker = 1
+                        Lurker = 1,
+                        SubscriberMultiplier = 2
                     }
                 }
         };
@@ -87,11 +88,12 @@ public class TestPointsCalculator
             { CHATTER_1_ID, CreateStandardCompany(CHATTER_1_ID, BROADCASTER_NAME) },
             { CHATTER_2_ID, CreateStandardCompany(CHATTER_2_ID, "CHATTER2") },
             { CHATTER_3_ID, CreateStandardCompany(CHATTER_3_ID, "CHATTER3") },
-            { CHATTER_4_ID, CreateStandardCompany(CHATTER_4_ID, "CHATTER4") }
+            { CHATTER_4_ID, CreateStandardCompany(CHATTER_4_ID, "CHATTER4", true) }
         };
     }
 
-    private static Company CreateStandardCompany(string chatterId, string chatterName)
+    private static Company CreateStandardCompany(string chatterId, string chatterName,
+        bool isSubscriber = false)
     {
         return new Company
         {
@@ -99,6 +101,7 @@ public class TestPointsCalculator
             CompanyName = chatterId + "_NAME",
             DisplayName = chatterName,
             IsBroadcaster = (chatterName == BROADCASTER_NAME),
+            IsSubscriber = (chatterName == BROADCASTER_NAME) || isSubscriber,
             Points = 0,
             Employees = new List<EmployeeQuantity>
             {

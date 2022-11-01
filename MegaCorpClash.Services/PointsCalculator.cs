@@ -80,6 +80,12 @@ public class PointsCalculator
                         _gameSettings.TurnDetails.PointsPerTurn.Lurker;
                 }
 
+                if(company.IsSubscriber)
+                {
+                    pointsForTurn *= 
+                        Math.Max(1, _gameSettings.TurnDetails.PointsPerTurn.SubscriberMultiplier);
+                }
+
                 // Apply employee multipliers
                 int salesPeople =
                     company.Employees.
@@ -90,7 +96,7 @@ public class PointsCalculator
                     Convert.ToInt32(Math.Round(Convert.ToDecimal(salesPeople) / 5M,
                     MidpointRounding.AwayFromZero)));
 
-                // Apply bonus
+                // Apply one-time tick interval bonus
                 if (s_chattersSinceStartup.Contains(company.UserId))
                 {
                     pointsForTurn += s_bonusPointsNextTurn;

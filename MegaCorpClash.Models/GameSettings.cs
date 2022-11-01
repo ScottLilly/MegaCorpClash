@@ -49,6 +49,7 @@ public sealed class GameSettings
     {
         public int Lurker { get; set; }
         public int Chatter { get; set; }
+        public int SubscriberMultiplier { get; set; }
     }
 
     public class StartupInfo
