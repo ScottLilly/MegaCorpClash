@@ -28,13 +28,13 @@ public sealed class GameSession
         _commandHandlerQueueManager = 
             new CommandHandlerQueue(_gameSettings.MinimumSecondsBetweenCommands);
 
-        PopulatePlayers();
+        PopulateCompanies();
 
         _commandHandlerFactory = 
             new CommandHandlerFactory(_gameSettings, _companies);
 
         _commandHandlerQueueManager.OnChatMessagePublished += HandleChatMessageToSend;
-        _commandHandlerQueueManager.OnPlayerDataUpdated += HandlePlayerDataUpdated;
+        _commandHandlerQueueManager.OnCompanyDataUpdated += HandleCompanyDataUpdated;
         _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
         _commandHandlerQueueManager.OnLogMessagePublished += HandleLogMessagePublished;
 
@@ -53,14 +53,6 @@ public sealed class GameSession
     }
     
     #region Public functions
-
-    public List<string> ShowPlayers()
-    {
-        return _companies
-            .OrderBy(p => p.Value.DisplayName)
-            .Select(p => $"[{p.Value.DisplayName}] {p.Value.CompanyName} - {p.Value.Points} Employee count: [{p.Value.Employees.Count}]")
-            .ToList();
-    }
 
     public void End()
     {
@@ -87,16 +79,16 @@ public sealed class GameSession
 
     #region Private startup functions
 
-    private void PopulatePlayers()
+    private void PopulateCompanies()
     {
-        var players = PersistenceService.GetPlayerData();
+        var companies = PersistenceService.GetPlayerData();
 
-        foreach (Company player in players)
+        foreach (Company company in companies)
         {
-            player.IsBroadcaster = 
-                player.DisplayName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
+            company.IsBroadcaster = 
+                company.DisplayName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
 
-            _companies.Add(player.UserId, player);
+            _companies.Add(company.UserId, company);
         }
     }
 
@@ -146,7 +138,7 @@ public sealed class GameSession
         WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
     }
 
-    private void HandlePlayerDataUpdated(object? sender, EventArgs e)
+    private void HandleCompanyDataUpdated(object? sender, EventArgs e)
     {
         UpdatePlayerInformation();
     }

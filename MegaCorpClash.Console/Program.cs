@@ -27,10 +27,6 @@ do
     if (command.Equals("!help"))
     {
         Console.WriteLine("!exit                Stop the program");
-        Console.WriteLine("!bonus <n>           Give bonus <n> points on next tick");
-        Console.WriteLine("!multipletoday <n>   Give bonus multiplier <n> during whole stream");
-        Console.WriteLine("!clear               Clear console app screen");
-        Console.WriteLine("!companies           List player company details");
     }
     else
     {
@@ -40,39 +36,6 @@ do
 
         switch (command)
         {
-            case "!bonus":
-                if (parsedArguments.IntegerArguments.Count == 1)
-                {
-                    var bonusPoints = parsedArguments.IntegerArguments.First();
-                    gameSession.AddBonusPointsNextTurn(bonusPoints);
-                    Console.WriteLine($"Bonus of {bonusPoints} will be applied on the next tick");
-                }
-                else
-                {
-                    Console.WriteLine("!bonus command requires an integer value to apply");
-                }
-                break;
-            case "!multipletoday":
-                if (parsedArguments.IntegerArguments.Count == 1)
-                {
-                    var multiplier = parsedArguments.IntegerArguments.First();
-                    gameSession.SetStreamMultiplier(multiplier);
-                    Console.WriteLine($"Stream has a multiplier of {multiplier} for today");
-                }
-                else
-                {
-                    Console.WriteLine("!multipletoday command requires an integer value to apply");
-                }
-                break;
-            case "!clear":
-                Console.Clear();
-                break;
-            case "!companies":
-                foreach (string player in gameSession.ShowPlayers())
-                {
-                    Console.WriteLine(player);
-                }
-                break;
             case "!exit":
                 gameSession.End();
                 break;

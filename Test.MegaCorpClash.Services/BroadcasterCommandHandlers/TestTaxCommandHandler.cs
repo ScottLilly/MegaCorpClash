@@ -31,7 +31,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         commandHandler.Execute(gameCommandArgs);
 
         Assert.Empty(commandHandler.ChatMessages);
-        Assert.False(commandHandler.PlayerDataUpdated);
+        Assert.False(commandHandler.CompanyDataUpdated);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         commandHandler.Execute(gameCommandArgs);
 
         Assert.Equal("Tax command requires a single integer tax rate between 1 and 99", commandHandler.ChatMessages.First());
-        Assert.False(commandHandler.PlayerDataUpdated);
+        Assert.False(commandHandler.CompanyDataUpdated);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         commandHandler.Execute(gameCommandArgs);
 
         Assert.Equal("Tax command requires a single integer tax rate between 1 and 99", commandHandler.ChatMessages.First());
-        Assert.False(commandHandler.PlayerDataUpdated);
+        Assert.False(commandHandler.CompanyDataUpdated);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         commandHandler.Execute(gameCommandArgs);
 
         Assert.Equal("Tax command requires a single integer tax rate between 1 and 99", commandHandler.ChatMessages.First());
-        Assert.False(commandHandler.PlayerDataUpdated);
+        Assert.False(commandHandler.CompanyDataUpdated);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class TestTaxCommandHandler : BaseCommandHandlerTest
         commandHandler.Execute(gameCommandArgs);
 
         Assert.Equal("A 10% tax was applied to all companies", commandHandler.ChatMessages.First());
-        Assert.True(commandHandler.PlayerDataUpdated);
+        Assert.True(commandHandler.CompanyDataUpdated);
         Assert.Equal(100, companies.First(c => c.Value.IsBroadcaster).Value.Points);
         Assert.Equal(90, companies.First(c => !c.Value.IsBroadcaster).Value.Points);
     }

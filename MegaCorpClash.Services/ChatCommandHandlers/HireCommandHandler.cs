@@ -111,7 +111,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
             empQtyObject.Quantity += qtyToHire;
         }
 
-        NotifyPlayerDataUpdated();
+        NotifyCompanyDataUpdated();
 
         string message =
             $"You hired {qtyToHire} {empType} employee" +

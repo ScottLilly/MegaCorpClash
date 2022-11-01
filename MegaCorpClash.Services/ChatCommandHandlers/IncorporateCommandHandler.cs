@@ -64,7 +64,7 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 
         Companies[chatter.ChatterId] = chatter.Company;
 
-        NotifyPlayerDataUpdated();
+        NotifyCompanyDataUpdated();
         PublishMessage($"You are now the proud CEO of {gameCommandArgs.Argument}");
     }
 

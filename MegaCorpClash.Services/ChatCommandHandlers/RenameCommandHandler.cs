@@ -50,7 +50,7 @@ public sealed class RenameCommandHandler : BaseCommandHandler
 
         chatter.Company.CompanyName = gameCommandArgs.Argument;
 
-        NotifyPlayerDataUpdated();
+        NotifyCompanyDataUpdated();
         PublishMessage($"Your company is now named {chatter.Company.CompanyName}");
     }
 }

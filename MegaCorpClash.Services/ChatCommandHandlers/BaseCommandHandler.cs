@@ -23,7 +23,7 @@ public abstract class BaseCommandHandler
                 .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
     public List<string> ChatMessages { get; } = new();
-    public bool PlayerDataUpdated { get; private set; } = false;
+    public bool CompanyDataUpdated { get; private set; } = false;
     public bool StreamerBankrupted { get; private set; } = false;
 
     public ChatterDetails
@@ -70,9 +70,9 @@ public abstract class BaseCommandHandler
         ChatMessages.Add(message);
     }
 
-    protected void NotifyPlayerDataUpdated()
+    protected void NotifyCompanyDataUpdated()
     {
-        PlayerDataUpdated = true;
+        CompanyDataUpdated = true;
     }
 
     protected void NotifyBankruptedStreamer()

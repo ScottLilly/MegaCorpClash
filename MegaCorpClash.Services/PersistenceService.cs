@@ -38,7 +38,7 @@ public static class PersistenceService
         return gameSettings;
     }
 
-    public static void SavePlayerData(IEnumerable<Company> players)
+    public static void SavePlayerData(IEnumerable<Company> companies)
     {
         lock (s_syncLock)
         {
@@ -55,7 +55,7 @@ public static class PersistenceService
 
             // Write file
             File.WriteAllText(PLAYER_DATA_FILE_NAME,
-                JsonSerializer.Serialize(players, 
+                JsonSerializer.Serialize(companies, 
                 new JsonSerializerOptions 
                 {
                     Converters = { new JsonStringEnumConverter() },
