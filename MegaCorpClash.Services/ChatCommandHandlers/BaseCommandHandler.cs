@@ -68,6 +68,11 @@ public abstract class BaseCommandHandler
         return rand > 50 + broadcasterDefenseBonus;
     }
 
+    protected void LogTraceMessage()
+    {
+        Logger.Trace("Begin execution of command: {CommandName}", CommandName);
+    }
+
     protected void PublishMessage(string message)
     {
         ChatMessages.Add(message);

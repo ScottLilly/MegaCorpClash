@@ -13,6 +13,8 @@ public sealed class StatusCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         var chatter = ChatterDetails(gameCommandArgs);
 
         PublishMessage(chatter.Company == null

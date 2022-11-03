@@ -25,6 +25,8 @@ using IHost host = Host.CreateDefaultBuilder(args)
         }))
     .Build();
 
+NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
 ArgumentParser argumentParser = new();
 GameSettings gameSettings = GetGameSettings();
 GameSession gameSession = new(gameSettings);
@@ -33,6 +35,8 @@ Console.WriteLine("Starting MegaCorpClash");
 
 // Wait for user commands
 string? command = "";
+
+Logger.Trace("Starting MegaCorpClash");
 
 do
 {
@@ -56,6 +60,7 @@ do
         switch (command)
         {
             case "!exit":
+                Logger.Trace("Stopping MegaCorpClash");
                 gameSession.End();
                 break;
             default:

@@ -14,6 +14,8 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         PublishMessage(Companies.None()
             ? Literals.Companies_NoCompaniesInGame
             : $"Richest companies: {TopCompaniesByPoints}");

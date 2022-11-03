@@ -13,6 +13,8 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         if (!gameCommandArgs.IsBroadcaster)
         {
             return;
