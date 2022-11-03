@@ -7,6 +7,9 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public abstract class BaseCommandHandler
 {
+    protected static readonly NLog.Logger Logger =
+        NLog.LogManager.GetCurrentClassLogger();
+
     protected readonly ArgumentParser _argumentParser = new();
 
     public string CommandName { get; }

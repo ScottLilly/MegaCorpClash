@@ -1,11 +1,13 @@
-﻿using MegaCorpClash.Models;
-using MegaCorpClash.Services.CustomEventArgs;
+﻿using MegaCorpClash.Services.CustomEventArgs;
 using System.Collections.Concurrent;
 
 namespace MegaCorpClash.Services.Queues;
 
 public abstract class BaseTypedQueue<T>
 {
+    protected static readonly NLog.Logger Logger =
+        NLog.LogManager.GetCurrentClassLogger();
+
     protected readonly BlockingCollection<T> _queue = new();
 
     public event EventHandler<LogMessageEventArgs> OnLogMessagePublished;

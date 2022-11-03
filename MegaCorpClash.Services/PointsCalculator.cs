@@ -4,6 +4,9 @@ namespace MegaCorpClash.Services;
 
 public class PointsCalculator
 {
+    private static readonly NLog.Logger Logger = 
+        NLog.LogManager.GetCurrentClassLogger();
+
     private readonly GameSettings _gameSettings;
     private readonly Dictionary<string, Company> _companies;
 
@@ -30,6 +33,7 @@ public class PointsCalculator
         lock (s_syncLock)
         {
             s_bonusPointsNextTurn = bonusPoints;
+            Logger.Trace($"Set bonus points to {bonusPoints}");
         }
     }
 
@@ -43,6 +47,7 @@ public class PointsCalculator
         lock (s_syncLock)
         {
             s_streamMultiplier = multiplier;
+            Logger.Trace($"Set stream multiplier to {multiplier}");
         }
     }
 

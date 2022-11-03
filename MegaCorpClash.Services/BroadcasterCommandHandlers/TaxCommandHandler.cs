@@ -29,6 +29,8 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
             return;
         }
 
+        Logger.Trace($"Applying tax of {parsedArguments.IntegerArguments.First()}%");
+
         foreach (var company in Companies
             .Where(c => !c.Value.IsBroadcaster)
             .Select(c => c.Value))
