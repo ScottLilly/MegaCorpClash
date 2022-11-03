@@ -17,6 +17,8 @@ public sealed class HelpCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         PublishMessage($"MegaCorpClash commands: {GetGameCommands()}");
     }
 

@@ -4,7 +4,28 @@ using MegaCorpClash.Models;
 using MegaCorpClash.Services;
 using MegaCorpClash.ViewModels;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using static MegaCorpClash.Models.GameSettings;
+
+var config = new ConfigurationBuilder()
+   .SetBasePath(Directory.GetCurrentDirectory())
+   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+   .Build();
+
+using IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((_, services) =>
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+            loggingBuilder.AddNLog(config);
+        }))
+    .Build();
+
+NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
 ArgumentParser argumentParser = new();
 GameSettings gameSettings = GetGameSettings();
@@ -14,6 +35,8 @@ Console.WriteLine("Starting MegaCorpClash");
 
 // Wait for user commands
 string? command = "";
+
+Logger.Trace("Starting MegaCorpClash");
 
 do
 {
@@ -37,6 +60,7 @@ do
         switch (command)
         {
             case "!exit":
+                Logger.Trace("Stopping MegaCorpClash");
                 gameSession.End();
                 break;
             default:

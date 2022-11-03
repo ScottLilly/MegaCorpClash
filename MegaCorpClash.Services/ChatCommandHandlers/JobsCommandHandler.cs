@@ -13,6 +13,8 @@ public sealed class JobsCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         PublishMessage($"Jobs and cost to hire: {GameSettings.JobsList}");
     }
 }

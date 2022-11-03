@@ -13,6 +13,8 @@ public sealed class StaffCommandHandler : BaseCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         var chatter = ChatterDetails(gameCommandArgs);
 
         if (chatter.Company == null)

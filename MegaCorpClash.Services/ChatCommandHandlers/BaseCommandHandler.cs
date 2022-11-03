@@ -7,6 +7,9 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public abstract class BaseCommandHandler
 {
+    protected static readonly NLog.Logger Logger =
+        NLog.LogManager.GetCurrentClassLogger();
+
     protected readonly ArgumentParser _argumentParser = new();
 
     public string CommandName { get; }
@@ -63,6 +66,11 @@ public abstract class BaseCommandHandler
         int rand = RngCreator.GetNumberBetween(1, 100);
 
         return rand > 50 + broadcasterDefenseBonus;
+    }
+
+    protected void LogTraceMessage()
+    {
+        Logger.Trace("Begin execution of command: {CommandName}", CommandName);
     }
 
     protected void PublishMessage(string message)

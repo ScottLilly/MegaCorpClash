@@ -13,6 +13,8 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 
     public override void Execute(GameCommandArgs gameCommandArgs)
     {
+        LogTraceMessage();
+
         if (!gameCommandArgs.IsBroadcaster)
         {
             return;
@@ -28,6 +30,8 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
             PublishMessage("Tax command requires a single integer tax rate between 1 and 99");
             return;
         }
+
+        Logger.Trace($"Applying tax of {parsedArguments.IntegerArguments.First()}%");
 
         foreach (var company in Companies
             .Where(c => !c.Value.IsBroadcaster)

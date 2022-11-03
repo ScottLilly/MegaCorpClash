@@ -10,6 +10,9 @@ namespace MegaCorpClash.Services.ChatConnectors;
 
 public sealed class TwitchConnector : IChatConnector
 {
+    private static readonly NLog.Logger Logger =
+        NLog.LogManager.GetCurrentClassLogger();
+
     private bool _hasConnected;
 
     private readonly string _channelName;
@@ -47,6 +50,8 @@ public sealed class TwitchConnector : IChatConnector
         _channelName = gameSettings.TwitchBroadcasterAccount.Name;
         _credentials = CreateCredentials(gameSettings);
 
+        Logger.Debug("Subscribing to Twitch events");
+
         SubscribeToEvents();
     }
 
@@ -58,10 +63,12 @@ public sealed class TwitchConnector : IChatConnector
         {
             if (_hasConnected)
             {
+                Logger.Debug("Reconnecting to Twitch");
                 _client.Reconnect();
             }
             else
             {
+                Logger.Debug("Connecting to Twitch");
                 _client.Initialize(_credentials, _channelName);
                 _client.Connect();
                 _hasConnected = true;
@@ -77,6 +84,7 @@ public sealed class TwitchConnector : IChatConnector
 
     public void Disconnect()
     {
+        Logger.Trace("Disconnecting from Twitch");
         UnsubscribeFromEvents();
 
         _client?.Disconnect();
@@ -131,6 +139,7 @@ public sealed class TwitchConnector : IChatConnector
 
     private void HandleDisconnected(object? sender, OnDisconnectedEventArgs e)
     {
+        Logger.Debug("Disconnected from Twitch");
         OnDisconnected?.Invoke(this, EventArgs.Empty);
 
         Connect();
