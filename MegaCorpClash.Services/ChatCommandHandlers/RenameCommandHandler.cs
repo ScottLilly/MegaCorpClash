@@ -33,7 +33,7 @@ public sealed class RenameCommandHandler : BaseCommandHandler
 
         if (gameCommandArgs.Argument.IsNotSafeText())
         {
-            PublishMessage(Literals.Incorporate_NotSafeText);
+            PublishMessage(Literals.Start_NotSafeText);
             return;
         }
 

@@ -120,7 +120,7 @@
   <data name="SetMotto_NotSafeText" xml:space="preserve">
     <value>Company motto can only contain letters, numbers, spaces, or simple punctuation.</value>
   </data>
-  <data name="Incorporate_NotSafeText" xml:space="preserve">
+  <data name="Start_NotSafeText" xml:space="preserve">
     <value>Company name can only contain letters, numbers, commas, space, ampersand, and hyphens</value>
   </data>
   <data name="Hire_InvalidParameters" xml:space="preserve">
@@ -129,8 +129,8 @@
   <data name="Hire_QuantityMustBeGreaterThanZero" xml:space="preserve">
     <value>Quantity must be greater than zero</value>
   </data>
-  <data name="Incorporate_NameRequired" xml:space="preserve">
-    <value>!incorporate must be followed by a name for your company</value>
+  <data name="Start_NameRequired" xml:space="preserve">
+    <value>!start must be followed by a name for your company</value>
   </data>
   <data name="Rename_YouMustProvideANewName" xml:space="preserve">
     <value>You must provide a new name for your company</value>
@@ -139,7 +139,7 @@
     <value>You must enter a value for the motto</value>
   </data>
   <data name="YouDoNotHaveACompany" xml:space="preserve">
-    <value>You don't have a company. Type !incorporate &lt;company name&gt; to start one.</value>
+    <value>You don't have a company. Type !start &lt;company name&gt; to start one.</value>
   </data>
   <data name="Companies_NoCompaniesInGame" xml:space="preserve">
     <value>No companies</value>

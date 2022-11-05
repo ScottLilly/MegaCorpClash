@@ -68,7 +68,7 @@ public class TestRenameCommandHandler : BaseCommandHandlerTest
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal(Literals.Incorporate_NotSafeText,
+        Assert.Equal(Literals.Start_NotSafeText,
             commandHandler.ChatMessages.First());
     }
 
