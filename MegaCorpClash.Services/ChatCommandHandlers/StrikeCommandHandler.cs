@@ -42,6 +42,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         }
 
         int successCount = 0;
+        int employeesWhoLeft = 0;
 
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
@@ -52,7 +53,24 @@ public class StrikeCommandHandler : BaseCommandHandler
 
             if (attackSuccessful)
             {
-                successCount++;
+                var employeesByCost = 
+                    GameSettings.EmployeeHiringDetails.OrderBy(ehd => ehd.CostToHire);
+
+                foreach(var emp in employeesByCost)
+                {
+                    var broadcasterEmpQty = 
+                        GetBroadcasterCompany.Employees.FirstOrDefault(e => e.Type == emp.Type);
+
+                    if(broadcasterEmpQty != null &&
+                        broadcasterEmpQty.Quantity > 2)
+                    {
+                        GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, 2);
+                        successCount++;
+                        employeesWhoLeft += 2;
+                        break;
+                    }
+                }
+
             }
             else
             {
@@ -64,12 +82,12 @@ public class StrikeCommandHandler : BaseCommandHandler
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1
-                    ? $"Your spy caused {successCount:N0} employees to leave {GetBroadcasterCompany.CompanyName}"
+                    ? $"Your spy caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}"
                     : $"Your spy was caught and nobody went on strike at {GetBroadcasterCompany.CompanyName}");
         }
         else
         {
-            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and caused {successCount:N0} employees to leave {GetBroadcasterCompany.CompanyName}");
+            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}");
         }
 
         if(successCount > 0)
