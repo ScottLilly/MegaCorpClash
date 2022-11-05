@@ -118,7 +118,8 @@ public sealed class GameSession
         var command =
             _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
 
-        if (command == null)
+        if (command == null ||
+            (e.IsBroadcaster && !command.BroadcasterCanRun))
         {
             return;
         }

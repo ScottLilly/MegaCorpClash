@@ -7,11 +7,17 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public class StealCommandHandler : BaseCommandHandler
 {
+    private GameSettings.AttackDetail _attackDetail;
+
     public StealCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("steal", gameSettings, companies)
     {
         BroadcasterCanRun = false;
+        _attackDetail = 
+            GameSettings.AttackDetails?
+            .FirstOrDefault(ad => ad.AttackType.Matches(CommandName))
+            ?? new GameSettings.AttackDetail { Min = 100, Max = 500 };
     }
 
     public override void Execute(GameCommandArgs gameCommandArgs)
@@ -47,26 +53,17 @@ public class StealCommandHandler : BaseCommandHandler
 
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
-            // "Consume" spy
-            var spyEmployeeQuantity =
-                chatter.Company.Employees
-                    .First(e => e.Type == EmployeeType.Spy);
-
-            if (spyEmployeeQuantity.Quantity == 1)
-            {
-                chatter.Company.Employees.Remove(spyEmployeeQuantity);
-            }
-            else
-            {
-                spyEmployeeQuantity.Quantity--;
-            }
+            // "Consume" spy during attack
+            chatter.Company.RemoveEmployeeOfType(EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.Security);
 
             if (attackSuccessful)
             {
                 // Success
-                int stolen = GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
+                int stolen = 
+                    GetBroadcasterCompany.Points / 
+                    RngCreator.GetNumberBetween(_attackDetail.Min, _attackDetail.Max);
 
                 if (GetBroadcasterCompany.Points < 1000)
                 {
@@ -82,21 +79,7 @@ public class StealCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster security person
-                var securityEmployeeQuantity =
-                    GetBroadcasterCompany.Employees
-                        .FirstOrDefault(e => e.Type == EmployeeType.Security);
-
-                if (securityEmployeeQuantity == null)
-                {
-                }
-                else if (securityEmployeeQuantity.Quantity == 1)
-                {
-                    GetBroadcasterCompany.Employees.Remove(securityEmployeeQuantity);
-                }
-                else
-                {
-                    securityEmployeeQuantity.Quantity--;
-                }
+                GetBroadcasterCompany.RemoveEmployeeOfType(EmployeeType.Security);
             }
         }
 
@@ -117,36 +100,5 @@ public class StealCommandHandler : BaseCommandHandler
         }
 
         NotifyCompanyDataUpdated();
-    }
-
-    private int GetNumberOfAttackingSpies(GameCommandArgs gameCommand, Company company)
-    {
-        int numberOfAttackingSpies = 1;
-
-        var parsedArguments =
-            _argumentParser.Parse(gameCommand.Argument);
-
-        if (parsedArguments.IntegerArguments.Count == 1)
-        {
-            if (parsedArguments.IntegerArguments.First() > 1)
-            {
-                numberOfAttackingSpies =
-                    Math.Min(
-                parsedArguments.IntegerArguments.First(),
-                        company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
-            }
-            else
-            {
-                numberOfAttackingSpies = 0;
-            }
-        }
-        else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
-        {
-            numberOfAttackingSpies =
-                company.Employees
-                    .First(e => e.Type == EmployeeType.Spy).Quantity;
-        }
-
-        return numberOfAttackingSpies;
     }
 }
