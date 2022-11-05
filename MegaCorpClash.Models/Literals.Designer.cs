@@ -88,24 +88,6 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to !incorporate must be followed by a name for your company.
-        /// </summary>
-        public static string Incorporate_NameRequired {
-            get {
-                return ResourceManager.GetString("Incorporate_NameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Company name can only contain letters, numbers, commas, space, ampersand, and hyphens.
-        /// </summary>
-        public static string Incorporate_NotSafeText {
-            get {
-                return ResourceManager.GetString("Incorporate_NotSafeText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You must provide a new name for your company.
         /// </summary>
         public static string Rename_YouMustProvideANewName {
@@ -133,7 +115,25 @@ namespace MegaCorpClash.Models {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You don&apos;t have a company. Type !incorporate &lt;company name&gt; to start one..
+        ///   Looks up a localized string similar to !start must be followed by a name for your company.
+        /// </summary>
+        public static string Start_NameRequired {
+            get {
+                return ResourceManager.GetString("Start_NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company name can only contain letters, numbers, commas, space, ampersand, and hyphens.
+        /// </summary>
+        public static string Start_NotSafeText {
+            get {
+                return ResourceManager.GetString("Start_NotSafeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have a company. Type !start &lt;company name&gt; to start one..
         /// </summary>
         public static string YouDoNotHaveACompany {
             get {

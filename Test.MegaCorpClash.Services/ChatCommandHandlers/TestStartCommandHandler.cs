@@ -14,13 +14,13 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate");
+        var gameCommand = GetGameCommandArgs("!start");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal(Literals.Incorporate_NameRequired,
+        Assert.Equal(Literals.Start_NameRequired,
             commandHandler.ChatMessages.First());
     }
 
@@ -30,13 +30,13 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate 1{a");
+        var gameCommand = GetGameCommandArgs("!start 1{a");
 
         commandHandler.Execute(gameCommand);
 
-        Assert.Equal(Literals.Incorporate_NotSafeText,
+        Assert.Equal(Literals.Start_NotSafeText,
             commandHandler.ChatMessages.First());
     }
 
@@ -46,9 +46,9 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate 1234567890123456");
+        var gameCommand = GetGameCommandArgs("!start 1234567890123456");
 
         commandHandler.Execute(gameCommand);
 
@@ -64,9 +64,9 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
             new Company { CompanyName = "Test" });
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate ABC");
+        var gameCommand = GetGameCommandArgs("!start ABC");
 
         commandHandler.Execute(gameCommand);
 
@@ -82,9 +82,9 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
             new Company { CompanyName = "Test" });
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate Test");
+        var gameCommand = GetGameCommandArgs("!start Test");
 
         commandHandler.Execute(gameCommand);
 
@@ -98,9 +98,9 @@ public class TestStartCommandHandler : BaseCommandHandlerTest
         Dictionary<string, Company> companies = new();
 
         var commandHandler =
-            new IncorporateCommandHandler(_gameSettings, companies);
+            new StartCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!incorporate Test");
+        var gameCommand = GetGameCommandArgs("!start Test");
 
         commandHandler.Execute(gameCommand);
 

@@ -5,9 +5,9 @@ using MegaCorpClash.Services.CustomEventArgs;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
-public sealed class IncorporateCommandHandler : BaseCommandHandler
+public sealed class StartCommandHandler : BaseCommandHandler
 {
-    public IncorporateCommandHandler(GameSettings gameSettings,
+    public StartCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("start", gameSettings, companies)
     {
@@ -21,13 +21,13 @@ public sealed class IncorporateCommandHandler : BaseCommandHandler
 
         if (gameCommandArgs.DoesNotHaveArguments)
         {
-            PublishMessage(Literals.Incorporate_NameRequired);
+            PublishMessage(Literals.Start_NameRequired);
             return;
         }
 
         if (gameCommandArgs.Argument.IsNotSafeText())
         {
-            PublishMessage(Literals.Incorporate_NotSafeText);
+            PublishMessage(Literals.Start_NotSafeText);
             return;
         }
 
