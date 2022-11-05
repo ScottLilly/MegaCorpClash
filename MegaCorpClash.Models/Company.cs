@@ -22,4 +22,24 @@ public sealed class Company
             Employees
                 .OrderBy(x => x.Type)
                 .Select(x => $"{x.Quantity:N0} {x.Type}"));
+
+    public void RemoveEmployeeOfType(EmployeeType employeeType, int quantityToRemove = 1)
+    {
+        var employeeQuantity =
+            Employees.FirstOrDefault(e => e.Type == employeeType);
+
+        if (employeeQuantity == null ||
+            employeeQuantity.Quantity < quantityToRemove)
+        {
+            // TODO: Throw exception (?)
+        }
+        else if (employeeQuantity.Quantity == quantityToRemove)
+        {
+            Employees.Remove(employeeQuantity);
+        }
+        else
+        {
+            employeeQuantity.Quantity -= quantityToRemove;
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using CSharpExtender.Services;
+﻿using CSharpExtender.ExtensionMethods;
+using CSharpExtender.Services;
 using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
@@ -66,6 +67,37 @@ public abstract class BaseCommandHandler
         int rand = RngCreator.GetNumberBetween(1, 100);
 
         return rand > 50 + broadcasterDefenseBonus;
+    }
+
+    protected int GetNumberOfAttackingSpies(GameCommandArgs gameCommand, Company company)
+    {
+        int numberOfAttackingSpies = 1;
+
+        var parsedArguments =
+            _argumentParser.Parse(gameCommand.Argument);
+
+        if (parsedArguments.IntegerArguments.Count == 1)
+        {
+            if (parsedArguments.IntegerArguments.First() > 1)
+            {
+                numberOfAttackingSpies =
+                    Math.Min(
+                parsedArguments.IntegerArguments.First(),
+                        company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
+            }
+            else
+            {
+                numberOfAttackingSpies = 0;
+            }
+        }
+        else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
+        {
+            numberOfAttackingSpies =
+                company.Employees
+                    .First(e => e.Type == EmployeeType.Spy).Quantity;
+        }
+
+        return numberOfAttackingSpies;
     }
 
     protected void LogTraceMessage()
