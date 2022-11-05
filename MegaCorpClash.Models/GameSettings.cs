@@ -12,6 +12,7 @@ public sealed class GameSettings
     public int MinimumSecondsBetweenCommands { get; set; }
     public TurnInfo TurnDetails { get; set; }
     public StartupInfo StartupDetails { get; set; }
+    public List<AttackDetail> AttackDetails { get; set; }
     public TimedMessageSettings TimedMessages { get; set; }
     public List<EmployeeHiringInfo> EmployeeHiringDetails { get; set; } = new();
 
@@ -69,4 +70,12 @@ public sealed class GameSettings
         public EmployeeType Type { get; set; }
         public int CostToHire { get; set; }
     }
+
+    public class AttackDetail
+    { 
+        public string AttackType { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+    }
+
 }

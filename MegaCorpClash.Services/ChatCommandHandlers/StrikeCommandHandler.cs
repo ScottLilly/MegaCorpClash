@@ -6,11 +6,18 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public class StrikeCommandHandler : BaseCommandHandler
 {
+    private GameSettings.AttackDetail _attackDetail;
+
     public StrikeCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("strike", gameSettings, companies)
     {
         BroadcasterCanRun = false;
+
+        _attackDetail =
+            GameSettings.AttackDetails?
+            .FirstOrDefault(ad => ad.AttackType.Matches(CommandName))
+            ?? new GameSettings.AttackDetail { Min = 1, Max = 5 };
     }
 
     public override void Execute(GameCommandArgs gameCommandArgs)
@@ -61,12 +68,15 @@ public class StrikeCommandHandler : BaseCommandHandler
                     var broadcasterEmpQty = 
                         GetBroadcasterCompany.Employees.FirstOrDefault(e => e.Type == emp.Type);
 
+                    int employeesLeaving = 
+                        Random.Shared.Next(_attackDetail.Min, _attackDetail.Max + 1);
+
                     if(broadcasterEmpQty != null &&
-                        broadcasterEmpQty.Quantity > 2)
+                        broadcasterEmpQty.Quantity > employeesLeaving)
                     {
-                        GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, 2);
+                        GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, employeesLeaving);
+                        employeesWhoLeft += employeesLeaving;
                         successCount++;
-                        employeesWhoLeft += 2;
                         break;
                     }
                 }

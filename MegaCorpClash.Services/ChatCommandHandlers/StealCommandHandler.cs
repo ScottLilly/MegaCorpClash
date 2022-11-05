@@ -7,11 +7,17 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public class StealCommandHandler : BaseCommandHandler
 {
+    private GameSettings.AttackDetail _attackDetail;
+
     public StealCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
         : base("steal", gameSettings, companies)
     {
         BroadcasterCanRun = false;
+        _attackDetail = 
+            GameSettings.AttackDetails?
+            .FirstOrDefault(ad => ad.AttackType.Matches(CommandName))
+            ?? new GameSettings.AttackDetail { Min = 100, Max = 500 };
     }
 
     public override void Execute(GameCommandArgs gameCommandArgs)
@@ -55,7 +61,9 @@ public class StealCommandHandler : BaseCommandHandler
             if (attackSuccessful)
             {
                 // Success
-                int stolen = GetBroadcasterCompany.Points / RngCreator.GetNumberBetween(100, 500);
+                int stolen = 
+                    GetBroadcasterCompany.Points / 
+                    RngCreator.GetNumberBetween(_attackDetail.Min, _attackDetail.Max);
 
                 if (GetBroadcasterCompany.Points < 1000)
                 {
