@@ -180,7 +180,24 @@ public sealed class GameSession
 
     private void TimedMessagesTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        WriteMessageToTwitchChat(_timedMessages?.RandomElement() ?? "");
+        string? message = _timedMessages?.RandomElement();
+
+        if(message == null ||
+            string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        if(message.StartsWith("!"))
+        {
+            HandleGameCommandReceived(this,
+                new GameCommandArgs(
+                    "", "", message.Substring(1), "", false, false, false, false));
+        }
+        else 
+        {
+            WriteMessageToTwitchChat(message ?? "");
+        }
     }
 
     private void PointsCalculatorTimerElapsed(object? sender, ElapsedEventArgs e)
