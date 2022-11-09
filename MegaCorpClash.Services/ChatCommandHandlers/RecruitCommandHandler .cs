@@ -4,20 +4,20 @@ using MegaCorpClash.Services.CustomEventArgs;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
-public class StrikeCommandHandler : BaseCommandHandler
+public class RecruitCommandHandler : BaseCommandHandler
 {
     private GameSettings.AttackDetail _attackDetail;
 
-    public StrikeCommandHandler(GameSettings gameSettings,
+    public RecruitCommandHandler(GameSettings gameSettings,
         Dictionary<string, Company> companies)
-        : base("strike", gameSettings, companies)
+        : base("recruit", gameSettings, companies)
     {
         BroadcasterCanRun = false;
 
         _attackDetail =
             GameSettings.AttackDetails?
             .FirstOrDefault(ad => ad.AttackType.Matches(CommandName))
-            ?? new GameSettings.AttackDetail { Min = 2, Max = 5 };
+            ?? new GameSettings.AttackDetail { Min = 1, Max = 2 };
     }
 
     public override void Execute(GameCommandArgs gameCommandArgs)
@@ -35,7 +35,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         // Check if player's company has a Spy
         if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
         {
-            PublishMessage("You must have at least one spy to initiate a strike");
+            PublishMessage("You must have at least one spy to recruit employees");
             return;
         }
 
@@ -49,7 +49,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         }
 
         int successCount = 0;
-        int employeesWhoLeft = 0;
+        List<EmployeeQuantity> employeesWhoStrike = new List<EmployeeQuantity>();
 
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
@@ -75,7 +75,24 @@ public class StrikeCommandHandler : BaseCommandHandler
                         broadcasterEmpQty.Quantity > employeesLeaving)
                     {
                         GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, employeesLeaving);
-                        employeesWhoLeft += employeesLeaving;
+
+                        var employeeTypeWhoStruck = 
+                            employeesWhoStrike.FirstOrDefault(e => e.Type.Equals(emp.Type));
+                        
+                        if(employeeTypeWhoStruck == null)
+                        {
+                            employeesWhoStrike.Add(
+                                new EmployeeQuantity 
+                                {
+                                    Type = emp.Type, 
+                                    Quantity = employeesLeaving 
+                                });
+                        }
+                        else
+                        {
+                            employeeTypeWhoStruck.Quantity += employeesLeaving;
+                        }
+
                         successCount++;
                         break;
                     }
@@ -89,15 +106,19 @@ public class StrikeCommandHandler : BaseCommandHandler
             }
         }
 
+        string recruits = 
+            string.Join(',', 
+            employeesWhoStrike.Select(e => $"{e.Quantity:N0} {e.Type}"));
+
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1
-                    ? $"Your spy caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}"
-                    : $"Your spy was caught and nobody went on strike at {GetBroadcasterCompany.CompanyName}");
+                    ? $"Your spy recruited {recruits} employees from {GetBroadcasterCompany.CompanyName}"
+                    : $"Your spy was caught and you didn't recruit anyone from {GetBroadcasterCompany.CompanyName}");
         }
         else
         {
-            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}");
+            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and recruited {recruits} employees from {GetBroadcasterCompany.CompanyName}");
         }
 
         if(successCount > 0)
