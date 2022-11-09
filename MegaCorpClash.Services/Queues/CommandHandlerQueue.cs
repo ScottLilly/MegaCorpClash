@@ -33,6 +33,7 @@ public class CommandHandlerQueue :
                 out var chattersLastCommand);
 
             if (ChatIsThrottled() &&
+                (!chatterDetails.Company?.IsBroadcaster ?? true) &&
                 chattersLastCommand != null)
             {
                 if ((DateTime.UtcNow -
