@@ -245,7 +245,7 @@ public sealed class GameSession
 
     private void UpdatePlayerInformation()
     {
-        PersistenceService.SavePlayerData(_companies.Values);
+        //PersistenceService.SavePlayerData(_companies.Values);
     }
 
     private void UpdateChatterDetailsIfChanged(ChattedEventArgs eventArgs)

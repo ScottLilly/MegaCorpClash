@@ -43,9 +43,12 @@ public sealed class MottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        chatter.Company.Motto = gameCommandArgs.Argument;
 
-        NotifyCompanyDataUpdated();
+        _companyRepository.ChangeMotto(chatter.ChatterId, gameCommandArgs.Argument);
+
+        //chatter.Company.Motto = gameCommandArgs.Argument;
+
+        //NotifyCompanyDataUpdated();
         PublishMessage($"Your new company motto is '{chatter.Company.Motto}'");
     }
 }

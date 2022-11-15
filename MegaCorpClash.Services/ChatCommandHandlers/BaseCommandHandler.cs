@@ -1,8 +1,10 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using CSharpExtender.Services;
+using LiteDB;
 using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -11,6 +13,9 @@ public abstract class BaseCommandHandler
     protected static readonly NLog.Logger Logger =
         NLog.LogManager.GetCurrentClassLogger();
 
+    protected static IRepository _companyRepository = 
+        CompanyRepository.GetInstance();
+    
     protected readonly ArgumentParser _argumentParser = new();
 
     public string CommandName { get; }
