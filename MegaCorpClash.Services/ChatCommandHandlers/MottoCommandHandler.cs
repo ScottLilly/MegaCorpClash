@@ -1,14 +1,15 @@
 ﻿using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class MottoCommandHandler : BaseCommandHandler
 {
     public MottoCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("motto", gameSettings, companies)
+        IRepository companyRepository)
+        : base("motto", gameSettings, companyRepository)
     {
     }
 
@@ -43,12 +44,10 @@ public sealed class MottoCommandHandler : BaseCommandHandler
             return;
         }
 
+        CompanyRepository.ChangeMotto(chatter.ChatterId, gameCommandArgs.Argument);
 
-        _companyRepository.ChangeMotto(chatter.ChatterId, gameCommandArgs.Argument);
+        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
-        //chatter.Company.Motto = gameCommandArgs.Argument;
-
-        //NotifyCompanyDataUpdated();
-        PublishMessage($"Your new company motto is '{chatter.Company.Motto}'");
+        PublishMessage($"Your new company motto is '{updatedCompany.Motto}'");
     }
 }

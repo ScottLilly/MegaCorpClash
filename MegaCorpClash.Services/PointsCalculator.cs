@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services;
 
@@ -8,7 +9,7 @@ public class PointsCalculator
         NLog.LogManager.GetCurrentClassLogger();
 
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Company> _companies;
+    private readonly IRepository _companyRepository;
 
     private static readonly HashSet<string> s_chattersSinceStartup = new();
     private static readonly HashSet<string> s_chattersDuringTurn = new();
@@ -17,10 +18,10 @@ public class PointsCalculator
     private static int s_streamMultiplier = 1;
 
     public PointsCalculator(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
+        IRepository companyRepository)
     {
         _gameSettings = gameSettings;
-        _companies = companies;
+        _companyRepository = companyRepository;
     }
 
     public void SetBonusPointsForNextTurn(int bonusPoints)
@@ -64,7 +65,7 @@ public class PointsCalculator
     {
         lock (s_syncLock)
         {
-            foreach (var company in _companies.Values)
+            foreach (var company in _companyRepository.GetAllCompanies())
             {
                 // Get base points
                 int pointsForTurn = 0;
@@ -111,7 +112,7 @@ public class PointsCalculator
                 pointsForTurn *= s_streamMultiplier;
 
                 // Add points to player
-                company.Points += pointsForTurn;
+                _companyRepository.AddPoints(company.UserId, pointsForTurn);
             }
 
             s_chattersDuringTurn.Clear();

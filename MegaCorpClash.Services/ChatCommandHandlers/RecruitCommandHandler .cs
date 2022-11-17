@@ -1,6 +1,7 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -9,8 +10,8 @@ public class RecruitCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public RecruitCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("recruit", gameSettings, companies)
+        IRepository companyRepository)
+        : base("recruit", gameSettings, companyRepository)
     {
         BroadcasterCanRun = false;
 
@@ -54,7 +55,7 @@ public class RecruitCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            chatter.Company.RemoveEmployeeOfType(EmployeeType.Spy);
+            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.HR);
 
@@ -74,7 +75,10 @@ public class RecruitCommandHandler : BaseCommandHandler
                     if(broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity > employeesLeaving)
                     {
-                        GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, employeesLeaving);
+                        CompanyRepository.RemoveEmployeeOfType(
+                            GetBroadcasterCompany.UserId, emp.Type, employeesLeaving);
+                        CompanyRepository.HireEmployees(
+                            chatter.ChatterId, emp.Type, employeesLeaving, 0);
 
                         var employeeTypeWhoStruck = 
                             employeesWhoStrike.FirstOrDefault(e => e.Type.Equals(emp.Type));
@@ -102,7 +106,8 @@ public class RecruitCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster HR employee
-                GetBroadcasterCompany.RemoveEmployeeOfType(EmployeeType.HR);
+                CompanyRepository.RemoveEmployeeOfType(
+                    GetBroadcasterCompany.UserId, EmployeeType.HR);
             }
         }
 
@@ -119,11 +124,6 @@ public class RecruitCommandHandler : BaseCommandHandler
         else
         {
             PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and recruited {recruits} employees from {GetBroadcasterCompany.CompanyName}");
-        }
-
-        if(successCount > 0)
-        {
-            NotifyCompanyDataUpdated();
         }
     }
 }

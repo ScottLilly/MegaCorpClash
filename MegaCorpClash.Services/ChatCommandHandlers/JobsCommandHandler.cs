@@ -1,13 +1,14 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class JobsCommandHandler : BaseCommandHandler
 {
     public JobsCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("jobs", gameSettings, companies)
+        IRepository companyRepository)
+        : base("jobs", gameSettings, companyRepository)
     {
     }
 

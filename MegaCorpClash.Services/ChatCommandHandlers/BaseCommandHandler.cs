@@ -12,23 +12,18 @@ public abstract class BaseCommandHandler
 {
     protected static readonly NLog.Logger Logger =
         NLog.LogManager.GetCurrentClassLogger();
-
-    protected static IRepository _companyRepository = 
-        CompanyRepository.GetInstance();
-    
+   
     protected readonly ArgumentParser _argumentParser = new();
 
     public string CommandName { get; }
     public bool BroadcasterCanRun { get; protected init; } = true;
     public bool NonBroadcasterCanRun { get; protected init; } = true;
     protected GameSettings GameSettings { get; }
-    protected Dictionary<string, Company> Companies { get; }
+    protected IRepository CompanyRepository { get; }
 
     protected string TopCompaniesByPoints =>
         string.Join(", ",
-            Companies.Values
-                .OrderByDescending(c => c.Points)
-                .Take(7)
+            CompanyRepository.GetRichestCompanies(7)
                 .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
     public List<string> ChatMessages { get; } = new();
@@ -39,19 +34,17 @@ public abstract class BaseCommandHandler
         ChatterDetails(GameCommandArgs gameCommand) =>
         new ChatterDetails(gameCommand.UserId,
             gameCommand.DisplayName,
-            Companies.ContainsKey(gameCommand.UserId)
-            ? Companies[gameCommand.UserId]
-            : null);
+            CompanyRepository.GetCompany(gameCommand.UserId));
 
     protected Company GetBroadcasterCompany =>
-        Companies.First(c => c.Value.IsBroadcaster).Value;
+        CompanyRepository.GetBroadcasterCompany();
 
     protected BaseCommandHandler(string commandName, GameSettings gameSettings,
-        Dictionary<string, Company> companies)
+        IRepository companyRepository)
     {
         CommandName = commandName;
         GameSettings = gameSettings;
-        Companies = companies;
+        CompanyRepository = companyRepository;
     }
 
     public abstract void Execute(GameCommandArgs gameCommandArgs);

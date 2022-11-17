@@ -1,13 +1,14 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public class MccCommandHandler : BaseCommandHandler
 {
     public MccCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("mcc", gameSettings, companies)
+        IRepository companyRepository) 
+        : base("mcc", gameSettings, companyRepository)
     {
     }
 

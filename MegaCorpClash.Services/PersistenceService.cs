@@ -39,35 +39,6 @@ public static class PersistenceService
         return gameSettings;
     }
 
-    public static void SavePlayerData(IEnumerable<Company> companies)
-    {
-        lock (s_syncLock)
-        {
-            // Make backup
-            var playerDataBackupFile = $"{PLAYER_DATA_FILE_NAME}.backup";
-
-            if (File.Exists(playerDataBackupFile))
-            {
-                File.Delete(playerDataBackupFile);
-            }
-
-            // Backup
-            File.Move(PLAYER_DATA_FILE_NAME, playerDataBackupFile);
-
-            // Write file
-            File.WriteAllText(PLAYER_DATA_FILE_NAME,
-                JsonSerializer.Serialize(companies, 
-                new JsonSerializerOptions 
-                {
-                    Converters = { new JsonStringEnumConverter() },
-                    IgnoreReadOnlyFields = true,
-                    IgnoreReadOnlyProperties = true,
-                    NumberHandling = JsonNumberHandling.AllowReadingFromString,
-                    WriteIndented = true 
-                }));
-        }
-    }
-
     public static List<Company> GetPlayerData()
     {
         IRepository db = CompanyRepository.GetInstance();

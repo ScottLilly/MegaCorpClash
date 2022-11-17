@@ -1,14 +1,15 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class HireCommandHandler : BaseCommandHandler
 {
     public HireCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("hire", gameSettings, companies)
+        IRepository companyRepository)
+        : base("hire", gameSettings, companyRepository)
     {
     }
 
@@ -84,8 +85,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
             return;
         }
 
-        int? costToHire =
-            costToHireOne * qtyToHire;
+        int? costToHire = costToHireOne * qtyToHire;
 
         if (costToHire > chatter.Company.Points)
         {
@@ -94,31 +94,15 @@ public sealed class HireCommandHandler : BaseCommandHandler
         }
 
         // Success! Hire the employee(s)
-        chatter.Company.Points -= (int)costToHire;
+        CompanyRepository.HireEmployees(chatter.ChatterId, 
+            empType, qtyToHire, (int)costToHire);
 
-        var empQtyObject =
-            chatter.Company.Employees.FirstOrDefault(e => e.Type == empType);
-
-        if (empQtyObject == null)
-        {
-            chatter.Company.Employees
-                .Add(new EmployeeQuantity
-                {
-                    Type = empType,
-                    Quantity = qtyToHire
-                });
-        }
-        else
-        {
-            empQtyObject.Quantity += qtyToHire;
-        }
-
-        NotifyCompanyDataUpdated();
+        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
         string message =
             $"You hired {qtyToHire} {empType} employee" +
             (qtyToHire == 1 ? "" : "s") +
-            $" and have {chatter.Company.Points:N0} {GameSettings.PointsName} remaining.";
+            $" and have {updatedCompany.Points:N0} {GameSettings.PointsName} remaining.";
 
         PublishMessage(message);
     }

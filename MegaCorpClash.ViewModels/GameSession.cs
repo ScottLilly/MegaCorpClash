@@ -4,14 +4,17 @@ using MegaCorpClash.Models;
 using MegaCorpClash.Services;
 using MegaCorpClash.Services.ChatConnectors;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 using MegaCorpClash.Services.Queues;
 
 namespace MegaCorpClash.ViewModels;
 
 public sealed class GameSession
 {
+    private IRepository _companyRepository =
+        CompanyRepository.GetInstance();
+
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Company> _companies = new();
     private readonly IChatConnector? _twitchConnector;
     private readonly PointsCalculator _pointsCalculator;
     private readonly CommandHandlerFactory _commandHandlerFactory;
@@ -28,17 +31,14 @@ public sealed class GameSession
         _commandHandlerQueueManager = 
             new CommandHandlerQueue(_gameSettings.MinimumSecondsBetweenCommands);
 
-        PopulateCompanies();
-
         _commandHandlerFactory = 
-            new CommandHandlerFactory(_gameSettings, _companies);
+            new CommandHandlerFactory(_gameSettings, _companyRepository);
 
         _commandHandlerQueueManager.OnChatMessagePublished += HandleChatMessageToSend;
-        _commandHandlerQueueManager.OnCompanyDataUpdated += HandleCompanyDataUpdated;
         _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
         _commandHandlerQueueManager.OnLogMessagePublished += HandleLogMessagePublished;
 
-        _pointsCalculator = new PointsCalculator(gameSettings, _companies);
+        _pointsCalculator = new PointsCalculator(gameSettings, _companyRepository);
 
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnConnected += HandleConnected;
@@ -73,23 +73,6 @@ public sealed class GameSession
     public void SetStreamMultiplier(int multiplier)
     {
         _pointsCalculator.SetStreamMultiplier(multiplier);
-    }
-
-    #endregion
-
-    #region Private startup functions
-
-    private void PopulateCompanies()
-    {
-        var companies = PersistenceService.GetPlayerData();
-
-        foreach (Company company in companies)
-        {
-            company.IsBroadcaster = 
-                company.DisplayName.Matches(_gameSettings.TwitchBroadcasterAccount?.Name ?? "");
-
-            _companies.Add(company.UserId, company);
-        }
     }
 
     #endregion
@@ -137,11 +120,6 @@ public sealed class GameSession
     private void HandleChatMessageToSend(object? sender, ChatMessageEventArgs e)
     {
         WriteMessageToTwitchChat($"{e.DisplayName} {e.Message}");
-    }
-
-    private void HandleCompanyDataUpdated(object? sender, EventArgs e)
-    {
-        UpdatePlayerInformation();
     }
 
     private void HandleBankruptedStreamer(object? sender, BankruptedStreamerArgs e)
@@ -208,8 +186,6 @@ public sealed class GameSession
         WriteMessageToLogFile(message);
 
         _pointsCalculator.ApplyPointsForTurn();
-
-        UpdatePlayerInformation();
     }
 
     private void StopTimers()
@@ -243,14 +219,11 @@ public sealed class GameSession
 
     #region Private support functions
 
-    private void UpdatePlayerInformation()
-    {
-        //PersistenceService.SavePlayerData(_companies.Values);
-    }
-
     private void UpdateChatterDetailsIfChanged(ChattedEventArgs eventArgs)
     {
-        if (_companies.TryGetValue(eventArgs.UserId, out Company? company) &&
+        var company = _companyRepository.GetCompany(eventArgs.UserId);
+
+        if (company != null &&
             (company.DisplayName != eventArgs.DisplayName ||
              company.IsSubscriber != eventArgs.IsSubscriber ||
              company.IsVip != eventArgs.IsVip))
@@ -259,7 +232,7 @@ public sealed class GameSession
             company.IsSubscriber = eventArgs.IsSubscriber;
             company.IsVip = eventArgs.IsVip;
 
-            UpdatePlayerInformation();
+            _companyRepository.UpdateCompany(company);
         }
     }
 

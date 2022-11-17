@@ -1,13 +1,14 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.BroadcasterCommandHandlers;
 
 public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 {
     public TaxCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("tax", gameSettings, companies)
+        IRepository companyRepository)
+        : base("tax", gameSettings, companyRepository)
     {
     }
 
@@ -33,18 +34,15 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 
         Logger.Trace($"Applying tax of {parsedArguments.IntegerArguments.First()}%");
 
-        foreach (var company in Companies
-            .Where(c => !c.Value.IsBroadcaster)
-            .Select(c => c.Value))
+        var taxPercentage = parsedArguments.IntegerArguments.First() / 100M;
+
+        foreach (var company in CompanyRepository.GetAllCompanies()
+            .Where(c => !c.IsBroadcaster))
         {
-            company.Points =
-                Convert.ToInt32(
-                    company.Points *
-                    ((100M - parsedArguments.IntegerArguments.First()) / 100M));
+            var amountToRemove = Convert.ToInt32(company.Points * taxPercentage);
+            CompanyRepository.SubtractPoints(company.UserId, amountToRemove);
         }
 
         PublishMessage($"A {parsedArguments.IntegerArguments.First()}% tax was applied to all companies");
-
-        NotifyCompanyDataUpdated();
     }
 }

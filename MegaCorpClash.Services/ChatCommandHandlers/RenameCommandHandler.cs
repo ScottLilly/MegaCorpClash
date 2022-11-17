@@ -1,15 +1,15 @@
-﻿using CSharpExtender.ExtensionMethods;
-using MegaCorpClash.Core;
+﻿using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("rename", gameSettings, companies)
+        IRepository companyRepository)
+        : base("rename", gameSettings, companyRepository)
     {
     }
 
@@ -44,15 +44,16 @@ public sealed class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommandArgs.Argument)))
+        if (CompanyRepository.OtherCompanyIsNamed(chatter.ChatterId, gameCommandArgs.Argument))
         {
             PublishMessage($"There is already a company named {gameCommandArgs.Argument}");
             return;
         }
 
-        chatter.Company.CompanyName = gameCommandArgs.Argument;
+        CompanyRepository.ChangeCompanyName(chatter.ChatterId, gameCommandArgs.Argument);
 
-        NotifyCompanyDataUpdated();
-        PublishMessage($"Your company is now named {chatter.Company.CompanyName}");
+        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
+
+        PublishMessage($"Your company is now named {updatedCompany.CompanyName}");
     }
 }
