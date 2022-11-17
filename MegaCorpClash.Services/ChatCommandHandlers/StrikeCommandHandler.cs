@@ -1,6 +1,7 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -9,8 +10,8 @@ public class StrikeCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StrikeCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("strike", gameSettings, companies)
+        IRepository companyRepository)
+        : base("strike", gameSettings, companyRepository)
     {
         BroadcasterCanRun = false;
 
@@ -54,7 +55,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            chatter.Company.RemoveEmployeeOfType(EmployeeType.Spy);
+            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.HR);
 
@@ -74,7 +75,9 @@ public class StrikeCommandHandler : BaseCommandHandler
                     if(broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity > employeesLeaving)
                     {
-                        GetBroadcasterCompany.RemoveEmployeeOfType(emp.Type, employeesLeaving);
+                        CompanyRepository.RemoveEmployeeOfType(
+                            GetBroadcasterCompany.UserId, emp.Type, employeesLeaving);
+
                         employeesWhoLeft += employeesLeaving;
                         successCount++;
                         break;
@@ -85,7 +88,8 @@ public class StrikeCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster HR employee
-                GetBroadcasterCompany.RemoveEmployeeOfType(EmployeeType.HR);
+                CompanyRepository.RemoveEmployeeOfType(
+                    GetBroadcasterCompany.UserId, EmployeeType.HR);
             }
         }
 
@@ -98,11 +102,6 @@ public class StrikeCommandHandler : BaseCommandHandler
         else
         {
             PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}");
-        }
-
-        if(successCount > 0)
-        {
-            NotifyCompanyDataUpdated();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using LiteDB;
+using System.Text.Json.Serialization;
 
 namespace MegaCorpClash.Models;
 
 public sealed class Company
 {
+    public ObjectId Id { get; set; }
     public string UserId { get; set; }
     public string DisplayName { get; set; }
     public bool IsBroadcaster { get; set; }

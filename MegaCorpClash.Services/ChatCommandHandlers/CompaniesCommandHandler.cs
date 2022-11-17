@@ -1,14 +1,15 @@
 ﻿using CSharpExtender.ExtensionMethods;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class CompaniesCommandHandler : BaseCommandHandler
 {
     public CompaniesCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("companies", gameSettings, companies)
+        IRepository companyRepository)
+        : base("companies", gameSettings, companyRepository)
     {
     }
 
@@ -16,7 +17,7 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
     {
         LogTraceMessage();
 
-        PublishMessage(Companies.None()
+        PublishMessage(CompanyRepository.GetAllCompanies().None()
             ? Literals.Companies_NoCompaniesInGame
             : $"Richest companies: {TopCompaniesByPoints}");
     }

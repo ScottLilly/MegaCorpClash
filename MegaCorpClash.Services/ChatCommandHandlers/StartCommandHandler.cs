@@ -2,14 +2,15 @@
 using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class StartCommandHandler : BaseCommandHandler
 {
     public StartCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("start", gameSettings, companies)
+        IRepository companyRepository)
+        : base("start", gameSettings, companyRepository)
     {
     }
 
@@ -44,13 +45,13 @@ public sealed class StartCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (Companies.Values.Any(p => p.CompanyName.Matches(gameCommandArgs.Argument)))
+        if (CompanyRepository.OtherCompanyIsNamed("", gameCommandArgs.Argument))
         {
             PublishMessage($"There is already a company named {gameCommandArgs.Argument}");
             return;
         }
 
-        chatter.Company =
+        var chatterCompany =
             new Company
             {
                 UserId = chatter.ChatterId,
@@ -62,11 +63,10 @@ public sealed class StartCommandHandler : BaseCommandHandler
                 Points = GameSettings?.StartupDetails.InitialPoints ?? 0
             };
 
-        GiveDefaultStaff(chatter.Company);
+        GiveDefaultStaff(chatterCompany);
 
-        Companies[chatter.ChatterId] = chatter.Company;
+        CompanyRepository.AddCompany(chatterCompany);
 
-        NotifyCompanyDataUpdated();
         PublishMessage($"You are now the proud CEO of {gameCommandArgs.Argument}");
     }
 

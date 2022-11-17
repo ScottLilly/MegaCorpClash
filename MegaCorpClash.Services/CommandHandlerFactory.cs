@@ -1,19 +1,20 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services;
 
 public class CommandHandlerFactory
 {
     private readonly GameSettings _gameSettings;
-    private readonly Dictionary<string, Company> _companies;
+    private readonly IRepository _companyRepository;
     private readonly Dictionary<string, Type> _commandHandlerTypes = new();
 
     public CommandHandlerFactory(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
+        IRepository companyRepository)
     {
         _gameSettings = gameSettings;
-        _companies = companies;
+        _companyRepository = companyRepository;
 
         var baseType = typeof(BaseCommandHandler);
         var assembly = baseType.Assembly;
@@ -24,7 +25,8 @@ public class CommandHandlerFactory
 
         foreach (var commandHandlerType in commandHandlerTypes)
         {
-            if (Activator.CreateInstance(commandHandlerType, _gameSettings, _companies) is BaseCommandHandler instance)
+            if (Activator.CreateInstance(commandHandlerType, 
+                _gameSettings, _companyRepository) is BaseCommandHandler instance)
             {
                 _commandHandlerTypes.Add(instance.CommandName, commandHandlerType);
             }
@@ -39,7 +41,8 @@ public class CommandHandlerFactory
             var commandHandlerType = _commandHandlerTypes[command];
 
             var instance =
-                Activator.CreateInstance(commandHandlerType, _gameSettings, _companies);
+                Activator.CreateInstance(commandHandlerType, 
+                _gameSettings, _companyRepository);
 
             return instance as BaseCommandHandler;
         }

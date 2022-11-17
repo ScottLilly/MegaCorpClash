@@ -11,24 +11,24 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_HelpMessage()
     {
-        Dictionary<string, Company> companies = new();
+        //Dictionary<string, Company> companies = new();
 
-        var commandHandler =
-            new HelpCommandHandler(_gameSettings, companies);
+        //var commandHandler =
+        //    new HelpCommandHandler(_gameSettings, companies);
 
-        var gameCommand = GetGameCommandArgs("!help");
+        //var gameCommand = GetGameCommandArgs("!help");
 
-        // Call the first time. List needs to be created.
-        commandHandler.Execute(gameCommand);
+        //// Call the first time. List needs to be created.
+        //commandHandler.Execute(gameCommand);
 
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-            commandHandler.ChatMessages.First());
+        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
+        //    commandHandler.ChatMessages.First());
 
-        //// Call a second time. Should have list created this time.
-        //// This is for testing code coverage.
-        commandHandler.Execute(gameCommand);
+        ////// Call a second time. Should have list created this time.
+        ////// This is for testing code coverage.
+        //commandHandler.Execute(gameCommand);
 
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-            commandHandler.ChatMessages.First());
+        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
+        //    commandHandler.ChatMessages.First());
     }
 }

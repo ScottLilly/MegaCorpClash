@@ -1,6 +1,7 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.BroadcasterCommandHandlers;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -10,8 +11,8 @@ public sealed class HelpCommandHandler : BaseCommandHandler
     private static readonly object s_syncLock = new();
 
     public HelpCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("help", gameSettings, companies)
+        IRepository companyRepository)
+        : base("help", gameSettings, companyRepository)
     {
     }
 
@@ -36,7 +37,7 @@ public sealed class HelpCommandHandler : BaseCommandHandler
                         .Where(t => t.IsSubclassOf(baseType) &&
                         !t.IsAbstract &&
                         !t.IsSubclassOf(typeof(BroadcasterOnlyCommandHandler)))
-                        .Select(t => Activator.CreateInstance(t, GameSettings, Companies))
+                        .Select(t => Activator.CreateInstance(t, GameSettings, CompanyRepository))
                         .Cast<BaseCommandHandler>()
                         .ToList();
 

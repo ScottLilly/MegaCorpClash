@@ -2,6 +2,7 @@
 using CSharpExtender.Services;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -10,8 +11,8 @@ public class StealCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StealCommandHandler(GameSettings gameSettings,
-        Dictionary<string, Company> companies)
-        : base("steal", gameSettings, companies)
+        IRepository companyRepository)
+        : base("steal", gameSettings, companyRepository)
     {
         BroadcasterCanRun = false;
         _attackDetail = 
@@ -54,7 +55,7 @@ public class StealCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            chatter.Company.RemoveEmployeeOfType(EmployeeType.Spy);
+            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.Security);
 
@@ -70,8 +71,8 @@ public class StealCommandHandler : BaseCommandHandler
                     stolen = GetBroadcasterCompany.Points;
                 }
 
-                chatter.Company.Points += stolen;
-                GetBroadcasterCompany.Points -= stolen;
+                CompanyRepository.AddPoints(chatter.ChatterId, stolen);
+                CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, stolen);
 
                 successCount++;
                 totalPointsStolen += stolen;
@@ -79,26 +80,26 @@ public class StealCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster security person
-                GetBroadcasterCompany.RemoveEmployeeOfType(EmployeeType.Security);
+                CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security); 
             }
         }
+
+        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1
-                    ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}"
+                    ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {updatedCompany.Points:N0} {GameSettings.PointsName}"
                     : "Your spy was caught and you got nothing");
         }
         else
         {
-            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company.Points:N0} {GameSettings.PointsName}");
+            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {updatedCompany.Points:N0} {GameSettings.PointsName}");
         }
 
         if (GetBroadcasterCompany.Points == 0)
         {
             NotifyBankruptedStreamer();
         }
-
-        NotifyCompanyDataUpdated();
     }
 }

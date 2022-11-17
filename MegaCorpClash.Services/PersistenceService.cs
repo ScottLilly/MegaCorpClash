@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using MegaCorpClash.Models;
+using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services;
 
@@ -38,50 +39,29 @@ public static class PersistenceService
         return gameSettings;
     }
 
-    public static void SavePlayerData(IEnumerable<Company> companies)
-    {
-        lock (s_syncLock)
-        {
-            // Make backup
-            var playerDataBackupFile = $"{PLAYER_DATA_FILE_NAME}.backup";
-
-            if (File.Exists(playerDataBackupFile))
-            {
-                File.Delete(playerDataBackupFile);
-            }
-
-            // Backup
-            File.Move(PLAYER_DATA_FILE_NAME, playerDataBackupFile);
-
-            // Write file
-            File.WriteAllText(PLAYER_DATA_FILE_NAME,
-                JsonSerializer.Serialize(companies, 
-                new JsonSerializerOptions 
-                {
-                    Converters = { new JsonStringEnumConverter() },
-                    IgnoreReadOnlyFields = true,
-                    IgnoreReadOnlyProperties = true,
-                    NumberHandling = JsonNumberHandling.AllowReadingFromString,
-                    WriteIndented = true 
-                }));
-        }
-    }
-
     public static List<Company> GetPlayerData()
     {
-        if (File.Exists(PLAYER_DATA_FILE_NAME))
-        {
-            return JsonSerializer.Deserialize<List<Company>>(
-                File.ReadAllText(PLAYER_DATA_FILE_NAME), 
-                new JsonSerializerOptions
-                {
-                    Converters = { new JsonStringEnumConverter() },
-                    IgnoreReadOnlyFields = true,
-                    IgnoreReadOnlyProperties = true,
-                    NumberHandling = JsonNumberHandling.AllowReadingFromString
-                }) ?? new List<Company>();
-        }
+        IRepository db = CompanyRepository.GetInstance();
 
-        return new List<Company>();
+        // Uncomment, to reload database from JSON file
+        //if (File.Exists(PLAYER_DATA_FILE_NAME))
+        //{
+        //    var companies = JsonSerializer.Deserialize<List<Company>>(
+        //        File.ReadAllText(PLAYER_DATA_FILE_NAME),
+        //        new JsonSerializerOptions
+        //        {
+        //            Converters = { new JsonStringEnumConverter() },
+        //            IgnoreReadOnlyFields = true,
+        //            IgnoreReadOnlyProperties = true,
+        //            NumberHandling = JsonNumberHandling.AllowReadingFromString
+        //        }) ?? new List<Company>();
+
+        //    foreach(Company company in companies)
+        //    {
+        //        db.AddCompany(company);
+        //    }
+        //}
+
+        return db.GetAllCompanies().ToList();
     }
 }
