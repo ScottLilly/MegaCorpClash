@@ -10,8 +10,8 @@ public class StrikeCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StrikeCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("strike", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("strike", gameSettings, companyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
 
@@ -21,11 +21,11 @@ public class StrikeCommandHandler : BaseCommandHandler
             ?? new GameSettings.AttackDetail { Min = 2, Max = 5 };
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -41,7 +41,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         }
 
         int numberOfAttackingSpies =
-            GetNumberOfAttackingSpies(gameCommandArgs, chatter.Company);
+            GetNumberOfAttackingSpies(GameCommandArgs, chatter.Company);
 
         if (numberOfAttackingSpies < 1)
         {

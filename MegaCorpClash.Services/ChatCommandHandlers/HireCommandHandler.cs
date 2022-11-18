@@ -8,16 +8,16 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class HireCommandHandler : BaseCommandHandler
 {
     public HireCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("hire", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("hire", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -27,7 +27,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
 
         // Check that we have valid parameters
         var parsedArguments =
-            _argumentParser.Parse(gameCommandArgs.Argument);
+            _argumentParser.Parse(GameCommandArgs.Argument);
 
         if (parsedArguments.IntegerArguments.Count > 1 ||
            parsedArguments.EnumArgumentsOfType<EmployeeType>().Count() != 1)

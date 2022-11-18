@@ -7,17 +7,17 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 
 public sealed class MottoCommandHandler : BaseCommandHandler
 {
-    public MottoCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("motto", gameSettings, companyRepository)
+    public MottoCommandHandler(GameSettings gameSettings, 
+        IRepository companyRepository, GameCommandArgs gameCommandArgs) 
+        : base("motto", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -25,26 +25,26 @@ public sealed class MottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (gameCommandArgs.DoesNotHaveArguments)
+        if (GameCommandArgs.DoesNotHaveArguments)
         {
             PublishMessage(Literals.SetMotto_MustProvideMotto);
             return;
         }
 
-        if (gameCommandArgs.Argument.IsNotSafeText())
+        if (GameCommandArgs.Argument.IsNotSafeText())
         {
             PublishMessage(Literals.SetMotto_NotSafeText);
             return;
         }
 
-        if (gameCommandArgs.Argument.Length >
+        if (GameCommandArgs.Argument.Length >
             GameSettings.MaxMottoLength)
         {
             PublishMessage($"Motto cannot be longer than {GameSettings.MaxMottoLength} characters");
             return;
         }
 
-        CompanyRepository.ChangeMotto(chatter.ChatterId, gameCommandArgs.Argument);
+        CompanyRepository.ChangeMotto(chatter.ChatterId, GameCommandArgs.Argument);
 
         var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 

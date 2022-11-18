@@ -11,12 +11,12 @@ public sealed class HelpCommandHandler : BaseCommandHandler
     private static readonly object s_syncLock = new();
 
     public HelpCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("help", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("help", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
@@ -37,7 +37,7 @@ public sealed class HelpCommandHandler : BaseCommandHandler
                         .Where(t => t.IsSubclassOf(baseType) &&
                         !t.IsAbstract &&
                         !t.IsSubclassOf(typeof(BroadcasterOnlyCommandHandler)))
-                        .Select(t => Activator.CreateInstance(t, GameSettings, CompanyRepository))
+                        .Select(t => Activator.CreateInstance(t, GameSettings, CompanyRepository, null))
                         .Cast<BaseCommandHandler>()
                         .ToList();
 

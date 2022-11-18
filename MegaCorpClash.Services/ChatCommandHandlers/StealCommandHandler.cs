@@ -11,8 +11,8 @@ public class StealCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StealCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("steal", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("steal", gameSettings, companyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
         _attackDetail = 
@@ -21,11 +21,11 @@ public class StealCommandHandler : BaseCommandHandler
             ?? new GameSettings.AttackDetail { Min = 100, Max = 500 };
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -41,7 +41,7 @@ public class StealCommandHandler : BaseCommandHandler
         }
 
         int numberOfAttackingSpies =
-            GetNumberOfAttackingSpies(gameCommandArgs, chatter.Company);
+            GetNumberOfAttackingSpies(GameCommandArgs, chatter.Company);
 
         if (numberOfAttackingSpies < 1)
         {

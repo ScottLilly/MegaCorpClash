@@ -7,16 +7,16 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class StatusCommandHandler : BaseCommandHandler
 {
     public StatusCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("status", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("status", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         PublishMessage(chatter.Company == null
                 ? Literals.YouDoNotHaveACompany
