@@ -10,8 +10,8 @@ public class RecruitCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public RecruitCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("recruit", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("recruit", gameSettings, companyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
 
@@ -21,11 +21,11 @@ public class RecruitCommandHandler : BaseCommandHandler
             ?? new GameSettings.AttackDetail { Min = 1, Max = 2 };
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -41,7 +41,7 @@ public class RecruitCommandHandler : BaseCommandHandler
         }
 
         int numberOfAttackingSpies =
-            GetNumberOfAttackingSpies(gameCommandArgs, chatter.Company);
+            GetNumberOfAttackingSpies(GameCommandArgs, chatter.Company);
 
         if (numberOfAttackingSpies < 1)
         {

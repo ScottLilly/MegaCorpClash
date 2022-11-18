@@ -7,22 +7,22 @@ namespace MegaCorpClash.Services.BroadcasterCommandHandlers;
 public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 {
     public TaxCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("tax", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("tax", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        if (!gameCommandArgs.IsBroadcaster)
+        if (!GameCommandArgs.IsBroadcaster)
         {
             return;
         }
 
         var parsedArguments =
-            _argumentParser.Parse(gameCommandArgs.Argument);
+            _argumentParser.Parse(GameCommandArgs.Argument);
 
         if (parsedArguments.IntegerArguments.Count != 1 ||
             parsedArguments.IntegerArguments.First() < 1 ||

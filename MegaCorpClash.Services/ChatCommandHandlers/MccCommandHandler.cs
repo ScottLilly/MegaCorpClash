@@ -7,12 +7,12 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public class MccCommandHandler : BaseCommandHandler
 {
     public MccCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository) 
-        : base("mcc", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs) 
+        : base("mcc", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         PublishMessage(@"Instructions for MegaCorpClash are at https://megacorpclash.com/game-instructions/");
     }

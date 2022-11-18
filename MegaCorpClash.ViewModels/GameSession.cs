@@ -99,7 +99,7 @@ public sealed class GameSession
     private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
     {
         var command =
-            _commandHandlerFactory.GetCommandHandlerForCommand(e.CommandName);
+            _commandHandlerFactory.GetCommandHandlerForCommand(e);
 
         if (command == null ||
             (e.IsBroadcaster && !command.BroadcasterCanRun))
@@ -107,7 +107,7 @@ public sealed class GameSession
             return;
         }
 
-        _commandHandlerQueueManager.Add((command, e));
+        _commandHandlerQueueManager.Add(command);
 
         UpdateChatterDetailsIfChanged(e);
     }

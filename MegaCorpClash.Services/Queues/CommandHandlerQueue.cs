@@ -6,11 +6,10 @@ using MegaCorpClash.Services.CustomEventArgs;
 namespace MegaCorpClash.Services.Queues;
 
 public class CommandHandlerQueue :
-    BaseTypedQueue<(BaseCommandHandler, GameCommandArgs)>
+    BaseTypedQueue<BaseCommandHandler>
 {
     private readonly int _minimumSecondsBetweenCommands;
     private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandTimestamp = new();
-    public event EventHandler OnCompanyDataUpdated;
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
     public CommandHandlerQueue(int minimumSecondsBetweenCommands)
@@ -22,11 +21,9 @@ public class CommandHandlerQueue :
 
     private void Consumer()
     {
-        foreach (var item in _queue.GetConsumingEnumerable())
+        foreach (BaseCommandHandler commandHandler in _queue.GetConsumingEnumerable())
         {
-            var commandHandler = item.Item1;
-            var commandArgs = item.Item2;
-            var chatterDetails = commandHandler.ChatterDetails(commandArgs);
+            var chatterDetails = commandHandler.ChatterDetails();
 
             _lastCommandTimestamp.TryGetValue(
                 chatterDetails.ChatterId, 
@@ -49,9 +46,10 @@ public class CommandHandlerQueue :
             _lastCommandTimestamp[chatterDetails.ChatterId] =
                 new CommandTimestamp(DateTime.UtcNow, false);
 
-            PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName} {commandArgs.Argument}");
+            // TODO: Get back command arguments
+            PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName}");
 
-            commandHandler.Execute(commandArgs);
+            commandHandler.Execute();
 
             foreach (var message in commandHandler.ChatMessages)
             {
@@ -59,8 +57,6 @@ public class CommandHandlerQueue :
             }
 
             NotifyIfStreamerBankrupted(commandHandler, chatterDetails);
-
-            NotifyDataNeedsUpdate(commandHandler);
         }
     }
 
@@ -88,15 +84,6 @@ public class CommandHandlerQueue :
 
             OnBankruptedStreamer?.Invoke(this,
                 new BankruptedStreamerArgs());
-        }
-    }
-
-    private void NotifyDataNeedsUpdate(BaseCommandHandler commandHandler)
-    {
-        if (commandHandler.CompanyDataUpdated ||
-            commandHandler.StreamerBankrupted)
-        {
-            OnCompanyDataUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 

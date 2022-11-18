@@ -9,30 +9,30 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class StartCommandHandler : BaseCommandHandler
 {
     public StartCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("start", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("start", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
-        if (gameCommandArgs.DoesNotHaveArguments)
+        if (GameCommandArgs.DoesNotHaveArguments)
         {
             PublishMessage(Literals.Start_NameRequired);
             return;
         }
 
-        if (gameCommandArgs.Argument.IsNotSafeText())
+        if (GameCommandArgs.Argument.IsNotSafeText())
         {
             PublishMessage(Literals.Start_NotSafeText);
             return;
         }
 
-        if (gameCommandArgs.Argument.Length >
+        if (GameCommandArgs.Argument.Length >
             GameSettings.MaxCompanyNameLength)
         {
             PublishMessage($"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
@@ -45,9 +45,10 @@ public sealed class StartCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (CompanyRepository.OtherCompanyIsNamed("", gameCommandArgs.Argument))
+        if (CompanyRepository.OtherCompanyIsNamed(GameCommandArgs.UserId, 
+            GameCommandArgs.Argument))
         {
-            PublishMessage($"There is already a company named {gameCommandArgs.Argument}");
+            PublishMessage($"There is already a company named {GameCommandArgs.Argument}");
             return;
         }
 
@@ -58,7 +59,7 @@ public sealed class StartCommandHandler : BaseCommandHandler
                 DisplayName = chatter.ChatterName,
                 IsBroadcaster =
                     chatter.ChatterName.Matches(GameSettings.TwitchBroadcasterAccount.Name),
-                CompanyName = gameCommandArgs.Argument,
+                CompanyName = GameCommandArgs.Argument,
                 CreatedOn = DateTime.UtcNow,
                 Points = GameSettings?.StartupDetails.InitialPoints ?? 0
             };
@@ -67,7 +68,7 @@ public sealed class StartCommandHandler : BaseCommandHandler
 
         CompanyRepository.AddCompany(chatterCompany);
 
-        PublishMessage($"You are now the proud CEO of {gameCommandArgs.Argument}");
+        PublishMessage($"You are now the proud CEO of {GameCommandArgs.Argument}");
     }
 
     private void GiveDefaultStaff(Company company)

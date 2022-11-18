@@ -20,6 +20,7 @@ public abstract class BaseCommandHandler
     public bool NonBroadcasterCanRun { get; protected init; } = true;
     protected GameSettings GameSettings { get; }
     protected IRepository CompanyRepository { get; }
+    protected GameCommandArgs GameCommandArgs { get; }
 
     protected string TopCompaniesByPoints =>
         string.Join(", ",
@@ -27,27 +28,27 @@ public abstract class BaseCommandHandler
                 .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
     public List<string> ChatMessages { get; } = new();
-    public bool CompanyDataUpdated { get; private set; } = false;
     public bool StreamerBankrupted { get; private set; } = false;
 
     public ChatterDetails
-        ChatterDetails(GameCommandArgs gameCommand) =>
-        new ChatterDetails(gameCommand.UserId,
-            gameCommand.DisplayName,
-            CompanyRepository.GetCompany(gameCommand.UserId));
+        ChatterDetails() =>
+        new ChatterDetails(GameCommandArgs.UserId,
+            GameCommandArgs.DisplayName,
+            CompanyRepository.GetCompany(GameCommandArgs.UserId));
 
     protected Company GetBroadcasterCompany =>
         CompanyRepository.GetBroadcasterCompany();
 
     protected BaseCommandHandler(string commandName, GameSettings gameSettings,
-        IRepository companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
     {
         CommandName = commandName;
         GameSettings = gameSettings;
         CompanyRepository = companyRepository;
+        GameCommandArgs = gameCommandArgs;
     }
 
-    public abstract void Execute(GameCommandArgs gameCommandArgs);
+    public abstract void Execute();
 
     protected bool IsAttackSuccessful(EmployeeType guardEmployeeType)
     {
@@ -106,11 +107,6 @@ public abstract class BaseCommandHandler
     protected void PublishMessage(string message)
     {
         ChatMessages.Add(message);
-    }
-
-    protected void NotifyCompanyDataUpdated()
-    {
-        CompanyDataUpdated = true;
     }
 
     protected void NotifyBankruptedStreamer()

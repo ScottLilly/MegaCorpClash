@@ -1,5 +1,6 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Persistence;
 
 namespace MegaCorpClash.Services;
@@ -26,7 +27,7 @@ public class CommandHandlerFactory
         foreach (var commandHandlerType in commandHandlerTypes)
         {
             if (Activator.CreateInstance(commandHandlerType, 
-                _gameSettings, _companyRepository) is BaseCommandHandler instance)
+                _gameSettings, _companyRepository, null) is BaseCommandHandler instance)
             {
                 _commandHandlerTypes.Add(instance.CommandName, commandHandlerType);
             }
@@ -34,15 +35,15 @@ public class CommandHandlerFactory
 
     }
 
-    public BaseCommandHandler? GetCommandHandlerForCommand(string command)
+    public BaseCommandHandler? GetCommandHandlerForCommand(GameCommandArgs gameCommandArgs)
     {
-        if (_commandHandlerTypes.ContainsKey(command))
+        if (_commandHandlerTypes.ContainsKey(gameCommandArgs.CommandName))
         {
-            var commandHandlerType = _commandHandlerTypes[command];
+            var commandHandlerType = _commandHandlerTypes[gameCommandArgs.CommandName];
 
             var instance =
                 Activator.CreateInstance(commandHandlerType, 
-                _gameSettings, _companyRepository);
+                _gameSettings, _companyRepository, gameCommandArgs);
 
             return instance as BaseCommandHandler;
         }

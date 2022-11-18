@@ -59,9 +59,12 @@ public class CompanyRepository : IRepository, IDisposable
         UpdateCompany(company);
     }
 
-    public bool OtherCompanyIsNamed(string chatterId, string newName) => 
-        _database.GetCollection<Company>(COMPANIES_COLLECTION)
-            .Count(c => c.UserId != chatterId && c.CompanyName.Matches(newName)) > 0;
+    public bool OtherCompanyIsNamed(string chatterId, string newName)
+    {
+        return _database.GetCollection<Company>(COMPANIES_COLLECTION)
+                    .Count(c => c.UserId != chatterId && 
+                    c.CompanyName.ToLower() == newName.ToLower()) > 0;
+    }
 
     public void ChangeCompanyName(string chatterId, string newName)
     {

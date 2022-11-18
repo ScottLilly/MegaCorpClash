@@ -8,16 +8,16 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("rename", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("rename", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
-        var chatter = ChatterDetails(gameCommandArgs);
+        var chatter = ChatterDetails();
 
         if (chatter.Company == null)
         {
@@ -25,32 +25,32 @@ public sealed class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (gameCommandArgs.DoesNotHaveArguments)
+        if (GameCommandArgs.DoesNotHaveArguments)
         {
             PublishMessage(Literals.Rename_YouMustProvideANewName);
             return;
         }
 
-        if (gameCommandArgs.Argument.IsNotSafeText())
+        if (GameCommandArgs.Argument.IsNotSafeText())
         {
             PublishMessage(Literals.Start_NotSafeText);
             return;
         }
 
-        if (gameCommandArgs.Argument.Length >
+        if (GameCommandArgs.Argument.Length >
             GameSettings.MaxCompanyNameLength)
         {
             PublishMessage($"Company name cannot be longer than {GameSettings.MaxCompanyNameLength} characters");
             return;
         }
 
-        if (CompanyRepository.OtherCompanyIsNamed(chatter.ChatterId, gameCommandArgs.Argument))
+        if (CompanyRepository.OtherCompanyIsNamed(chatter.ChatterId, GameCommandArgs.Argument))
         {
-            PublishMessage($"There is already a company named {gameCommandArgs.Argument}");
+            PublishMessage($"There is already a company named {GameCommandArgs.Argument}");
             return;
         }
 
-        CompanyRepository.ChangeCompanyName(chatter.ChatterId, gameCommandArgs.Argument);
+        CompanyRepository.ChangeCompanyName(chatter.ChatterId, GameCommandArgs.Argument);
 
         var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 

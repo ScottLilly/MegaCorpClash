@@ -7,12 +7,12 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class JobsCommandHandler : BaseCommandHandler
 {
     public JobsCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository)
-        : base("jobs", gameSettings, companyRepository)
+        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        : base("jobs", gameSettings, companyRepository, gameCommandArgs)
     {
     }
 
-    public override void Execute(GameCommandArgs gameCommandArgs)
+    public override void Execute()
     {
         LogTraceMessage();
 
