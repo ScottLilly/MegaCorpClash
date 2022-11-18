@@ -86,9 +86,9 @@ static GameSettings GetGameSettings()
             .Get<List<TwitchAccount>>();
 
     var secretsBroadcasterAccount = 
-        secretsTwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Broadcaster"));
+        secretsTwitchAccounts?.FirstOrDefault(ta => ta.Type.Matches("Broadcaster"));
     var secretsBotAccount =
-        secretsTwitchAccounts.FirstOrDefault(ta => ta.Type.Matches("Bot"));
+        secretsTwitchAccounts?.FirstOrDefault(ta => ta.Type.Matches("Bot"));
 
     // Populate missing appsettings value (should only happen in development)
     if (settings.TwitchBroadcasterAccount != null &&
