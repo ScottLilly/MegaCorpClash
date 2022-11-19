@@ -5,10 +5,11 @@ using MegaCorpClash.Core;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Persistence;
+using MegaCorpClash.Services.Queues;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
-public abstract class BaseCommandHandler
+public abstract class BaseCommandHandler : IExecutable
 {
     protected static readonly NLog.Logger Logger =
         NLog.LogManager.GetCurrentClassLogger();

@@ -16,9 +16,9 @@ public sealed class GameSession
 
     private readonly GameSettings _gameSettings;
     private readonly IChatConnector? _twitchConnector;
-    private readonly PointsCalculator _pointsCalculator;
+    private readonly PointsCalculatorFactory _pointsCalculatorFactory;
     private readonly CommandHandlerFactory _commandHandlerFactory;
-    private readonly CommandHandlerQueue _commandHandlerQueueManager;
+    private readonly GameEventQueue _gameEventQueue;
 
     private List<string> _timedMessages = new();
     private System.Timers.Timer? _timedMessagesTimer;
@@ -28,17 +28,18 @@ public sealed class GameSession
     {
         _gameSettings = gameSettings;
 
-        _commandHandlerQueueManager = 
-            new CommandHandlerQueue(_gameSettings.MinimumSecondsBetweenCommands);
+        _gameEventQueue = 
+            new GameEventQueue(_gameSettings.MinimumSecondsBetweenCommands);
 
         _commandHandlerFactory = 
             new CommandHandlerFactory(_gameSettings, _companyRepository);
 
-        _commandHandlerQueueManager.OnChatMessagePublished += HandleChatMessageToSend;
-        _commandHandlerQueueManager.OnBankruptedStreamer += HandleBankruptedStreamer;
-        _commandHandlerQueueManager.OnLogMessagePublished += HandleLogMessagePublished;
+        _pointsCalculatorFactory = 
+            new PointsCalculatorFactory(gameSettings.TurnDetails.PointsPerTurn, _companyRepository);
 
-        _pointsCalculator = new PointsCalculator(gameSettings, _companyRepository);
+        _gameEventQueue.OnChatMessagePublished += HandleChatMessageToSend;
+        _gameEventQueue.OnBankruptedStreamer += HandleBankruptedStreamer;
+        _gameEventQueue.OnLogMessagePublished += HandleLogMessagePublished;
 
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnConnected += HandleConnected;
@@ -60,19 +61,19 @@ public sealed class GameSession
 
         _timedMessagesTimer?.Stop();
         _pointsCalculatorTimer?.Stop();
-        _commandHandlerQueueManager.Stop();
+        _gameEventQueue.Stop();
 
         _twitchConnector?.Disconnect();
     }
 
     public void AddBonusPointsNextTurn(int bonusPoints)
     {
-        _pointsCalculator.SetBonusPointsForNextTurn(bonusPoints);
+        _pointsCalculatorFactory.SetBonusPointsForNextTurn(bonusPoints);
     }
 
     public void SetStreamMultiplier(int multiplier)
     {
-        _pointsCalculator.SetStreamMultiplier(multiplier);
+        _pointsCalculatorFactory.SetStreamMultiplier(multiplier);
     }
 
     #endregion
@@ -93,7 +94,7 @@ public sealed class GameSession
     {
         UpdateChatterDetailsIfChanged(e);
 
-        _pointsCalculator.RecordPlayerChatted(e.UserId);
+        _pointsCalculatorFactory.RecordPlayerChatted(e.UserId);
     }
 
     private void HandleGameCommandReceived(object? sender, GameCommandArgs e)
@@ -107,7 +108,7 @@ public sealed class GameSession
             return;
         }
 
-        _commandHandlerQueueManager.Add(command);
+        _gameEventQueue.Add(command);
 
         UpdateChatterDetailsIfChanged(e);
     }
@@ -185,7 +186,7 @@ public sealed class GameSession
         WriteToConsole(message);
         WriteMessageToLogFile(message);
 
-        _pointsCalculator.ApplyPointsForTurn();
+        _gameEventQueue.Add(_pointsCalculatorFactory.GetPointsCalculator());
     }
 
     private void StopTimers()

@@ -1,26 +1,26 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.Persistence;
+using MegaCorpClash.Services.Queues;
 
 namespace MegaCorpClash.Services;
 
-public class PointsCalculator
+public class PointsCalculator : IExecutable
 {
     private static readonly NLog.Logger Logger = 
         NLog.LogManager.GetCurrentClassLogger();
 
-    private readonly GameSettings _gameSettings;
+    private readonly GameSettings.PointsInfo _pointsInfo;
     private readonly IRepository _companyRepository;
 
-    private static readonly HashSet<string> s_chattersSinceStartup = new();
-    private static readonly HashSet<string> s_chattersDuringTurn = new();
+    private static readonly HashSet<string> s_chattersSinceLastTick = new();
     private static readonly object s_syncLock = new();
     private static int s_bonusPointsNextTurn = 0;
     private static int s_streamMultiplier = 1;
 
-    public PointsCalculator(GameSettings gameSettings,
+    public PointsCalculator(GameSettings.PointsInfo pointsInfo,
         IRepository companyRepository)
     {
-        _gameSettings = gameSettings;
+        _pointsInfo = pointsInfo;
         _companyRepository = companyRepository;
     }
 
@@ -56,12 +56,11 @@ public class PointsCalculator
     {
         lock (s_syncLock)
         {
-            s_chattersDuringTurn.Add(userId);
-            s_chattersSinceStartup.Add(userId);
+            s_chattersSinceLastTick.Add(userId);
         }
     }
 
-    public void ApplyPointsForTurn()
+    public void Execute()
     {
         lock (s_syncLock)
         {
@@ -72,24 +71,21 @@ public class PointsCalculator
 
                 if (company.IsBroadcaster)
                 {
-                    pointsForTurn =
-                        _gameSettings.TurnDetails.PointsPerTurn.Chatter * 5;
+                    pointsForTurn = _pointsInfo.Chatter * 5;
                 }
-                else if (s_chattersDuringTurn.Contains(company.UserId))
+                else if (s_chattersSinceLastTick.Contains(company.UserId))
                 {
-                    pointsForTurn =
-                        _gameSettings.TurnDetails.PointsPerTurn.Chatter;
+                    pointsForTurn = _pointsInfo.Chatter;
                 }
                 else
                 {
-                    pointsForTurn =
-                        _gameSettings.TurnDetails.PointsPerTurn.Lurker;
+                    pointsForTurn = _pointsInfo.Lurker;
                 }
 
                 if(company.IsSubscriber)
                 {
                     pointsForTurn *= 
-                        Math.Max(1, _gameSettings.TurnDetails.PointsPerTurn.SubscriberMultiplier);
+                        Math.Max(1, _pointsInfo.SubscriberMultiplier);
                 }
 
                 // Apply employee multipliers
@@ -103,10 +99,7 @@ public class PointsCalculator
                     MidpointRounding.AwayFromZero)));
 
                 // Apply one-time tick interval bonus
-                if (s_chattersSinceStartup.Contains(company.UserId))
-                {
-                    pointsForTurn += s_bonusPointsNextTurn;
-                }
+                pointsForTurn += s_bonusPointsNextTurn;
 
                 // Apply stream multiplier
                 pointsForTurn *= s_streamMultiplier;
@@ -115,7 +108,6 @@ public class PointsCalculator
                 _companyRepository.AddPoints(company.UserId, pointsForTurn);
             }
 
-            s_chattersDuringTurn.Clear();
             s_bonusPointsNextTurn = 0;
         }
     }
