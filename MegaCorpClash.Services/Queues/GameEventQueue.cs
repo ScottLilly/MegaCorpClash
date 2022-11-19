@@ -1,18 +1,18 @@
-﻿using System.Collections.Concurrent;
-using MegaCorpClash.Models;
+﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Services.CustomEventArgs;
+using System.Collections.Concurrent;
 
 namespace MegaCorpClash.Services.Queues;
 
-public class CommandHandlerQueue :
-    BaseTypedQueue<BaseCommandHandler>
+public class GameEventQueue :
+    BaseTypedQueue<IExecutable>
 {
     private readonly int _minimumSecondsBetweenCommands;
     private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandTimestamp = new();
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
 
-    public CommandHandlerQueue(int minimumSecondsBetweenCommands)
+    public GameEventQueue(int minimumSecondsBetweenCommands)
     {
         _minimumSecondsBetweenCommands = minimumSecondsBetweenCommands;
 
@@ -21,12 +21,20 @@ public class CommandHandlerQueue :
 
     private void Consumer()
     {
-        foreach (BaseCommandHandler commandHandler in _queue.GetConsumingEnumerable())
+        foreach (var commandToExecute in _queue.GetConsumingEnumerable())
         {
+            if (commandToExecute is not BaseCommandHandler)
+            {
+                commandToExecute.Execute();
+                continue;
+            }
+
+            var commandHandler = (BaseCommandHandler)commandToExecute;
+
             var chatterDetails = commandHandler.ChatterDetails();
 
             _lastCommandTimestamp.TryGetValue(
-                chatterDetails.ChatterId, 
+                chatterDetails.ChatterId,
                 out var chattersLastCommand);
 
             if (ChatIsThrottled() &&
@@ -49,7 +57,7 @@ public class CommandHandlerQueue :
             // TODO: Get back command arguments
             PublishLogMessage($"[{chatterDetails.ChatterName}] {commandHandler.CommandName}");
 
-            commandHandler.Execute();
+            commandToExecute.Execute();
 
             foreach (var message in commandHandler.ChatMessages)
             {
