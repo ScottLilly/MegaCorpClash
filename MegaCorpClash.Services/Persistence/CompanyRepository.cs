@@ -96,7 +96,6 @@ public class CompanyRepository : IRepository, IDisposable
 
     public void HireEmployees(string chatterId, EmployeeType type, int quantity, int cost)
     {
-        // TODO: Convert to use a transaction
         var company = GetChatterCompany(chatterId);
 
         company.Points -= cost;
@@ -124,7 +123,6 @@ public class CompanyRepository : IRepository, IDisposable
     public void RemoveEmployeeOfType(string chatterId, EmployeeType type, 
         int quantity = 1)
     {
-        // TODO: Convert to use a transaction
         var company = GetChatterCompany(chatterId);
 
         var employeeQuantity = 
