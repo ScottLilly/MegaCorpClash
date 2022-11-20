@@ -7,8 +7,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class StatusCommandHandler : BaseCommandHandler
 {
     public StatusCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("status", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("status", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 

@@ -10,7 +10,7 @@ public class PointsCalculator : IExecutable
         NLog.LogManager.GetCurrentClassLogger();
 
     private readonly GameSettings.PointsInfo _pointsInfo;
-    private readonly IRepository _companyRepository;
+    private readonly ICompanyRepository _companyCompanyRepository;
 
     private static readonly HashSet<string> s_chattersSinceLastTick = new();
     private static readonly object s_syncLock = new();
@@ -18,10 +18,10 @@ public class PointsCalculator : IExecutable
     private static int s_streamMultiplier = 1;
 
     public PointsCalculator(GameSettings.PointsInfo pointsInfo,
-        IRepository companyRepository)
+        ICompanyRepository companyCompanyRepository)
     {
         _pointsInfo = pointsInfo;
-        _companyRepository = companyRepository;
+        _companyCompanyRepository = companyCompanyRepository;
     }
 
     public void SetBonusPointsForNextTurn(int bonusPoints)
@@ -64,7 +64,7 @@ public class PointsCalculator : IExecutable
     {
         lock (s_syncLock)
         {
-            foreach (var company in _companyRepository.GetAllCompanies())
+            foreach (var company in _companyCompanyRepository.GetAllCompanies())
             {
                 // Get base points
                 int pointsForTurn = 0;
@@ -105,7 +105,7 @@ public class PointsCalculator : IExecutable
                 pointsForTurn *= s_streamMultiplier;
 
                 // Add points to player
-                _companyRepository.AddPoints(company.UserId, pointsForTurn);
+                _companyCompanyRepository.AddPoints(company.UserId, pointsForTurn);
             }
 
             s_bonusPointsNextTurn = 0;

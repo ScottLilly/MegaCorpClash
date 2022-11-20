@@ -9,8 +9,8 @@ public abstract class BroadcasterOnlyCommandHandler : BaseCommandHandler
 {
     protected BroadcasterOnlyCommandHandler(
         string commandName, GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base(commandName, gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base(commandName, gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 }

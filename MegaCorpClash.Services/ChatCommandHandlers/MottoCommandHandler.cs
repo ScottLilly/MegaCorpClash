@@ -8,8 +8,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class MottoCommandHandler : BaseCommandHandler
 {
     public MottoCommandHandler(GameSettings gameSettings, 
-        IRepository companyRepository, GameCommandArgs gameCommandArgs) 
-        : base("motto", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs) 
+        : base("motto", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -44,9 +44,9 @@ public sealed class MottoCommandHandler : BaseCommandHandler
             return;
         }
 
-        CompanyRepository.ChangeMotto(chatter.ChatterId, GameCommandArgs.Argument);
+        CompanyCompanyRepository.ChangeMotto(chatter.ChatterId, GameCommandArgs.Argument);
 
-        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
+        var updatedCompany = CompanyCompanyRepository.GetCompany(chatter.ChatterId);
 
         PublishMessage($"Your new company motto is '{updatedCompany.Motto}'");
     }

@@ -10,8 +10,8 @@ public class RecruitCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public RecruitCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("recruit", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("recruit", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
 
@@ -55,7 +55,7 @@ public class RecruitCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
+            CompanyCompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.HR);
 
@@ -75,9 +75,9 @@ public class RecruitCommandHandler : BaseCommandHandler
                     if(broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity > employeesLeaving)
                     {
-                        CompanyRepository.RemoveEmployeeOfType(
+                        CompanyCompanyRepository.RemoveEmployeeOfType(
                             GetBroadcasterCompany.UserId, emp.Type, employeesLeaving);
-                        CompanyRepository.HireEmployees(
+                        CompanyCompanyRepository.HireEmployees(
                             chatter.ChatterId, emp.Type, employeesLeaving, 0);
 
                         var employeeTypeWhoStruck = 
@@ -106,7 +106,7 @@ public class RecruitCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster HR employee
-                CompanyRepository.RemoveEmployeeOfType(
+                CompanyCompanyRepository.RemoveEmployeeOfType(
                     GetBroadcasterCompany.UserId, EmployeeType.HR);
             }
         }

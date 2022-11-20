@@ -15,20 +15,20 @@ public class PointsCalculatorFactory
     private static int s_streamMultiplier = 1;
 
     private readonly GameSettings.PointsInfo _pointsInfo;
-    private readonly IRepository _companyRepository;
+    private readonly ICompanyRepository _companyCompanyRepository;
 
     public PointsCalculatorFactory(GameSettings.PointsInfo pointsInfo, 
-        IRepository companyRepository)
+        ICompanyRepository companyCompanyRepository)
     {
         _pointsInfo = pointsInfo;
-        _companyRepository = companyRepository;
+        _companyCompanyRepository = companyCompanyRepository;
     }
 
     public PointsCalculator GetPointsCalculator()
     {
         lock (s_syncLock)
         {
-            var pointsCalculator = new PointsCalculator(_pointsInfo, _companyRepository);
+            var pointsCalculator = new PointsCalculator(_pointsInfo, _companyCompanyRepository);
 
             pointsCalculator.SetBonusPointsForNextTurn(s_bonusPointsNextTurn);
             s_bonusPointsNextTurn = 0;

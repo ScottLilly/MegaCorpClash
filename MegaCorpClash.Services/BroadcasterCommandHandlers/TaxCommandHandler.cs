@@ -7,8 +7,8 @@ namespace MegaCorpClash.Services.BroadcasterCommandHandlers;
 public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 {
     public TaxCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("tax", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("tax", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -36,11 +36,11 @@ public class TaxCommandHandler : BroadcasterOnlyCommandHandler
 
         var taxPercentage = parsedArguments.IntegerArguments.First() / 100M;
 
-        foreach (var company in CompanyRepository.GetAllCompanies()
+        foreach (var company in CompanyCompanyRepository.GetAllCompanies()
             .Where(c => !c.IsBroadcaster))
         {
             var amountToRemove = Convert.ToInt32(company.Points * taxPercentage);
-            CompanyRepository.SubtractPoints(company.UserId, amountToRemove);
+            CompanyCompanyRepository.SubtractPoints(company.UserId, amountToRemove);
         }
 
         PublishMessage($"A {parsedArguments.IntegerArguments.First()}% tax was applied to all companies");

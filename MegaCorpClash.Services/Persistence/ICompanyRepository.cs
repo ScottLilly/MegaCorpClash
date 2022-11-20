@@ -2,7 +2,7 @@
 
 namespace MegaCorpClash.Services.Persistence;
 
-public interface IRepository
+public interface ICompanyRepository
 {
     public void AddCompany(Company company);
     public void UpdateCompany(Company company);

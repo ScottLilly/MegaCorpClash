@@ -7,8 +7,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public class MccCommandHandler : BaseCommandHandler
 {
     public MccCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs) 
-        : base("mcc", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs) 
+        : base("mcc", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 

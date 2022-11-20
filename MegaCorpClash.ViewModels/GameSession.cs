@@ -11,8 +11,8 @@ namespace MegaCorpClash.ViewModels;
 
 public sealed class GameSession
 {
-    private IRepository _companyRepository =
-        CompanyRepository.GetInstance();
+    private ICompanyRepository _companyCompanyRepository =
+        CompanyCompanyRepository.GetInstance();
 
     private readonly GameSettings _gameSettings;
     private readonly IChatConnector? _twitchConnector;
@@ -32,10 +32,10 @@ public sealed class GameSession
             new GameEventQueue(_gameSettings.MinimumSecondsBetweenCommands);
 
         _commandHandlerFactory = 
-            new CommandHandlerFactory(_gameSettings, _companyRepository);
+            new CommandHandlerFactory(_gameSettings, _companyCompanyRepository);
 
         _pointsCalculatorFactory = 
-            new PointsCalculatorFactory(gameSettings.TurnDetails.PointsPerTurn, _companyRepository);
+            new PointsCalculatorFactory(gameSettings.TurnDetails.PointsPerTurn, _companyCompanyRepository);
 
         _gameEventQueue.OnChatMessagePublished += HandleChatMessageToSend;
         _gameEventQueue.OnBankruptedStreamer += HandleBankruptedStreamer;
@@ -222,7 +222,7 @@ public sealed class GameSession
 
     private void UpdateChatterDetailsIfChanged(ChattedEventArgs eventArgs)
     {
-        var company = _companyRepository.GetCompany(eventArgs.UserId);
+        var company = _companyCompanyRepository.GetCompany(eventArgs.UserId);
 
         if (company != null &&
             (company.DisplayName != eventArgs.DisplayName ||
@@ -233,7 +233,7 @@ public sealed class GameSession
             company.IsSubscriber = eventArgs.IsSubscriber;
             company.IsVip = eventArgs.IsVip;
 
-            _companyRepository.UpdateCompany(company);
+            _companyCompanyRepository.UpdateCompany(company);
         }
     }
 

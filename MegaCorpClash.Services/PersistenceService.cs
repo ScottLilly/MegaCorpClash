@@ -41,7 +41,7 @@ public static class PersistenceService
 
     public static List<Company> GetPlayerData()
     {
-        IRepository db = CompanyRepository.GetInstance();
+        ICompanyRepository db = CompanyCompanyRepository.GetInstance();
 
         // Uncomment, to reload database from JSON file
         //if (File.Exists(PLAYER_DATA_FILE_NAME))

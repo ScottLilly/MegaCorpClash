@@ -8,14 +8,14 @@ namespace MegaCorpClash.Services;
 public class CommandHandlerFactory
 {
     private readonly GameSettings _gameSettings;
-    private readonly IRepository _companyRepository;
+    private readonly ICompanyRepository _companyCompanyRepository;
     private readonly Dictionary<string, Type> _commandHandlerTypes = new();
 
     public CommandHandlerFactory(GameSettings gameSettings,
-        IRepository companyRepository)
+        ICompanyRepository companyCompanyRepository)
     {
         _gameSettings = gameSettings;
-        _companyRepository = companyRepository;
+        _companyCompanyRepository = companyCompanyRepository;
 
         var baseType = typeof(BaseCommandHandler);
         var assembly = baseType.Assembly;
@@ -27,7 +27,7 @@ public class CommandHandlerFactory
         foreach (var commandHandlerType in commandHandlerTypes)
         {
             if (Activator.CreateInstance(commandHandlerType, 
-                _gameSettings, _companyRepository, null) is BaseCommandHandler instance)
+                _gameSettings, _companyCompanyRepository, null) is BaseCommandHandler instance)
             {
                 _commandHandlerTypes.Add(instance.CommandName, commandHandlerType);
             }
@@ -43,7 +43,7 @@ public class CommandHandlerFactory
 
             var instance =
                 Activator.CreateInstance(commandHandlerType, 
-                _gameSettings, _companyRepository, gameCommandArgs);
+                _gameSettings, _companyCompanyRepository, gameCommandArgs);
 
             return instance as BaseCommandHandler;
         }

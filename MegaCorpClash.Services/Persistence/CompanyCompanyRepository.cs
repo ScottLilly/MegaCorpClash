@@ -4,25 +4,25 @@ using MegaCorpClash.Models;
 
 namespace MegaCorpClash.Services.Persistence;
 
-public class CompanyRepository : IRepository, IDisposable
+public class CompanyCompanyRepository : ICompanyRepository, IDisposable
 {
     const string COMPANIES_COLLECTION = "companies";
 
     readonly static LiteDatabase _database;
 
-    static CompanyRepository()
+    static CompanyCompanyRepository()
     {
         Directory.CreateDirectory(@".\Data");
 
         _database = new LiteDatabase(@".\Data\Companies.db");
     }
-    private CompanyRepository()
+    private CompanyCompanyRepository()
     {
     }
 
-    public static IRepository GetInstance()
+    public static ICompanyRepository GetInstance()
     {
-        return new CompanyRepository();
+        return new CompanyCompanyRepository();
     }
 
     public void AddCompany(Company company) => 
