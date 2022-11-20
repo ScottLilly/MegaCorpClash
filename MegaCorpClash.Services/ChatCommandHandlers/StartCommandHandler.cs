@@ -9,8 +9,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class StartCommandHandler : BaseCommandHandler
 {
     public StartCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("start", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("start", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -45,7 +45,7 @@ public sealed class StartCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (CompanyRepository.OtherCompanyIsNamed(GameCommandArgs.UserId, 
+        if (CompanyCompanyRepository.OtherCompanyIsNamed(GameCommandArgs.UserId, 
             GameCommandArgs.Argument))
         {
             PublishMessage($"There is already a company named {GameCommandArgs.Argument}");
@@ -66,7 +66,7 @@ public sealed class StartCommandHandler : BaseCommandHandler
 
         GiveDefaultStaff(chatterCompany);
 
-        CompanyRepository.AddCompany(chatterCompany);
+        CompanyCompanyRepository.AddCompany(chatterCompany);
 
         PublishMessage($"You are now the proud CEO of {GameCommandArgs.Argument}");
     }

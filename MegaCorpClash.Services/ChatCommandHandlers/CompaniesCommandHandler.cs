@@ -8,8 +8,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class CompaniesCommandHandler : BaseCommandHandler
 {
     public CompaniesCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("companies", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("companies", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -17,7 +17,7 @@ public sealed class CompaniesCommandHandler : BaseCommandHandler
     {
         LogTraceMessage();
 
-        PublishMessage(CompanyRepository.GetAllCompanies().None()
+        PublishMessage(CompanyCompanyRepository.GetAllCompanies().None()
             ? Literals.Companies_NoCompaniesInGame
             : $"Richest companies: {TopCompaniesByPoints}");
     }

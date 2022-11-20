@@ -8,8 +8,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class HireCommandHandler : BaseCommandHandler
 {
     public HireCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("hire", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("hire", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -94,10 +94,10 @@ public sealed class HireCommandHandler : BaseCommandHandler
         }
 
         // Success! Hire the employee(s)
-        CompanyRepository.HireEmployees(chatter.ChatterId, 
+        CompanyCompanyRepository.HireEmployees(chatter.ChatterId, 
             empType, qtyToHire, (int)costToHire);
 
-        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
+        var updatedCompany = CompanyCompanyRepository.GetCompany(chatter.ChatterId);
 
         string message =
             $"You hired {qtyToHire} {empType} employee" +

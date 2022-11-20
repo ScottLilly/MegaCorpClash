@@ -8,8 +8,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class RenameCommandHandler : BaseCommandHandler
 {
     public RenameCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("rename", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("rename", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 
@@ -44,15 +44,15 @@ public sealed class RenameCommandHandler : BaseCommandHandler
             return;
         }
 
-        if (CompanyRepository.OtherCompanyIsNamed(chatter.ChatterId, GameCommandArgs.Argument))
+        if (CompanyCompanyRepository.OtherCompanyIsNamed(chatter.ChatterId, GameCommandArgs.Argument))
         {
             PublishMessage($"There is already a company named {GameCommandArgs.Argument}");
             return;
         }
 
-        CompanyRepository.ChangeCompanyName(chatter.ChatterId, GameCommandArgs.Argument);
+        CompanyCompanyRepository.ChangeCompanyName(chatter.ChatterId, GameCommandArgs.Argument);
 
-        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
+        var updatedCompany = CompanyCompanyRepository.GetCompany(chatter.ChatterId);
 
         PublishMessage($"Your company is now named {updatedCompany.CompanyName}");
     }

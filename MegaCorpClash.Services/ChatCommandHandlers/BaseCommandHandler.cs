@@ -20,12 +20,12 @@ public abstract class BaseCommandHandler : IExecutable
     public bool BroadcasterCanRun { get; protected init; } = true;
     public bool NonBroadcasterCanRun { get; protected init; } = true;
     protected GameSettings GameSettings { get; }
-    protected IRepository CompanyRepository { get; }
+    protected ICompanyRepository CompanyCompanyRepository { get; }
     protected GameCommandArgs GameCommandArgs { get; }
 
     protected string TopCompaniesByPoints =>
         string.Join(", ",
-            CompanyRepository.GetRichestCompanies(7)
+            CompanyCompanyRepository.GetRichestCompanies(7)
                 .Select(c => $"{c.CompanyName} [{c.Points:N0}]"));
 
     public List<string> ChatMessages { get; } = new();
@@ -35,17 +35,17 @@ public abstract class BaseCommandHandler : IExecutable
         ChatterDetails() =>
         new ChatterDetails(GameCommandArgs.UserId,
             GameCommandArgs.DisplayName,
-            CompanyRepository.GetCompany(GameCommandArgs.UserId));
+            CompanyCompanyRepository.GetCompany(GameCommandArgs.UserId));
 
     protected Company GetBroadcasterCompany =>
-        CompanyRepository.GetBroadcasterCompany();
+        CompanyCompanyRepository.GetBroadcasterCompany();
 
     protected BaseCommandHandler(string commandName, GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
     {
         CommandName = commandName;
         GameSettings = gameSettings;
-        CompanyRepository = companyRepository;
+        CompanyCompanyRepository = companyCompanyRepository;
         GameCommandArgs = gameCommandArgs;
     }
 

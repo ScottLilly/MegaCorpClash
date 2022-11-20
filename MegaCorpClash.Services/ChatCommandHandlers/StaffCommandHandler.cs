@@ -7,8 +7,8 @@ namespace MegaCorpClash.Services.ChatCommandHandlers;
 public sealed class StaffCommandHandler : BaseCommandHandler
 {
     public StaffCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("staff", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("staff", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
     }
 

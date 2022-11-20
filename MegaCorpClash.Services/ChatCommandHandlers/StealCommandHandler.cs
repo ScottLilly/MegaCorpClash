@@ -11,8 +11,8 @@ public class StealCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StealCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("steal", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("steal", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
         _attackDetail = 
@@ -55,7 +55,7 @@ public class StealCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
+            CompanyCompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.Security);
 
@@ -71,8 +71,8 @@ public class StealCommandHandler : BaseCommandHandler
                     stolen = GetBroadcasterCompany.Points;
                 }
 
-                CompanyRepository.AddPoints(chatter.ChatterId, stolen);
-                CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, stolen);
+                CompanyCompanyRepository.AddPoints(chatter.ChatterId, stolen);
+                CompanyCompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, stolen);
 
                 successCount++;
                 totalPointsStolen += stolen;
@@ -80,11 +80,11 @@ public class StealCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster security person
-                CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security); 
+                CompanyCompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security); 
             }
         }
 
-        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
+        var updatedCompany = CompanyCompanyRepository.GetCompany(chatter.ChatterId);
 
         if (numberOfAttackingSpies == 1)
         {

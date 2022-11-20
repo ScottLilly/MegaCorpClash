@@ -10,8 +10,8 @@ public class StrikeCommandHandler : BaseCommandHandler
     private GameSettings.AttackDetail _attackDetail;
 
     public StrikeCommandHandler(GameSettings gameSettings,
-        IRepository companyRepository, GameCommandArgs gameCommandArgs)
-        : base("strike", gameSettings, companyRepository, gameCommandArgs)
+        ICompanyRepository companyCompanyRepository, GameCommandArgs gameCommandArgs)
+        : base("strike", gameSettings, companyCompanyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
 
@@ -55,7 +55,7 @@ public class StrikeCommandHandler : BaseCommandHandler
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
             // "Consume" spy during attack
-            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
+            CompanyCompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
 
             var attackSuccessful = IsAttackSuccessful(EmployeeType.HR);
 
@@ -75,7 +75,7 @@ public class StrikeCommandHandler : BaseCommandHandler
                     if(broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity > employeesLeaving)
                     {
-                        CompanyRepository.RemoveEmployeeOfType(
+                        CompanyCompanyRepository.RemoveEmployeeOfType(
                             GetBroadcasterCompany.UserId, emp.Type, employeesLeaving);
 
                         employeesWhoLeft += employeesLeaving;
@@ -88,7 +88,7 @@ public class StrikeCommandHandler : BaseCommandHandler
             else
             {
                 // Failure, consumes broadcaster HR employee
-                CompanyRepository.RemoveEmployeeOfType(
+                CompanyCompanyRepository.RemoveEmployeeOfType(
                     GetBroadcasterCompany.UserId, EmployeeType.HR);
             }
         }
