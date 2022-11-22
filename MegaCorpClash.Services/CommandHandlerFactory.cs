@@ -29,7 +29,7 @@ public class CommandHandlerFactory
             if (Activator.CreateInstance(commandHandlerType, 
                 _gameSettings, _companyRepository, null) is BaseCommandHandler instance)
             {
-                _commandHandlerTypes.Add(instance.CommandName, commandHandlerType);
+                _commandHandlerTypes.Add(instance.CommandName.ToLowerInvariant(), commandHandlerType);
             }
         }
 
@@ -37,9 +37,9 @@ public class CommandHandlerFactory
 
     public BaseCommandHandler? GetCommandHandlerForCommand(GameCommandArgs gameCommandArgs)
     {
-        if (_commandHandlerTypes.ContainsKey(gameCommandArgs.CommandName))
+        if (_commandHandlerTypes.ContainsKey(gameCommandArgs.CommandName.ToLowerInvariant()))
         {
-            var commandHandlerType = _commandHandlerTypes[gameCommandArgs.CommandName];
+            var commandHandlerType = _commandHandlerTypes[gameCommandArgs.CommandName.ToLowerInvariant()];
 
             var instance =
                 Activator.CreateInstance(commandHandlerType, 
