@@ -100,7 +100,7 @@ public sealed class HireCommandHandler : BaseCommandHandler
         var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
         string message =
-            $"You hired {qtyToHire} {empType} employee" +
+            $"You hired {qtyToHire:N0} {empType} employee" +
             (qtyToHire == 1 ? "" : "s") +
             $" and have {updatedCompany.Points:N0} {GameSettings.PointsName} remaining.";
 
