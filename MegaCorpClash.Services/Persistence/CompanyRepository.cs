@@ -12,9 +12,11 @@ public class CompanyRepository : IRepository, IDisposable
 
     static CompanyRepository()
     {
-        Directory.CreateDirectory(@".\Data");
+        var dir = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+        var database = Path.Combine(dir, "Companies.db");
 
-        _database = new LiteDatabase(@".\Data\Companies.db");
+        Directory.CreateDirectory(dir);
+        _database = new LiteDatabase(database);
     }
     private CompanyRepository()
     {

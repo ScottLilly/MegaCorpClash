@@ -7,8 +7,8 @@ namespace MegaCorpClash.Services;
 
 public static class PersistenceService
 {
-    private const string GAME_SETTINGS_FILE_NAME = @".\appsettings.json";
-    private const string PLAYER_DATA_FILE_NAME = @".\playerData.json";
+    private const string GAME_SETTINGS_FILE_NAME = @"appsettings.json";
+    private const string PLAYER_DATA_FILE_NAME = @"playerData.json";
 
     private static object s_syncLock = new();
 
