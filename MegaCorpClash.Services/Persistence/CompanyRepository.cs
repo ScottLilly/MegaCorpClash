@@ -77,6 +77,13 @@ public class CompanyRepository : IRepository, IDisposable
         UpdateCompany(company);
     }
 
+    public void IncrementVictoryCount(string chatterId)
+    {
+        var company = GetChatterCompany(chatterId);
+        company.VictoryCount++;
+        UpdateCompany(company);
+    }
+    
     public void ChangeMotto(string chatterId, string motto)
     {
         var company = GetChatterCompany(chatterId);

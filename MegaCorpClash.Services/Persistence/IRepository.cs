@@ -12,6 +12,7 @@ public interface IRepository
     public void ChangeMotto(string chatterId, string motto);
     public bool OtherCompanyIsNamed(string chatterId, string name);
     public void ChangeCompanyName(string chatterId, string name);
+    public void IncrementVictoryCount(string chatterId);
     public IEnumerable<Company> GetRichestCompanies(int count);
     public void RemoveEmployeeOfType(string chatterId, EmployeeType type, int quantity = 1);
     public void AddPoints(string chatterId, int points);
