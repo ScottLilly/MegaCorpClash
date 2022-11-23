@@ -99,6 +99,7 @@ public class StealCommandHandler : BaseCommandHandler
 
         if (GetBroadcasterCompany.Points == 0)
         {
+            CompanyRepository.IncrementVictoryCount(chatter.ChatterId);
             NotifyBankruptedStreamer();
         }
     }

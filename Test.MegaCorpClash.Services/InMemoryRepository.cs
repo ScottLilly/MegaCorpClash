@@ -18,6 +18,11 @@ public class InMemoryRepository : IRepository
         _companies.First(c => c.UserId == chatterId).Points += points;
     }
 
+    public void IncrementVictoryCount(string chatterId)
+    {
+        _companies.First(c => c.UserId == chatterId).VictoryCount++;
+    }
+
     public void ChangeCompanyName(string chatterId, string name)
     {
         _companies.First(c => c.UserId == chatterId).CompanyName = name;

@@ -64,7 +64,7 @@ public class GameEventQueue :
                 PublishChatMessage(chatterDetails.ChatterName, message);
             }
 
-            NotifyIfStreamerBankrupted(commandHandler, chatterDetails);
+            NotifyIfStreamerBankrupted(commandHandler);
         }
     }
 
@@ -83,13 +83,10 @@ public class GameEventQueue :
         _lastCommandTimestamp[chatterDetails.ChatterId].HasBeenWarned = true;
     }
 
-    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler,
-        ChatterDetails chatterDetails)
+    private void NotifyIfStreamerBankrupted(BaseCommandHandler commandHandler)
     {
         if (commandHandler.StreamerBankrupted)
         {
-            chatterDetails.Company.VictoryCount++;
-
             OnBankruptedStreamer?.Invoke(this,
                 new BankruptedStreamerArgs());
         }
