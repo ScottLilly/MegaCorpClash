@@ -1,1 +1,25 @@
-TO BE WRITTEN
+To install MegaCorpClash, for running on a local computer:
+
+- Download complete source code from GitHub
+- Configure MegaCorpClash.Console\appsettings.json
+  - In TwitchAccounts section
+    - In "Type:Broadcaster" section
+      - "Name" is name of the Twitch channel to play the game in
+      - "AuthToken" is currently not required for Broadcaster
+    - In "Type:Bot" section
+      -  "Name" is name of the Twitch account that will read and send messages in chat. This can be the same as the "Broadcaster" account or can be a different Twitch account.
+      - "AuthToken" this is required for the "Bot" account
+        - Log in to Twitch with the account you're using for the "Bot"
+        - Go to https://twitchapps.com/tmi/ and get the token. It should start with "oauth:"
+        - Enter that value here, including the "oauth:" prefix
+- Build the solution
+  - Use Visual Studio, VS Code, MSBuild, etc.
+- Run MegaCorpClash.Console
+  - In the console, you should see the message "Starting MegaCorpClash"
+  - In the Twitch chat for the Broadcaster channel, you should see the message "Started MegaCorpClash game"
+- If this is your first time running the game, you need to manually create the Company for the Broadcaster.
+  - Run MegaCorpClash and wait for it's startup message in the broadcaster's Twitch chat
+  - Using the broadcaster's Twitch account, type the "!start" command in the chat, along with the company name for the broadcaster's Company.
+  - This Company should automatically be marked as IsBroadcaster in the database.
+- To stop the game safely, type "!exit" in the console app. It will take a few seconds to update all data and shut down the game.
+  - In Twitch chat, you should see the message " Stopping MegaCorpClash game. Thanks for playing!"
