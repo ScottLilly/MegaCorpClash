@@ -3,6 +3,7 @@ using CSharpExtender.Services;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Persistence;
+using Newtonsoft.Json.Linq;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -33,13 +34,6 @@ public class StealCommandHandler : BaseCommandHandler
             return;
         }
 
-        // Check if player's company has a Spy
-        if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
-        {
-            PublishMessage("You must have at least one spy to steal");
-            return;
-        }
-
         int numberOfAttackingSpies =
             GetNumberOfAttackingSpies(GameCommandArgs, chatter.Company);
 
@@ -49,43 +43,71 @@ public class StealCommandHandler : BaseCommandHandler
             return;
         }
 
+        // Check if player's company has enough spies
+        int availableSpies = 
+            chatter.Company.Employees.First(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
+
+        if (availableSpies < numberOfAttackingSpies)
+        {
+            if(availableSpies == 0)
+            {
+                PublishMessage("You don't have any spies");
+            }
+            else if(availableSpies == 1)
+            {
+                PublishMessage("You only have 1 spy");
+            }
+            else
+            {
+                PublishMessage($"You only have {availableSpies} spies");
+            }
+            return;
+        }
+
+        int broadcasterPoints = GetBroadcasterCompany.Points;
         int successCount = 0;
         long totalPointsStolen = 0;
+        int securityPeopleLost = 0;
 
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
-            // "Consume" spy during attack
-            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
-
             var attackSuccessful = IsAttackSuccessful(EmployeeType.Security);
 
             if (attackSuccessful)
             {
                 // Success
                 int stolen = 
-                    GetBroadcasterCompany.Points / 
+                    broadcasterPoints / 
                     RngCreator.GetNumberBetween(_attackDetail.Min, _attackDetail.Max);
 
-                if (GetBroadcasterCompany.Points < 1000)
+                if (broadcasterPoints < 1000)
                 {
-                    stolen = GetBroadcasterCompany.Points;
+                    stolen = broadcasterPoints;
                 }
-
-                CompanyRepository.AddPoints(chatter.ChatterId, stolen);
-                CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, stolen);
 
                 successCount++;
                 totalPointsStolen += stolen;
+                broadcasterPoints -= stolen;
             }
             else
             {
                 // Failure, consumes broadcaster security person
-                CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security); 
+                securityPeopleLost++;
             }
         }
 
+        // Do debits/credits
+        // "Consume" spies used during attack
+        CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
+        CompanyRepository.AddPoints(chatter.ChatterId, (int)totalPointsStolen);
+
+        CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security, securityPeopleLost);
+        CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, (int)totalPointsStolen);
+
+        // Get currect chatter company
         var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
+        // Display messages
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1

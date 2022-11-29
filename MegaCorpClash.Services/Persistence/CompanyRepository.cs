@@ -137,12 +137,11 @@ public class CompanyRepository : IRepository, IDisposable
         var employeeQuantity = 
             company.Employees.FirstOrDefault(e => e.Type == type);
 
-        if (employeeQuantity == null ||
-            employeeQuantity.Quantity < quantity)
+        if (employeeQuantity == null)
         {
             // TODO: Throw exception (?)
         }
-        else if (employeeQuantity.Quantity == quantity)
+        else if (employeeQuantity.Quantity <= quantity)
         {
             company.Employees.Remove(employeeQuantity);
         }
