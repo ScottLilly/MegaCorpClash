@@ -33,13 +33,6 @@ public class RecruitCommandHandler : BaseCommandHandler
             return;
         }
 
-        // Check if player's company has a Spy
-        if (chatter.Company.Employees.None(e => e.Type == EmployeeType.Spy))
-        {
-            PublishMessage("You must have at least one spy to recruit employees");
-            return;
-        }
-
         int numberOfAttackingSpies =
             GetNumberOfAttackingSpies(GameCommandArgs, chatter.Company);
 
@@ -49,6 +42,26 @@ public class RecruitCommandHandler : BaseCommandHandler
             return;
         }
 
+        // Check if player's company has enough spies
+        int availableSpies =
+            chatter.Company.Employees.First(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
+
+        if (availableSpies < numberOfAttackingSpies)
+        {
+            if (availableSpies == 0)
+            {
+                PublishMessage("You don't have any spies");
+            }
+            else if (availableSpies == 1)
+            {
+                PublishMessage("You only have 1 spy");
+            }
+            else
+            {
+                PublishMessage($"You only have {availableSpies} spies");
+            }
+            return;
+        }
         int successCount = 0;
         List<EmployeeQuantity> employeesWhoStrike = new List<EmployeeQuantity>();
 

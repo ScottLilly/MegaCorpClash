@@ -104,7 +104,7 @@ public class StealCommandHandler : BaseCommandHandler
         CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security, securityPeopleLost);
         CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, (int)totalPointsStolen);
 
-        // Get currect chatter company
+        // Get correct chatter company
         var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
 
         // Display messages
