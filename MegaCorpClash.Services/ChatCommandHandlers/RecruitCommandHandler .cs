@@ -62,36 +62,39 @@ public class RecruitCommandHandler : BaseCommandHandler
             }
             return;
         }
+
+        var employeesByCost = GameSettings.EmployeeHiringDetails.OrderBy(ehd => ehd.CostToHire);
+
+        List<EmployeeQuantity> broadcasterEmployees = GetBroadcasterCompany.Employees.ToList();
         int successCount = 0;
         List<EmployeeQuantity> employeesWhoStrike = new List<EmployeeQuantity>();
+        int hrPeopleConsumed = 0;
 
         for (int i = 0; i < numberOfAttackingSpies; i++)
         {
-            // "Consume" spy during attack
-            CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy);
-
             var attackSuccessful = IsAttackSuccessful(EmployeeType.HR);
 
             if (attackSuccessful)
             {
-                var employeesByCost = 
-                    GameSettings.EmployeeHiringDetails.OrderBy(ehd => ehd.CostToHire);
-
                 foreach(var emp in employeesByCost)
                 {
-                    var broadcasterEmpQty = 
-                        GetBroadcasterCompany.Employees.FirstOrDefault(e => e.Type == emp.Type);
+                    var broadcasterEmpQty =
+                        broadcasterEmployees.FirstOrDefault(e => e.Type == emp.Type);
 
                     int employeesLeaving = 
                         Random.Shared.Next(_attackDetail.Min, _attackDetail.Max + 1);
 
                     if(broadcasterEmpQty != null &&
-                        broadcasterEmpQty.Quantity > employeesLeaving)
+                        broadcasterEmpQty.Quantity >= employeesLeaving)
                     {
-                        CompanyRepository.RemoveEmployeeOfType(
-                            GetBroadcasterCompany.UserId, emp.Type, employeesLeaving);
-                        CompanyRepository.HireEmployees(
-                            chatter.ChatterId, emp.Type, employeesLeaving, 0);
+                        if (broadcasterEmpQty.Quantity == employeesLeaving)
+                        {
+                            broadcasterEmployees.Remove(broadcasterEmpQty);
+                        }
+                        else
+                        {
+                            broadcasterEmpQty.Quantity -= employeesLeaving;
+                        }
 
                         var employeeTypeWhoStruck = 
                             employeesWhoStrike.FirstOrDefault(e => e.Type.Equals(emp.Type));
@@ -114,14 +117,25 @@ public class RecruitCommandHandler : BaseCommandHandler
                         break;
                     }
                 }
-
             }
             else
             {
                 // Failure, consumes broadcaster HR employee
-                CompanyRepository.RemoveEmployeeOfType(
-                    GetBroadcasterCompany.UserId, EmployeeType.HR);
+                hrPeopleConsumed++;
             }
+        }
+
+        // Do debits/credits
+        // "Consume" spies used during attack
+        CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
+        CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.HR, hrPeopleConsumed);
+
+        foreach(var empQty in employeesWhoStrike)
+        {
+            CompanyRepository.RemoveEmployeeOfType(
+                GetBroadcasterCompany.UserId, empQty.Type, empQty.Quantity);
+            CompanyRepository.HireEmployees(
+                chatter.ChatterId, empQty.Type, empQty.Quantity, 0);
         }
 
         string recruits = 
