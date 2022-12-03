@@ -13,6 +13,12 @@ public enum EmployeeType
     Spy
 }
 
+public enum BroadcasterCommandType
+{
+    None,
+    Bonus
+}
+
 [Flags]
 public enum LogMessageDestination
 {

@@ -1,4 +1,5 @@
 ﻿using MegaCorpClash.Models;
+using MegaCorpClash.Services.BroadcasterCommandHandlers;
 using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Services.CustomEventArgs;
 using System.Collections.Concurrent;
@@ -11,6 +12,7 @@ public class GameEventQueue :
     private readonly int _minimumSecondsBetweenCommands;
     private readonly ConcurrentDictionary<string, CommandTimestamp> _lastCommandTimestamp = new();
     public event EventHandler<BankruptedStreamerArgs> OnBankruptedStreamer;
+    public event EventHandler<BroadcasterCommandEventArgs> OnBroadcasterCommand;
 
     public GameEventQueue(int minimumSecondsBetweenCommands)
     {
@@ -23,6 +25,14 @@ public class GameEventQueue :
     {
         foreach (var commandToExecute in _queue.GetConsumingEnumerable())
         {
+            if(commandToExecute is BroadcasterOnlyCommandHandler broadcasterCommand)
+            {
+                broadcasterCommand.OnBroadcasterCommand += HandleBroadcasterCommand;
+                broadcasterCommand.Execute();
+                broadcasterCommand.OnBroadcasterCommand -= HandleBroadcasterCommand;
+                continue;
+            }
+
             if (commandToExecute is not BaseCommandHandler)
             {
                 commandToExecute.Execute();
@@ -66,6 +76,11 @@ public class GameEventQueue :
 
             NotifyIfStreamerBankrupted(commandHandler);
         }
+    }
+
+    private void HandleBroadcasterCommand(object? sender, BroadcasterCommandEventArgs e)
+    {
+        OnBroadcasterCommand.Invoke(sender, e);
     }
 
     private void WarnChatterOfThrottlingCondition(
