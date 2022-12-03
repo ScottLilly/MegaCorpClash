@@ -40,6 +40,7 @@ public sealed class GameSession
         _gameEventQueue.OnChatMessagePublished += HandleChatMessageToSend;
         _gameEventQueue.OnBankruptedStreamer += HandleBankruptedStreamer;
         _gameEventQueue.OnLogMessagePublished += HandleLogMessagePublished;
+        _gameEventQueue.OnBroadcasterCommand += HandleBroadcasterCommand;
 
         _twitchConnector = new TwitchConnector(gameSettings);
         _twitchConnector.OnConnected += HandleConnected;
@@ -52,7 +53,7 @@ public sealed class GameSession
         InitializePointsTimer();
         InitializeTimedMessages(gameSettings.TimedMessages);
     }
-    
+
     #region Public functions
 
     public void End()
@@ -127,6 +128,14 @@ public sealed class GameSession
     {
         WriteMessageToLogFile("Bankrupted streamer");
         WriteMessageToTwitchChat("Bankrupted streamer");
+    }
+
+    private void HandleBroadcasterCommand(object? sender, BroadcasterCommandEventArgs e)
+    {
+        if(e.CommandType == BroadcasterCommandType.Bonus)
+        {
+            _pointsCalculatorFactory.SetBonusPointsForNextTurn(e.Value);
+        }
     }
 
     #endregion
