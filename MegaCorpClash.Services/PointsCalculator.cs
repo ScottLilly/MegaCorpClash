@@ -102,7 +102,7 @@ public class PointsCalculator : IExecutable
                 pointsForTurn += s_bonusPointsNextTurn;
 
                 // Apply stream multiplier
-                pointsForTurn *= s_streamMultiplier;
+                pointsForTurn = (int)((100 + s_streamMultiplier) / 100M * pointsForTurn);
 
                 // Add points to player
                 _companyRepository.AddPoints(company.UserId, pointsForTurn);
