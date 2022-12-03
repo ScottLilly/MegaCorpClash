@@ -136,6 +136,10 @@ public sealed class GameSession
         {
             _pointsCalculatorFactory.SetBonusPointsForNextTurn(e.Value);
         }
+        else if(e.CommandType == BroadcasterCommandType.Multiplier)
+        {
+            _pointsCalculatorFactory.SetStreamMultiplier(e.Value);
+        }
     }
 
     #endregion

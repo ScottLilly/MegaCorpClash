@@ -16,7 +16,8 @@ public enum EmployeeType
 public enum BroadcasterCommandType
 {
     None,
-    Bonus
+    Bonus,
+    Multiplier
 }
 
 [Flags]
