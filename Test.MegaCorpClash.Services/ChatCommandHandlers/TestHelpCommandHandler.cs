@@ -1,14 +1,10 @@
 ﻿using MegaCorpClash.Services.ChatCommandHandlers;
-using MegaCorpClash.Models;
-using MegaCorpClash.Services.CustomEventArgs;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestHelpCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_HelpMessage()
     {
@@ -17,18 +13,18 @@ public class TestHelpCommandHandler : BaseCommandHandlerTest
         var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "help", "");
 
         var commandHandler =
-            new HelpCommandHandler(_gameSettings, repo, args);
+            new HelpCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-            commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike");
 
         // Call a second time. Should have list created this time.
         // This is for testing code coverage.
         commandHandler.Execute();
 
-        Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-            commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike");
     }
 }
