@@ -1,34 +1,30 @@
 ﻿using MegaCorpClash.Services.ChatCommandHandlers;
-using MegaCorpClash.Models;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestHelpCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_HelpMessage()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "help", "");
 
-        //var commandHandler =
-        //    new HelpCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new HelpCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!help");
+        commandHandler.Execute();
 
-        //// Call the first time. List needs to be created.
-        //commandHandler.Execute(gameCommand);
+        commandHandler.ChatMessages.First()
+            .ShouldBe("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike");
 
-        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-        //    commandHandler.ChatMessages.First());
+        // Call a second time. Should have list created this time.
+        // This is for testing code coverage.
+        commandHandler.Execute();
 
-        ////// Call a second time. Should have list created this time.
-        ////// This is for testing code coverage.
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("MegaCorpClash commands: !companies, !help, !hire, !jobs, !mcc, !motto, !recruit, !rename, !staff, !start, !status, !steal, !strike");
     }
 }

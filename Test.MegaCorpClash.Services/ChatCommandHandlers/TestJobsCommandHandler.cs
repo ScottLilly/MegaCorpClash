@@ -1,41 +1,23 @@
-﻿using MegaCorpClash.Models;
-using MegaCorpClash.Services.ChatCommandHandlers;
+﻿using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestJobsCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
-    public TestJobsCommandHandler()
-    {
-        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
-        {
-            Type = EmployeeType.Sales,
-            CostToHire = 10
-        });
-
-        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
-        {
-            Type = EmployeeType.Marketing,
-            CostToHire = 25
-        });
-    }
-
     [Fact]
     public void Test_JobsList()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "jobs", "");
 
-        //var commandHandler =
-        //    new JobsCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new JobsCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!jobs");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Jobs and cost to hire: Marketing [25], Sales [10]",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Jobs and cost to hire: HR [40], IT [100], Legal [150], Marketing [75], Production [25], Research [250], Sales [50], Security [100], Spy [500]");
     }
 }
