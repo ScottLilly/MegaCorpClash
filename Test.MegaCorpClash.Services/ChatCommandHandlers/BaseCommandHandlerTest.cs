@@ -157,7 +157,8 @@ public abstract class BaseCommandHandlerTest
             false, false, false, false);
     }
 
-    protected static IRepository GetTestInMemoryRepository()
+    protected static IRepository GetTestInMemoryRepository(bool includeBroadcasterCompany = true,
+        int numberOfNonBroadcasterCompanies = 3)
     {
         var broadcaster =
             new Company
@@ -179,10 +180,23 @@ public abstract class BaseCommandHandlerTest
 
         var repository = new InMemoryRepository();
 
-        repository.AddCompany(broadcaster);
-        repository.AddCompany(player1);
-        repository.AddCompany(player2);
-        repository.AddCompany(player3);
+        if(includeBroadcasterCompany)
+        {
+            repository.AddCompany(broadcaster);
+        }
+
+        if (numberOfNonBroadcasterCompanies > 0)
+        {
+            repository.AddCompany(player1);
+        }
+        if (numberOfNonBroadcasterCompanies > 1)
+        {
+            repository.AddCompany(player2);
+        }
+        if (numberOfNonBroadcasterCompanies > 2)
+        {
+            repository.AddCompany(player3);
+        }
 
         return repository;
     }

@@ -1,76 +1,56 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestCompaniesCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_NoCompanies()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository(false, 0);
+        var args = GetGameCommandArgs(new Company(), "companies", "");
 
-        //var commandHandler =
-        //    new CompaniesCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new CompaniesCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!companies");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.Companies_NoCompaniesInGame, commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Companies_NoCompaniesInGame);
     }
 
     [Fact]
     public void Test_OneCompany()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository(true, 0);
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "companies", "");
 
-        //companies.Add("123", new Company
-        //{
-        //    DisplayName = "Joe",
-        //    CompanyName = "JoeCo",
-        //    Points = 99
-        //});
+        var commandHandler =
+            new CompaniesCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new CompaniesCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!companies");
-
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Richest companies: JoeCo [99]", commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Richest companies: ScottCo [1,000,000]");
     }
 
     [Fact]
     public void Test_TwoCompanies()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository(true, 1);
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "companies", "");
 
-        //companies.Add("123", new Company
-        //{
-        //    DisplayName = "Joe",
-        //    CompanyName = "JoeCo",
-        //    Points = 1111
-        //});
+        var commandHandler =
+            new CompaniesCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //companies.Add("456", new Company
-        //{
-        //    DisplayName = "Sue",
-        //    CompanyName = "SueCo",
-        //    Points = 2222
-        //});
+        commandHandler.Execute();
 
-        //var commandHandler =
-        //    new CompaniesCommandHandler(_gameSettings, companies);
-
-        //var gameCommand = GetGameCommandArgs("!companies");
-
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Richest companies: SueCo [2,222], JoeCo [1,111]", commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Richest companies: ScottCo [1,000,000], Player1Co [1,000]");
     }
 }
