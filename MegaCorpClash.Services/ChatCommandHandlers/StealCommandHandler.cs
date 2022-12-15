@@ -45,7 +45,8 @@ public class StealCommandHandler : BaseCommandHandler
 
         // Check if player's company has enough spies
         int availableSpies = 
-            chatter.Company.Employees.First(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
+            chatter.Company.Employees
+            .FirstOrDefault(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
 
         if (availableSpies < numberOfAttackingSpies)
         {

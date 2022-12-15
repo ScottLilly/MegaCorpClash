@@ -1,188 +1,161 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
+using System.Reflection.Metadata;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestHireCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
-    public TestHireCommandHandler()
-    {
-        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
-        {
-            Type = EmployeeType.Sales,
-            CostToHire = 10
-        });
-
-        _gameSettings.EmployeeHiringDetails.Add(new GameSettings.EmployeeHiringInfo
-        {
-            Type = EmployeeType.Marketing,
-            CostToHire = 25
-        });
-    }
-
     [Theory]
     [MemberData(nameof(InvalidParameterTestValues))]
     public void Test_InvalidParameters(string parameter)
     {
-        //HireCommandHandler commandHandler =
-        //    GetHireCommandHandler();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "hire", parameter);
 
-        //var gameCommand = GetGameCommandArgs($"!hire {parameter}");
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal(Literals.Hire_InvalidParameters,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Hire_InvalidParameters);
     }
 
     [Fact]
     public void Test_NoCompany()
     {
-        //Dictionary<string, Company> companies = new();
+        // TODO: FIX!
+        //// Setup
+        //var repo = GetTestInMemoryRepository();
+        //var args = GetGameCommandArgs(new Company(), "hire", "");
 
         //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        //    new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!hire");
+        //commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    commandHandler.ChatMessages.First());
+        //commandHandler.ChatMessages.First()
+        //    .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]
     public void Test_OneValidOneInvalid()
     {
-        //HireCommandHandler commandHandler =
-        //    GetHireCommandHandler(100);
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "hire", "Sales gibberish");
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales gibberish");
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You hired 1 Sales employee and have 999,950 CorpoBux remaining.");
     }
 
     [Fact]
     public void Test_OneValidTextParameter()
     {
-        //HireCommandHandler commandHandler =
-        //    GetHireCommandHandler(100);
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "hire", "sales");
 
-        //var gameCommand = GetGameCommandArgs("!hire sales");
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal("You hired 1 Sales employee and have 90 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You hired 1 Sales employee and have 999,950 CorpoBux remaining.");
     }
 
     [Fact]
     public void Test_ZeroQuantity()
     {
-        //HireCommandHandler commandHandler =
-        //    GetHireCommandHandler();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "hire", "sales 0");
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales 0");
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Hire_QuantityMustBeGreaterThanZero);
     }
 
     [Fact]
     public void Test_NegativeQuantity()
     {
-        //HireCommandHandler commandHandler =
-        //    GetHireCommandHandler();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetBroadcasterCompany(), "hire", "sales -1");
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales -1");
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal(Literals.Hire_QuantityMustBeGreaterThanZero,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Hire_QuantityMustBeGreaterThanZero);
     }
 
     [Fact]
     public void Test_ValidParametersInsufficientMoney()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101"); // Should have 1000 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales 21");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 9
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales 1");
-
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("It costs 10 CorpoBux to hire 1 Sales employees. You only have 9 CorpoBux",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("It costs 1,050 CorpoBux to hire 21 Sales employees. You only have 1,000 CorpoBux");
     }
 
     [Fact]
     public void Test_ValidParametersInsufficientMoneyToHireMax()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        repo.SubtractPoints("101", 960);
+        var company = repo.GetCompany("101"); // Should have 40 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales max");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 9
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales max");
-
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("It costs 10 CorpoBux to hire a Sales employee. You only have 9 CorpoBux",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("It costs 50 CorpoBux to hire a Sales employee. You only have 40 CorpoBux");
     }
 
     [Fact]
     public void Test_ValidParametersMaxHireSufficientMoney()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        repo.SubtractPoints("101", 950);
+        var company = repo.GetCompany("101"); // Should have 50 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales max");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 50
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales max");
-
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You hired 5 Sales employees and have 0 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You hired 1 Sales employee and have 0 CorpoBux remaining.");
     }
 
     [Fact]
