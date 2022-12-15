@@ -53,7 +53,7 @@ public abstract class BaseCommandHandlerTest
                 }
             },
             MaxCompanyNameLength = 20,
-            MaxMottoLength = 75,
+            MaxMottoLength = 25,
             LowestHrDiscount = 25,
             MinimumSecondsBetweenCommands = 0,
             PointsName = POINTS_NAME,
@@ -215,28 +215,6 @@ public abstract class BaseCommandHandlerTest
             false);
     }
 
-    private static void AddDefaultEmployees(Company company)
-    {
-        var standardEmployeeList = new List<EmployeeQuantity>
-        {
-            new EmployeeQuantity
-            {
-                Type = EmployeeType.Production,
-                Quantity = 10
-            },
-            new EmployeeQuantity
-            {
-                Type = EmployeeType.Sales,
-                Quantity = 10
-            }
-        };
-
-        foreach (var empQty in standardEmployeeList)
-        {
-            company.Employees.Add(empQty);
-        }
-    }
-
     private static Company GetPlayerCompany(string userId, string playerName,
         bool isSubscriber = false)
     {
@@ -257,5 +235,27 @@ public abstract class BaseCommandHandlerTest
         AddDefaultEmployees(player);
 
         return player;
+    }
+
+    private static void AddDefaultEmployees(Company company)
+    {
+        var standardEmployeeList = new List<EmployeeQuantity>
+        {
+            new EmployeeQuantity
+            {
+                Type = EmployeeType.Production,
+                Quantity = 10
+            },
+            new EmployeeQuantity
+            {
+                Type = EmployeeType.Sales,
+                Quantity = 10
+            }
+        };
+
+        foreach (var empQty in standardEmployeeList)
+        {
+            company.Employees.Add(empQty);
+        }
     }
 }
