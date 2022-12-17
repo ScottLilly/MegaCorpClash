@@ -9,7 +9,6 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_NoCompany()
     {
-        // Setup
         var repo = GetTestInMemoryRepository();
         var args = GetGameCommandArgs(new Company(), "staff", "");
 
@@ -25,7 +24,6 @@ public class TestStaffCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_Success()
     {
-        // Setup
         var repo = GetTestInMemoryRepository();
         var args = GetGameCommandArgs(repo.GetCompany("101"), "staff", "");
 

@@ -1,114 +1,101 @@
 ﻿using MegaCorpClash.Services.ChatCommandHandlers;
 using MegaCorpClash.Models;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestStartCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_NoCompanyNamePassed()
     {
-        //Dictionary<string, Company> companies = new();
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "start", "");
 
-        //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.Start_NameRequired,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Start_NameRequired);
     }
 
     [Fact]
     public void Test_CompanyNameNotSafeText()
     {
-        //Dictionary<string, Company> companies = new();
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "start", "1{a");
 
-        //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start 1{a");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.Start_NotSafeText,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Start_NotSafeText);
     }
 
     [Fact]
     public void Test_CompanyNameTooLong()
     {
-        //Dictionary<string, Company> companies = new();
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "start", 
+            "123456789012345678901");
 
-        //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start 1234567890123456");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Company name cannot be longer than 15 characters",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Company name cannot be longer than 20 characters");
     }
 
     [Fact]
     public void Test_AlreadyHasACompany()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company { CompanyName = "Test" });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "start", "asd");
 
-        //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start ABC");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You already have a company named Test",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You already have a company named Player1Co");
     }
 
     [Fact]
     public void Test_CompanyNameAlreadyUsed()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add("999",
-        //    new Company { CompanyName = "Test" });
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "start", "Player2Co");
 
-        //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start Test");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("There is already a company named Test",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("There is already a company named Player2Co");
     }
 
     [Fact]
     public void Test_Success()
     {
-        //Dictionary<string, Company> companies = new();
+        // TODO
+        //var repo = GetTestInMemoryRepository();
+        //var args = GetGameCommandArgs(new Company(), "start", "UniqueNameCo");
 
         //var commandHandler =
-        //    new StartCommandHandler(_gameSettings, companies);
+        //    new StartCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!start Test");
+        //commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You are now the proud CEO of Test",
-        //    commandHandler.ChatMessages.First());
-
-        //Company company = companies[DEFAULT_CHATTER_ID];
-
-        //Assert.Equal(2, company.Employees.Count);
+        //commandHandler.ChatMessages.First()
+        //    .ShouldBe("You are now the proud CEO of UniqueNameCo");
     }
 }

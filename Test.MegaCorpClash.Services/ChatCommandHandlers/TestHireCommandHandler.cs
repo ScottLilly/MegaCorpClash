@@ -26,18 +26,17 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_NoCompany()
     {
-        // TODO: FIX!
-        //// Setup
-        //var repo = GetTestInMemoryRepository();
-        //var args = GetGameCommandArgs(new Company(), "hire", "");
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "hire", "");
 
-        //var commandHandler =
-        //    new HireCommandHandler(GetDefaultGameSettings(), repo, args);
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute();
+        commandHandler.Execute();
 
-        //commandHandler.ChatMessages.First()
-        //    .ShouldBe(Literals.YouDoNotHaveACompany);
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]

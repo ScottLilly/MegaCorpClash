@@ -78,23 +78,13 @@ public abstract class BaseCommandHandler : IExecutable
 
         if (parsedArguments.IntegerArguments.Count == 1)
         {
-            if (parsedArguments.IntegerArguments.First() > 1)
-            {
-                numberOfAttackingSpies =
-                    Math.Min(
-                parsedArguments.IntegerArguments.First(),
-                        company.Employees.First(e => e.Type == EmployeeType.Spy).Quantity);
-            }
-            else
-            {
-                numberOfAttackingSpies = 0;
-            }
+            numberOfAttackingSpies = parsedArguments.IntegerArguments.First();
         }
         else if (parsedArguments.StringArguments.Any(s => s.Matches("max")))
         {
             numberOfAttackingSpies =
                 company.Employees
-                    .First(e => e.Type == EmployeeType.Spy).Quantity;
+                    .FirstOrDefault(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
         }
 
         return numberOfAttackingSpies;
