@@ -1,140 +1,102 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestMottoCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_NoCompany()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "motto", "");
 
-        //var commandHandler =
-        //    new MottoCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new MottoCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!setmotto");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]
     public void Test_HasCompanyMissingMottoParameter()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetCompany("101"), "motto", "");
 
-        //var commandHandler =
-        //    new MottoCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new MottoCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!setmotto");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You must enter a value for the motto",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You must enter a value for the motto");
     }
 
     [Fact]
     public void Test_CompanyMottoNotSafeText()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetCompany("101"), "motto", "kjh*234");
 
-        //var commandHandler =
-        //    new MottoCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new MottoCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!setmotto kjh*234");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.SetMotto_NotSafeText,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.SetMotto_NotSafeText);
     }
 
     [Fact]
     public void Test_CompanyMottoTooLong()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetCompany("101"), 
+            "motto", "12345678901234567890123456");
 
-        //var commandHandler =
-        //    new MottoCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new MottoCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!setmotto 12345678901234567890123456");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Motto cannot be longer than 25 characters",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Motto cannot be longer than 25 characters");
     }
 
     [Fact]
     public void Test_Success_DefaultMotto()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
-
-        //var company = companies[DEFAULT_CHATTER_ID];
-
-        //Assert.Equal("We don't need a motto", company.Motto);
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        company.Motto.ShouldBe("We don't need a motto");
     }
 
     [Fact]
     public void Test_Success_ModifiedMotto()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 99
-        //    });
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(repo.GetCompany("101"),
+            "motto", "This is our new motto");
 
-        //var commandHandler =
-        //    new MottoCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new MottoCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!setmotto This is our new motto");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Your new company motto is 'This is our new motto'");
 
-        //Assert.Equal("Your new company motto is 'This is our new motto'",
-        //    commandHandler.ChatMessages.First());
+        var updatedCompany = repo.GetCompany("101");
+        updatedCompany.Motto.ShouldBe("This is our new motto");
     }
 }

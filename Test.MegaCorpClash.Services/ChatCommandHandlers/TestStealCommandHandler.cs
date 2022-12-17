@@ -1,66 +1,138 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestStealCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_NoCompany()
     {
-        //Dictionary<string, Company> companies = new();
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "steal", "");
 
-        //var commandHandler =
-        //    new StealCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!steal");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]
-    public void Test_NoSpy()
+    public void Test_NegativeSpyValue()
     {
-        //var commandHandler =
-        //    GetStealCommandHandler(100, 0);
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "-1");
 
-        //var gameCommand = GetGameCommandArgs("!steal");
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute(gameCommand);
+        commandHandler.Execute();
 
-        //Assert.Equal("You must have at least one spy to steal",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Number of attacking spies must be greater than 0");
     }
 
-    //private StealCommandHandler GetStealCommandHandler(int points, int hiredSpies)
-    //{
-    //    Dictionary<string, Company> companies = new();
+    [Fact]
+    public void Test_ZeroSpyValue()
+    {
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "0");
 
-    //    companies.Add(DEFAULT_CHATTER_ID,
-    //        new Company
-    //        {
-    //            DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-    //            CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-    //            Points = points
-    //        });
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
 
-    //    if (hiredSpies > 0)
-    //    {
-    //        companies[DEFAULT_CHATTER_ID].Employees =
-    //            new List<EmployeeQuantity> {
-    //                new()
-    //                {
-    //                    Type = EmployeeType.Spy,
-    //                    Quantity = hiredSpies
-    //                }};
-    //    }
+        commandHandler.Execute();
 
-    //    return new StealCommandHandler(_gameSettings, companies);
-    //}
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Number of attacking spies must be greater than 0");
+    }
+
+    [Fact]
+    public void Test_AlphaSpyValue_AssumesUseOneSpy()
+    {
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "A");
+
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
+
+        commandHandler.Execute();
+
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You don't have any spies");
+    }
+
+    [Fact]
+    public void Test_AlphaSpyValue_BlankUseOneSpy()
+    {
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "");
+
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
+
+        commandHandler.Execute();
+
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You don't have any spies");
+    }
+
+    [Fact]
+    public void Test_AlphaSpyValue_ExplicitUseOneSpy()
+    {
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "1");
+
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
+
+        commandHandler.Execute();
+
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You don't have any spies");
+    }
+
+    [Fact]
+    public void Test_UseTwoSpies_OnlyHaveOne()
+    {
+        var repo = GetTestInMemoryRepository();
+        repo.HireEmployees("101", EmployeeType.Spy, 1, 0);
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "2");
+
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
+
+        commandHandler.Execute();
+
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You only have 1 spy");
+    }
+
+    [Fact]
+    public void Test_UseThreeSpies_OnlyHaveTwo()
+    {
+        var repo = GetTestInMemoryRepository();
+        repo.HireEmployees("101", EmployeeType.Spy, 2, 0);
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "steal", "3");
+
+        var commandHandler =
+            new StealCommandHandler(GetDefaultGameSettings(), repo, args);
+
+        commandHandler.Execute();
+
+        commandHandler.ChatMessages.First()
+            .ShouldBe("You only have 2 spies");
+    }
+
 }

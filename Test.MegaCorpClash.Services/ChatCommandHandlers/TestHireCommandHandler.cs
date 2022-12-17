@@ -1,7 +1,6 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
 using Shouldly;
-using System.Reflection.Metadata;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -27,18 +26,17 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_NoCompany()
     {
-        // TODO: FIX!
-        //// Setup
-        //var repo = GetTestInMemoryRepository();
-        //var args = GetGameCommandArgs(new Company(), "hire", "");
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "hire", "");
 
-        //var commandHandler =
-        //    new HireCommandHandler(GetDefaultGameSettings(), repo, args);
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //commandHandler.Execute();
+        commandHandler.Execute();
 
-        //commandHandler.ChatMessages.First()
-        //    .ShouldBe(Literals.YouDoNotHaveACompany);
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]
@@ -161,99 +159,71 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
     [Fact]
     public void Test_ValidParametersSufficientMoney_OneEmployee()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101"); // Should have 1000 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales 1");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 11
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales 1");
+        commandHandler.ChatMessages.First().
+            ShouldBe("You hired 1 Sales employee and have 950 CorpoBux remaining.");
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You hired 1 Sales employee and have 1 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
-
-        //var company = companies[DEFAULT_CHATTER_ID];
-
-        //Assert.Single(company.Employees);
-        //Assert.Equal(1, company.Points);
+        var updatedCompany = repo.GetCompany("101");
+        updatedCompany.Employees
+            .First(e => e.Type == EmployeeType.Sales).Quantity
+            .ShouldBe(11);
+        updatedCompany.Points.ShouldBe(950);
     }
 
     [Fact]
     public void Test_ValidParametersSufficientMoney_OneEmployee_WithHRDiscount()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        repo.HireEmployees("101", EmployeeType.HR, 10, 0);
+        var company = repo.GetCompany("101"); // Should have 1000 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales 1");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 11,
-        //        Employees = new List<EmployeeQuantity>
-        //        {
-        //            new()
-        //            {
-        //                Type = EmployeeType.HR,
-        //                Quantity = 10
-        //            }
-        //        }
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire Sales 1");
+        commandHandler.ChatMessages.First().
+            ShouldBe("You hired 1 Sales employee and have 955 CorpoBux remaining.");
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You hired 1 Sales employee and have 2 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
-
-        //var company = companies[DEFAULT_CHATTER_ID];
-
-        //Assert.Equal(2, company.Employees.Count);
-        //Assert.Equal(2, company.Points);
+        var updatedCompany = repo.GetCompany("101");
+        updatedCompany.Employees
+            .First(e => e.Type == EmployeeType.Sales).Quantity
+            .ShouldBe(11);
+        updatedCompany.Points.ShouldBe(955);
     }
 
     [Fact]
     public void Test_ValidParametersSufficientMoney_TwoEmployees()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101"); // Should have 1000 CorpoBux
+        var args = GetGameCommandArgs(company, "hire", "sales 2");
 
-        //companies.Add(
-        //    DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        Points = 22
-        //    });
+        var commandHandler =
+            new HireCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var commandHandler =
-        //    new HireCommandHandler(_gameSettings, companies);
+        commandHandler.Execute();
 
-        //var gameCommand = GetGameCommandArgs("!hire 2 sales");
+        commandHandler.ChatMessages.First().
+            ShouldBe("You hired 2 Sales employees and have 900 CorpoBux remaining.");
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("You hired 2 Sales employees and have 2 CorpoBux remaining.",
-        //    commandHandler.ChatMessages.First());
-
-        //var company = companies[DEFAULT_CHATTER_ID];
-
-        //Assert.Equal(2, company.Employees.First(e => e.Type == EmployeeType.Sales).Quantity);
-        //Assert.Equal(2, company.Points);
+        var updatedCompany = repo.GetCompany("101");
+        updatedCompany.Employees
+            .First(e => e.Type == EmployeeType.Sales).Quantity
+            .ShouldBe(12);
+        updatedCompany.Points.ShouldBe(900);
     }
 
     public static IEnumerable<object[]> InvalidParameterTestValues()
@@ -267,18 +237,4 @@ public class TestHireCommandHandler : BaseCommandHandlerTest
         yield return new object[] { "CEO 1" };
     }
 
-    //private HireCommandHandler GetHireCommandHandler(int points = 0)
-    //{
-    //    Dictionary<string, Company> companies = new();
-
-    //    companies.Add(DEFAULT_CHATTER_ID,
-    //        new Company
-    //        {
-    //            DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-    //            CompanyName = DEFAULT_CHATTER_DISPLAY_NAME,
-    //            Points = points
-    //        });
-
-    //    return new HireCommandHandler(_gameSettings, companies);
-    //}
 }

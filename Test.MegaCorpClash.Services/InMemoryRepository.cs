@@ -45,7 +45,7 @@ public class InMemoryRepository : IRepository
 
     public Company GetCompany(string companyId)
     {
-        return _companies.First(c => c.UserId.Equals(companyId));
+        return _companies.FirstOrDefault(c => c.UserId.Equals(companyId));
     }
 
     public IEnumerable<Company> GetRichestCompanies(int count)

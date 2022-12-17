@@ -1,162 +1,104 @@
 ﻿using MegaCorpClash.Models;
 using MegaCorpClash.Services.ChatCommandHandlers;
+using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
 public class TestRenameCommandHandler : BaseCommandHandlerTest
 {
-    private readonly GameSettings _gameSettings =
-        GetDefaultGameSettings();
-
     [Fact]
     public void Test_NoCompany()
     {
-        //Dictionary<string, Company> companies = new();
+        // Setup
+        var repo = GetTestInMemoryRepository();
+        var args = GetGameCommandArgs(new Company(), "rename", "");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.YouDoNotHaveACompany,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.YouDoNotHaveACompany);
     }
 
     [Fact]
     public void Test_NoCompanyNamePassed()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "rename", "");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.Rename_YouMustProvideANewName,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Rename_YouMustProvideANewName);
     }
 
     [Fact]
-    public void Test_CompanyNameTooLong()
+    public void Test_CompanyName_InvalidCharacters()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "rename", "u[k");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename u[k");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal(Literals.Start_NotSafeText,
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe(Literals.Start_NotSafeText);
     }
 
     [Fact]
-    public void Test_CompanyNameNotSafeText()
+    public void Test_CompanyName_NameTooLong()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "rename", "123456789012345678901");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename 1234567890123456");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Company name cannot be longer than 15 characters",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Company name cannot be longer than 20 characters");
     }
 
     [Fact]
     public void Test_CompanyNameAlreadyUsed()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add("999",
-        //    new Company
-        //    {
-        //        UserId = "999",
-        //        DisplayName = "OtherPlayer",
-        //        CompanyName = "FirstCo",
-        //        Points = 100
-        //    });
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "rename", "ScottCo");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename FirstCo");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("There is already a company named FirstCo",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("There is already a company named ScottCo");
     }
 
     [Fact]
     public void Test_Success()
     {
-        //Dictionary<string, Company> companies = new();
-        //companies.Add("999",
-        //    new Company
-        //    {
-        //        UserId = "999",
-        //        DisplayName = "OtherPlayer",
-        //        CompanyName = "FirstCo",
-        //        Points = 100
-        //    });
-        //companies.Add(DEFAULT_CHATTER_ID,
-        //    new Company
-        //    {
-        //        UserId = DEFAULT_CHATTER_ID,
-        //        DisplayName = DEFAULT_CHATTER_DISPLAY_NAME,
-        //        CompanyName = "ScottCo",
-        //        Points = 100
-        //    });
+        var repo = GetTestInMemoryRepository();
+        var company = repo.GetCompany("101");
+        var args = GetGameCommandArgs(company, "rename", "SecondCo");
 
-        //var commandHandler =
-        //    new RenameCommandHandler(_gameSettings, companies);
+        var commandHandler =
+            new RenameCommandHandler(GetDefaultGameSettings(), repo, args);
 
-        //var gameCommand = GetGameCommandArgs("!rename SecondCo");
+        commandHandler.Execute();
 
-        //commandHandler.Execute(gameCommand);
-
-        //Assert.Equal("Your company is now named SecondCo",
-        //    commandHandler.ChatMessages.First());
+        commandHandler.ChatMessages.First()
+            .ShouldBe("Your company is now named SecondCo");
     }
 }
