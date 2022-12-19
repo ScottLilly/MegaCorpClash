@@ -4,16 +4,16 @@ using Shouldly;
 
 namespace Test.MegaCorpClash.Services.ChatCommandHandlers;
 
-public class TestStrikeCommandHandler : BaseCommandHandlerTest
+public class TestRecruitCommandHandler : BaseCommandHandlerTest
 {
     [Fact]
     public void Test_NoCompany()
     {
         var repo = GetTestInMemoryRepository();
-        var args = GetGameCommandArgs(new Company(), "strike", "");
+        var args = GetGameCommandArgs(new Company(), "recruit", "");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -26,10 +26,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
     {
         var repo = GetTestInMemoryRepository();
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "-1");
+        var args = GetGameCommandArgs(company, "recruit", "-1");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -42,10 +42,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
     {
         var repo = GetTestInMemoryRepository();
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "0");
+        var args = GetGameCommandArgs(company, "recruit", "0");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -58,10 +58,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
     {
         var repo = GetTestInMemoryRepository();
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "A");
+        var args = GetGameCommandArgs(company, "recruit", "A");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -74,10 +74,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
     {
         var repo = GetTestInMemoryRepository();
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "");
+        var args = GetGameCommandArgs(company, "recruit", "");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -90,10 +90,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
     {
         var repo = GetTestInMemoryRepository();
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "1");
+        var args = GetGameCommandArgs(company, "recruit", "1");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -107,10 +107,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
         var repo = GetTestInMemoryRepository();
         repo.HireEmployees("101", EmployeeType.Spy, 1, 0);
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "2");
+        var args = GetGameCommandArgs(company, "recruit", "2");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
@@ -124,10 +124,10 @@ public class TestStrikeCommandHandler : BaseCommandHandlerTest
         var repo = GetTestInMemoryRepository();
         repo.HireEmployees("101", EmployeeType.Spy, 2, 0);
         var company = repo.GetCompany("101");
-        var args = GetGameCommandArgs(company, "strike", "3");
+        var args = GetGameCommandArgs(company, "recruit", "3");
 
         var commandHandler =
-            new StrikeCommandHandler(GetDefaultGameSettings(), repo, args);
+            new RecruitCommandHandler(GetDefaultGameSettings(), repo, args);
 
         commandHandler.Execute();
 
