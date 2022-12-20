@@ -90,6 +90,22 @@ public abstract class BaseCommandHandler : IExecutable
         return numberOfAttackingSpies;
     }
 
+    protected void SetMessageForInsufficientSpies(int availableSpies)
+    {
+        if (availableSpies == 0)
+        {
+            PublishMessage("You don't have any spies");
+        }
+        else if (availableSpies == 1)
+        {
+            PublishMessage("You only have 1 spy");
+        }
+        else
+        {
+            PublishMessage($"You only have {availableSpies} spies");
+        }
+    }
+
     protected void LogTraceMessage()
     {
         Logger.Trace("Begin execution of command: {CommandName}", CommandName);

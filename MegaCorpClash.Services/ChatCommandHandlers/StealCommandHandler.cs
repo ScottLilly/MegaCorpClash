@@ -3,7 +3,6 @@ using CSharpExtender.Services;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Persistence;
-using Newtonsoft.Json.Linq;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -16,7 +15,7 @@ public class StealCommandHandler : BaseCommandHandler
         : base("steal", gameSettings, companyRepository, gameCommandArgs)
     {
         BroadcasterCanRun = false;
-        _attackDetail = 
+        _attackDetail =
             GameSettings.AttackDetails?
             .FirstOrDefault(ad => ad.AttackType.Matches(CommandName))
             ?? new GameSettings.AttackDetail { Min = 100, Max = 500 };
@@ -44,24 +43,13 @@ public class StealCommandHandler : BaseCommandHandler
         }
 
         // Check if player's company has enough spies
-        int availableSpies = 
+        int availableSpies =
             chatter.Company.Employees
             .FirstOrDefault(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
 
         if (availableSpies < numberOfAttackingSpies)
         {
-            if(availableSpies == 0)
-            {
-                PublishMessage("You don't have any spies");
-            }
-            else if(availableSpies == 1)
-            {
-                PublishMessage("You only have 1 spy");
-            }
-            else
-            {
-                PublishMessage($"You only have {availableSpies} spies");
-            }
+            SetMessageForInsufficientSpies(availableSpies);
             return;
         }
 
@@ -77,8 +65,8 @@ public class StealCommandHandler : BaseCommandHandler
             if (attackSuccessful)
             {
                 // Success
-                int stolen = 
-                    broadcasterPoints / 
+                int stolen =
+                    broadcasterPoints /
                     RngCreator.GetNumberBetween(_attackDetail.Min, _attackDetail.Max);
 
                 if (broadcasterPoints < 1000)

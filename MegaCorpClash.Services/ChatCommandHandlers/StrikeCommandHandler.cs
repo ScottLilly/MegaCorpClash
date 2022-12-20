@@ -49,18 +49,7 @@ public class StrikeCommandHandler : BaseCommandHandler
 
         if (availableSpies < numberOfAttackingSpies)
         {
-            if (availableSpies == 0)
-            {
-                PublishMessage("You don't have any spies");
-            }
-            else if (availableSpies == 1)
-            {
-                PublishMessage("You only have 1 spy");
-            }
-            else
-            {
-                PublishMessage($"You only have {availableSpies} spies");
-            }
+            SetMessageForInsufficientSpies(availableSpies);
             return;
         }
 
