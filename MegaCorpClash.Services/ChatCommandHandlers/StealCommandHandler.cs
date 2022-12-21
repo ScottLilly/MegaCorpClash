@@ -43,11 +43,9 @@ public class StealCommandHandler : BaseCommandHandler
             return;
         }
 
-        // Check if player's company has enough spies
-        int availableSpies =
-            chatter.Company.Employees
-            .FirstOrDefault(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
+        int availableSpies = chatter.Company.EmployeesOfType(EmployeeType.Spy);
 
+        // Check if player's company has enough spies
         if (availableSpies < numberOfAttackingSpies)
         {
             SetMessageForInsufficientSpies(availableSpies);
@@ -86,13 +84,16 @@ public class StealCommandHandler : BaseCommandHandler
             }
         }
 
-        ApplyAttackResults(chatter, numberOfAttackingSpies, totalPointsStolen, securityPeopleLost);
+        ApplyAttackResults(numberOfAttackingSpies, totalPointsStolen, securityPeopleLost);
 
         SetResultMessage(numberOfAttackingSpies, successCount, totalPointsStolen);
     }
 
-    private void ApplyAttackResults(ChatterDetails chatter, int numberOfAttackingSpies, long totalPointsStolen, int securityPeopleLost)
+    private void ApplyAttackResults(int numberOfAttackingSpies, long totalPointsStolen, 
+        int securityPeopleLost)
     {
+        var chatter = ChatterDetails();
+
         CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
         CompanyRepository.AddPoints(chatter.ChatterId, (int)totalPointsStolen);
 

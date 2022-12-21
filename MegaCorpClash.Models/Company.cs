@@ -25,6 +25,9 @@ public sealed class Company
                 .OrderBy(x => x.Type)
                 .Select(x => $"{x.Quantity:N0} {x.Type}"));
 
+    public int EmployeesOfType(EmployeeType type)  => 
+        Employees.FirstOrDefault(e => e.Type == type)?.Quantity ?? 0;
+
     public void RemoveEmployeeOfType(EmployeeType employeeType, int quantityToRemove = 1)
     {
         var employeeQuantity =

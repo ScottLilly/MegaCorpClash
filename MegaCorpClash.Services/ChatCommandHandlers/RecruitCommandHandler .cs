@@ -42,11 +42,9 @@ public class RecruitCommandHandler : BaseCommandHandler
             return;
         }
 
-        // Check if player's company has enough spies
-        int availableSpies =
-            chatter.Company.Employees
-            .FirstOrDefault(e => e.Type == EmployeeType.Spy)?.Quantity ?? 0;
+        int availableSpies = chatter.Company.EmployeesOfType(EmployeeType.Spy);
 
+        // Check if player's company has enough spies
         if (availableSpies < numberOfAttackingSpies)
         {
             SetMessageForInsufficientSpies(availableSpies);
@@ -115,7 +113,7 @@ public class RecruitCommandHandler : BaseCommandHandler
             }
         }
 
-        ApplyAttackResults(chatter, numberOfAttackingSpies, employeesWhoStrike, hrPeopleConsumed);
+        ApplyAttackResults(numberOfAttackingSpies, employeesWhoStrike, hrPeopleConsumed);
 
         string recruits =
             string.Join(',',
@@ -124,10 +122,15 @@ public class RecruitCommandHandler : BaseCommandHandler
         SetResultMessage(numberOfAttackingSpies, successCount, recruits);
     }
 
-    private void ApplyAttackResults(ChatterDetails chatter, int numberOfAttackingSpies, List<EmployeeQuantity> employeesWhoStrike, int hrPeopleConsumed)
+    private void ApplyAttackResults(int numberOfAttackingSpies, 
+        List<EmployeeQuantity> employeesWhoStrike, int hrPeopleConsumed)
     {
-        CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
-        CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.HR, hrPeopleConsumed);
+        var chatter = ChatterDetails();
+
+        CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, 
+            numberOfAttackingSpies);
+        CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.HR, 
+            hrPeopleConsumed);
 
         foreach (var empQty in employeesWhoStrike)
         {
