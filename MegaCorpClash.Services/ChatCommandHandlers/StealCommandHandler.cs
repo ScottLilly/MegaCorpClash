@@ -3,6 +3,7 @@ using CSharpExtender.Services;
 using MegaCorpClash.Models;
 using MegaCorpClash.Services.CustomEventArgs;
 using MegaCorpClash.Services.Persistence;
+using TwitchLib.Api.Core.Models.Undocumented.Chatters;
 
 namespace MegaCorpClash.Services.ChatCommandHandlers;
 
@@ -85,33 +86,40 @@ public class StealCommandHandler : BaseCommandHandler
             }
         }
 
-        // Do debits/credits
-        // "Consume" spies used during attack
+        ApplyAttackResults(chatter, numberOfAttackingSpies, totalPointsStolen, securityPeopleLost);
+
+        SetResultMessage(numberOfAttackingSpies, successCount, totalPointsStolen);
+    }
+
+    private void ApplyAttackResults(ChatterDetails chatter, int numberOfAttackingSpies, long totalPointsStolen, int securityPeopleLost)
+    {
         CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
         CompanyRepository.AddPoints(chatter.ChatterId, (int)totalPointsStolen);
 
         CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.Security, securityPeopleLost);
         CompanyRepository.SubtractPoints(GetBroadcasterCompany.UserId, (int)totalPointsStolen);
 
-        // Get correct chatter company
-        var updatedCompany = CompanyRepository.GetCompany(chatter.ChatterId);
-
-        // Display messages
-        if (numberOfAttackingSpies == 1)
-        {
-            PublishMessage(successCount == 1
-                    ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {updatedCompany.Points:N0} {GameSettings.PointsName}"
-                    : "Your spy was caught and you got nothing");
-        }
-        else
-        {
-            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {updatedCompany.Points:N0} {GameSettings.PointsName}");
-        }
-
         if (GetBroadcasterCompany.Points == 0)
         {
             CompanyRepository.IncrementVictoryCount(chatter.ChatterId);
             NotifyBankruptedStreamer();
+        }
+    }
+
+    private void SetResultMessage(int numberOfAttackingSpies, int successCount, 
+        long totalPointsStolen)
+    {
+        var chatter = ChatterDetails();
+
+        if (numberOfAttackingSpies == 1)
+        {
+            PublishMessage(successCount == 1
+                ? $"Your spy stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company?.Points:N0} {GameSettings.PointsName}"
+                : "Your spy was caught and you got nothing");
+        }
+        else
+        {
+            PublishMessage($"You had {successCount:N0}/{numberOfAttackingSpies:N0} successful attacks and stole {totalPointsStolen:N0} {GameSettings.PointsName} and now have {chatter.Company?.Points:N0} {GameSettings.PointsName}");
         }
     }
 }

@@ -67,18 +67,18 @@ public class StrikeCommandHandler : BaseCommandHandler
 
             if (attackSuccessful)
             {
-                foreach(var emp in employeesByCost)
+                foreach (var emp in employeesByCost)
                 {
                     var broadcasterEmpQty =
                         broadcasterEmployees.FirstOrDefault(e => e.Type == emp.Type);
 
-                    int employeesLeaving = 
+                    int employeesLeaving =
                         Random.Shared.Next(_attackDetail.Min, _attackDetail.Max + 1);
 
-                    if(broadcasterEmpQty != null &&
+                    if (broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity >= employeesLeaving)
                     {
-                        if(broadcasterEmpQty.Quantity == employeesLeaving)
+                        if (broadcasterEmpQty.Quantity == employeesLeaving)
                         {
                             broadcasterEmployees.Remove(broadcasterEmpQty);
                         }
@@ -100,25 +100,35 @@ public class StrikeCommandHandler : BaseCommandHandler
             }
         }
 
-        // Do debits/credits
-        // "Consume" spies used during attack
+        ApplyAttackResults(chatter, numberOfAttackingSpies, broadcasterEmployees, hrPeopleConsumed);
+
+        SetResultMessage(numberOfAttackingSpies, successCount, employeesWhoLeft);
+    }
+
+    private void ApplyAttackResults(ChatterDetails chatter, int numberOfAttackingSpies, List<EmployeeQuantity> broadcasterEmployees, int hrPeopleConsumed)
+    {
         CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
 
         var broadcasterCompany = GetBroadcasterCompany;
         broadcasterCompany.Employees.Clear();
-        foreach(var empQty in broadcasterEmployees)
+        foreach (var empQty in broadcasterEmployees)
         {
             broadcasterCompany.Employees.Add(empQty);
         }
         CompanyRepository.UpdateCompany(broadcasterCompany);
 
-        CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.HR, hrPeopleConsumed);
+        CompanyRepository.RemoveEmployeeOfType(
+            GetBroadcasterCompany.UserId, EmployeeType.HR, hrPeopleConsumed);
+    }
 
+    private void SetResultMessage(int numberOfAttackingSpies, int successCount, 
+        int employeesWhoLeft)
+    {
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1
-                    ? $"Your spy caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}"
-                    : $"Your spy was caught and nobody went on strike at {GetBroadcasterCompany.CompanyName}");
+                ? $"Your spy caused {employeesWhoLeft:N0} employees to leave {GetBroadcasterCompany.CompanyName}"
+                : $"Your spy was caught and nobody went on strike at {GetBroadcasterCompany.CompanyName}");
         }
         else
         {

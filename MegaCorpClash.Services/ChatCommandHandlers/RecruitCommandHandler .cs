@@ -66,15 +66,15 @@ public class RecruitCommandHandler : BaseCommandHandler
 
             if (attackSuccessful)
             {
-                foreach(var emp in employeesByCost)
+                foreach (var emp in employeesByCost)
                 {
                     var broadcasterEmpQty =
                         broadcasterEmployees.FirstOrDefault(e => e.Type == emp.Type);
 
-                    int employeesLeaving = 
+                    int employeesLeaving =
                         Random.Shared.Next(_attackDetail.Min, _attackDetail.Max + 1);
 
-                    if(broadcasterEmpQty != null &&
+                    if (broadcasterEmpQty != null &&
                         broadcasterEmpQty.Quantity >= employeesLeaving)
                     {
                         if (broadcasterEmpQty.Quantity == employeesLeaving)
@@ -86,16 +86,16 @@ public class RecruitCommandHandler : BaseCommandHandler
                             broadcasterEmpQty.Quantity -= employeesLeaving;
                         }
 
-                        var employeeTypeWhoStruck = 
+                        var employeeTypeWhoStruck =
                             employeesWhoStrike.FirstOrDefault(e => e.Type.Equals(emp.Type));
-                        
-                        if(employeeTypeWhoStruck == null)
+
+                        if (employeeTypeWhoStruck == null)
                         {
                             employeesWhoStrike.Add(
-                                new EmployeeQuantity 
+                                new EmployeeQuantity
                                 {
-                                    Type = emp.Type, 
-                                    Quantity = employeesLeaving 
+                                    Type = emp.Type,
+                                    Quantity = employeesLeaving
                                 });
                         }
                         else
@@ -115,28 +115,36 @@ public class RecruitCommandHandler : BaseCommandHandler
             }
         }
 
-        // Do debits/credits
-        // "Consume" spies used during attack
+        ApplyAttackResults(chatter, numberOfAttackingSpies, employeesWhoStrike, hrPeopleConsumed);
+
+        string recruits =
+            string.Join(',',
+            employeesWhoStrike.Select(e => $"{e.Quantity:N0} {e.Type}"));
+
+        SetResultMessage(numberOfAttackingSpies, successCount, recruits);
+    }
+
+    private void ApplyAttackResults(ChatterDetails chatter, int numberOfAttackingSpies, List<EmployeeQuantity> employeesWhoStrike, int hrPeopleConsumed)
+    {
         CompanyRepository.RemoveEmployeeOfType(chatter.ChatterId, EmployeeType.Spy, numberOfAttackingSpies);
         CompanyRepository.RemoveEmployeeOfType(GetBroadcasterCompany.UserId, EmployeeType.HR, hrPeopleConsumed);
 
-        foreach(var empQty in employeesWhoStrike)
+        foreach (var empQty in employeesWhoStrike)
         {
             CompanyRepository.RemoveEmployeeOfType(
                 GetBroadcasterCompany.UserId, empQty.Type, empQty.Quantity);
             CompanyRepository.HireEmployees(
                 chatter.ChatterId, empQty.Type, empQty.Quantity, 0);
         }
+    }
 
-        string recruits = 
-            string.Join(',', 
-            employeesWhoStrike.Select(e => $"{e.Quantity:N0} {e.Type}"));
-
+    private void SetResultMessage(int numberOfAttackingSpies, int successCount, string recruits)
+    {
         if (numberOfAttackingSpies == 1)
         {
             PublishMessage(successCount == 1
-                    ? $"Your spy recruited {recruits} employees from {GetBroadcasterCompany.CompanyName}"
-                    : $"Your spy was caught and you didn't recruit anyone from {GetBroadcasterCompany.CompanyName}");
+                ? $"Your spy recruited {recruits} employees from {GetBroadcasterCompany.CompanyName}"
+                : $"Your spy was caught and you didn't recruit anyone from {GetBroadcasterCompany.CompanyName}");
         }
         else
         {
