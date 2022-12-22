@@ -10,6 +10,7 @@ public enum EmployeeType
     Legal,
     Security,
     IT,
+    PR,
     Spy
 }
 

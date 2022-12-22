@@ -123,6 +123,11 @@ public abstract class BaseCommandHandlerTest
                 },
                 new GameSettings.EmployeeHiringInfo
                 {
+                    Type = EmployeeType.PR,
+                    CostToHire = 125
+                },
+                new GameSettings.EmployeeHiringInfo
+                {
                     Type = EmployeeType.Legal,
                     CostToHire = 150
                 },
