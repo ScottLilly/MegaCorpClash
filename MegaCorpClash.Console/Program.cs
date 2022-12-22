@@ -71,7 +71,7 @@ do
 
 } while (!(command ?? "").Equals("!exit", StringComparison.InvariantCultureIgnoreCase));
 
-static GameSettings GetGameSettings()
+GameSettings GetGameSettings()
 {
     GameSettings settings =
         PersistenceService.ReadGameSettings();
@@ -121,6 +121,17 @@ static GameSettings GetGameSettings()
     {
         settings.TwitchBotAccount.AuthToken =
             secretsBotAccount.AuthToken;
+    }
+
+    // Check if required values are missing
+    if(settings.TwitchBroadcasterAccount == null ||
+        settings.TwitchBotAccount == null ||
+        string.IsNullOrWhiteSpace(settings.TwitchBroadcasterAccount.Name) ||
+        string.IsNullOrWhiteSpace(settings.TwitchBotAccount.Name) ||
+        string.IsNullOrWhiteSpace(settings.TwitchBotAccount.AuthToken))
+    {
+        Logger.Error("Missing or invalid Twitch account values");
+        throw new InvalidDataException("Missing or invalid Twitch account values");
     }
 
     return settings;
