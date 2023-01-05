@@ -14,6 +14,7 @@ public class TestPointsCalculator
     [Fact]
     public void Test_PointsCalculator()
     {
+        // TODO: Add unit tests for PointsCalculator
         //var gameSettings = GetGameSettings();
         //var companies = GetStandardCompanies();
 
