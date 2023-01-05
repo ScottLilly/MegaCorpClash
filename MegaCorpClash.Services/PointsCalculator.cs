@@ -88,15 +88,26 @@ public class PointsCalculator : IExecutable
                         Math.Max(1, _pointsInfo.SubscriberMultiplier);
                 }
 
-                // Apply employee multipliers
+                // Apply salesperson multiplier
                 int salesPeople =
                     company.Employees.
                         FirstOrDefault(e => e.Type == EmployeeType.Sales)?.Quantity ?? 1;
 
+                // Turn points multiplier for number of salespeople
                 pointsForTurn *=
                     Math.Max(1,
-                    Convert.ToInt32(Math.Round(Convert.ToDecimal(salesPeople) / 5M,
+                    Convert.ToInt32(Math.Round(Convert.ToDecimal(salesPeople) / 10M,
                     MidpointRounding.AwayFromZero)));
+
+                // Apply PR employee multiplier
+                int prPeople =
+                    company.Employees.
+                        FirstOrDefault(e => e.Type == EmployeeType.PR)?.Quantity ?? 1;
+
+                // Turn points multiplier for number of PR people
+                pointsForTurn += 
+                    Convert.ToInt32(pointsForTurn * 
+                    (Math.Log10(Convert.ToDouble(prPeople)) / 10));
 
                 // Apply one-time tick interval bonus
                 pointsForTurn += s_bonusPointsNextTurn;
